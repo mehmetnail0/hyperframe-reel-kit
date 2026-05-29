@@ -1,0 +1,12 @@
+# Personal videos & rendered reels — NOT public (privacy)
+nail-ai-reel/
+nwn-incele-reel/
+personal-brand-reel/
+references/
+# Internal design notes
+docs/
+# System
+node_modules/
+**/.DS_Store
+*.mp4
+*.mov

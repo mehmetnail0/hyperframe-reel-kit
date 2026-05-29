@@ -1,0 +1,112 @@
+/* ============================================================================
+   THEME: fork-sunset  —  "Sunset Editorial" (public fork identity, NOT the brand)
+   A distinct, shareable warm-editorial identity for a 1080×1920 vertical reel.
+   Coral + peach on warm paper/espresso. Deliberately not nailingai green.
+
+   ── SHARED CLASS CONTRACT (identical surface to nail.css → drop-in swappable) ─
+   Fonts:   .cool (display/hook)   .gsans (body/caption)
+   Glow:    .glow-coral .glow-peach .glow-danger   (the "glow set")
+            (nail.css mirrors with .glow-emerald .glow-mint .glow-amber .glow-danger)
+   Atmos:   .atmo-vig  .atmo-rim  .atmo-grain  .atmo-bot
+   Same class names, same purpose — swap ONE theme <style> block and a
+   composition re-skins without touching markup. Only :root tokens + accent
+   hues differ between the two files.
+
+   ── ADD TO <head> (copy these EXACT lines, in order) ─────────────────────────
+   1) GSAP (already in HyperFrames compositions; include if missing):
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+
+   2) Fonts — Cabinet Grotesk (display) + General Sans (body) via Fontshare CSS
+      API. Verified 2026-05-29: returns HTTP 200.
+      <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800,900&f[]=general-sans@500,600,700&display=swap" rel="stylesheet"/>
+
+      FALLBACK if Fontshare is unreachable (note: 'Clash Display' is NOT on
+      Google Fonts, so the fallback uses Archivo for display + Inter for body):
+      <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@500;600;700&display=swap" rel="stylesheet"/>
+      The .cool / .gsans stacks below already include 'Archivo' / 'Inter' so the
+      theme degrades gracefully with no other change.
+   ============================================================================ */
+
+/* ── Design tokens ─────────────────────────────────────────────────────────
+   Warm editorial: coral lead, peach support, magenta-pink secondary accent,
+   over an espresso/ink stage with paper as the soft text color. */
+:root {
+  --coral:    #FB7185;  /* primary — hook, headlines, lead glow              */
+  --peach:    #FDBA74;  /* warm highlight / secondary text                   */
+  --paper:    #FFF7ED;  /* soft warm off-white body text                     */
+  --espresso: #1A1110;  /* deep warm brown (panels / solid fills)            */
+  --ink:      #120D0C;  /* near-black warm composition background            */
+  --accent2:  #F472B6;  /* magenta-pink secondary accent                     */
+  --danger:   #EF4444;  /* shared danger hue (parity with nail.css)          */
+
+  /* Convenience aliases so generic comp markup (var(--accent)/var(--bg)) maps
+     to this theme's leads identically to nail.css. */
+  --brand:  var(--coral);
+  --accent: var(--peach);
+  --bg:     var(--ink);
+  --text:   var(--paper);
+}
+
+/* ── Font helpers (SHARED contract) ─────────────────────────────────────────
+   .cool  → impact / hook / big numbers (Cabinet Grotesk, Archivo fallback)
+   .gsans → running captions / body (General Sans, Inter fallback)
+   Same class names as nail.css; only the family lists differ. */
+.cool {
+  font-family: 'Cabinet Grotesk', 'Archivo', 'Inter', sans-serif;
+  font-weight: 900;
+  letter-spacing: -.01em;  /* tighter editorial display set */
+}
+.gsans {
+  font-family: 'General Sans', 'Inter', sans-serif;
+  font-weight: 600;
+}
+
+/* ── Glow helpers (SHARED contract) ─────────────────────────────────────────
+   Same neon text-shadow recipe as nail.css, recolored to coral / peach:
+   text-shadow:0 0 20px rgba(R,G,B,.6),0 0 60px rgba(R,G,B,.2)
+   .glow-danger is kept for cross-theme parity. */
+.glow-coral  { text-shadow: 0 0 20px rgba(251, 113, 133, .6), 0 0 60px rgba(251, 113, 133, .2); }
+.glow-peach  { text-shadow: 0 0 20px rgba(253, 186, 116, .6), 0 0 60px rgba(253, 186, 116, .2); }
+.glow-danger { text-shadow: 0 0 20px rgba(239, 68, 68, .6),   0 0 60px rgba(239, 68, 68, .2); }
+
+/* ── Atmosphere set (SHARED contract) ───────────────────────────────────────
+   Identical structure/markup to nail.css, tinted coral + peach instead of
+   emerald + amber. Drop four sibling divs at the top of the stage, .atmo-bot LAST:
+     <div class="atmo-vig"></div><div class="atmo-rim"></div><div class="atmo-grain"></div><div class="atmo-bot"></div> */
+
+/* Feathered radial vignette — same geometry as nail.css (theme-agnostic). */
+.atmo-vig {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 66% at 50% 47%, transparent 46%, rgba(0, 0, 0, .5) 100%);
+}
+
+/* Inset rim glow — coral primary tint + black contain + faint peach kicker. */
+.atmo-rim {
+  position: absolute; inset: 0; pointer-events: none;
+  box-shadow:
+    inset 0 0 210px rgba(251, 113, 133, .10),
+    inset 0 0 76px  rgba(0, 0, 0, .55),
+    inset 0 0 10px  rgba(253, 186, 116, .10);
+}
+
+/* SVG fractalNoise film grain (inline data-URI), soft-light blended — same as nail.css. */
+.atmo-grain {
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: .09; mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* Cinematic bottom fade — REQUIRED in EVERY composition (same as nail.css,
+   tinted to this theme's espresso ink). The hyperframes renderer intermittently
+   drops the bottom ~86px of the VIDEO layer (a per-seek-time artifact; NOT
+   fixable by source encoding/keyframes/CSS scale — all tested). Regular DIVs
+   paint to the bottom fine, so this near-opaque gradient masks the intermittent
+   black band, reads as an intentional cinematic vignette, AND sits in the IG
+   bottom-UI zone anyway. Add `<div class="atmo-bot"></div>` as the LAST child of
+   the atmosphere layer. */
+.atmo-bot {
+  position: absolute; left: 0; bottom: 0; width: 1080px; height: 300px;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(18, 13, 12, .98) 0%, rgba(18, 13, 12, .82) 28%, rgba(18, 13, 12, .4) 60%, transparent 100%);
+}

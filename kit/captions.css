@@ -1,0 +1,84 @@
+/* ============================================================================
+   KIT: captions.css  —  IG danger-zone-aware caption bands (1080×1920)
+   Copy-paste source of truth. Theme-agnostic: colors via shared theme vars
+   (--white,--amber,--cream,...), fonts via the shared .gsans / .cool contract.
+   NEVER hardcode a hex where a var exists — the fallback after the comma is
+   only the safety net when no theme <style> is loaded.
+
+   ── INSTAGRAM DANGER ZONES (1080×1920 reels) ────────────────────────────────
+   Instagram overlays its own UI on top of the video. Keep meaningful text OUT
+   of these regions or the platform chrome covers/competes with it:
+
+     • TOP UI (clock / profile row)        →  y  0  – 140
+     • BOTTOM UI (caption · username ·
+       audio title · progress · CTA)       →  y ~1560 – 1920
+     • RIGHT action rail (like · comment ·
+       share · save · more)                →  x 960 – 1080,  y ~1050 – 1700
+
+   ── SAFE TEXT BOX ────────────────────────────────────────────────────────────
+   Horizontal: usable x[60,1010], BUT keep the centered band width ≤ 900 so the
+   text never bleeds into the right action rail (x 960+). Base .cap = left:90px
+   + width:900px → spans x[90,990], clears the right rail with margin.
+
+   Vertical bands (pick the variant whose `top` lands in a clear zone):
+     .cap-upper  top:160  — just under the top UI    (DEFAULT for tight selfies)
+     .cap-mid    top:856  — middle dead-band          (split / empty mid only)
+     .cap-lower  top:1330 — classic lower-third       (chin/neck must be clear)
+     .cap-seg1   top:1200 — under a baked top overlay (overlay owns top ~60%)
+   All four end well above the y~1560 bottom-UI band for a 2–3 line caption.
+   ============================================================================ */
+
+/* ── Base caption ─────────────────────────────────────────────────────────────
+   Centered safe band. Inherits the .gsans body face via the shared contract
+   (Product Sans → Inter fallback); weight bumped to 800 for punch on video.
+   The heavy double text-shadow keeps it legible over any moving footage. */
+.cap {
+  position: absolute;
+  left: 90px;
+  width: 900px;
+  text-align: center;
+  font-family: 'Product Sans', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 46px;
+  color: var(--white, #fff);
+  line-height: 1.06;
+  letter-spacing: .004em;
+  text-shadow: 0 3px 16px rgba(0, 0, 0, .95), 0 1px 3px rgba(0, 0, 0, .9);
+}
+
+/* Highlighted word inside a caption: <p class="cap">... <b>word</b> ...</p> */
+.cap b { color: var(--amber, #F59E0B); }
+
+/* ── Position variants ────────────────────────────────────────────────────────
+   Only `top` changes — width/safe-x stay constant across all variants. */
+
+/* DEFAULT for tight talking-head selfies: sits over hair/forehead/bg, clears
+   the eyes, and stays out of the top UI band. */
+.cap-upper { top: 160px; }
+
+/* Middle dead-band — use ONLY when there's a visual split or empty mid zone
+   (e.g. subject pushed to one side). Avoid over a centered face. */
+.cap-mid { top: 856px; }
+
+/* Classic lower-third — use ONLY when the chin/neck area is clear.
+   ⚠️ WARNING: at top:1330 a 2-line caption can creep over the mouth on
+   close-up selfies. Prefer .cap-upper for tight talking heads. */
+.cap-lower { top: 1330px; }
+
+/* Special: when a baked-in overlay (diagram/full-bg) occupies the top ~60%
+   of the frame. Sits just under that overlay and above the mouth. */
+.cap-seg1 { top: 1200px; }
+
+/* ── Optional chip ───────────────────────────────────────────────────────────
+   Translucent blurred pill behind the text for noisy/busy backgrounds where
+   the shadow alone isn't enough. Add alongside a position variant:
+     <p class="cap cap-upper"><span class="cap-chip">your text</span></p>
+   display:inline-block so the pill hugs the text instead of the full 900px. */
+.cap-chip {
+  display: inline-block;
+  background: rgba(0, 0, 0, .32);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 14px 28px;
+  border-radius: 18px;
+}

@@ -1,0 +1,128 @@
+/* ============================================================================
+   THEME: nail  —  "Reel-tuned brand" + "Product Sans everywhere"
+   nailingai.co brand, retuned to POP on dark vertical video (1080×1920).
+   Decision: Reel-tuned brand (not the literal flat site palette) + Product Sans
+             ("Google Sans") for BOTH hooks and captions — one self-hosted face
+             with full Turkish glyphs (ş ğ İ), no mixed-face breakage.
+
+   ── SHARED CLASS CONTRACT (identical in fork-sunset.css → drop-in swappable) ──
+   Fonts:   .cool (display/hook)   .gsans (body/caption)
+   Glow:    .glow-emerald .glow-mint .glow-amber .glow-danger
+            (fork-sunset mirrors with .glow-coral .glow-peach .glow-danger)
+   Atmos:   .atmo-vig  .atmo-rim  .atmo-grain  .atmo-bot
+   A composition swaps ONE theme <style> block and nothing else breaks: same
+   class names, same purpose, only the :root tokens + accent hues change.
+
+   ── ADD TO <head> (copy these EXACT lines, in order) ─────────────────────────
+   1) GSAP (already in HyperFrames compositions; include if missing):
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+
+   2) Inter fallback (Google Fonts, weights 400–900) — robust web-safe stack:
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
+   3) Display + body face — Product Sans ("Google Sans"), @font-face below
+      (cdnfonts woff is live and HAS Turkish glyphs). Used for BOTH .cool hooks
+      and .gsans captions. Self-host the woff in /assets for render-safety
+      (the live comp does this). No second face needed.
+   ============================================================================ */
+
+/* ── Faces (FONT REALITY verified 2026-05-29) ────────────────────────────────
+   • Product Sans ("Google Sans") cdnfonts woff is live (200) AND has Turkish
+     glyphs (ş ğ İ) → used for both hook and body, no fallback-face mismatch.
+   • Coolvetica DROPPED for Turkish content: it has no Turkish glyphs, so ş/ğ/İ
+     fall back to a different face and look broken. Inter stays as the fallback. */
+@font-face {
+  font-family: 'Product Sans';
+  src: url('https://fonts.cdnfonts.com/s/13998/ProductSans-Regular.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* ── Design tokens ─────────────────────────────────────────────────────────
+   Brand greens are split into a bright reel-tuned glow green (--emerald) for
+   text-shadow neon, a soft highlight (--mint), and the literal site brand
+   (--emerald-deep) reserved for SOLID fills/bars where a flat brand color reads
+   better than a glowing one. Amber is the single warm accent. */
+:root {
+  --emerald:      #10B981;  /* primary glow — bright, parlak on dark video      */
+  --mint:         #34D399;  /* soft highlight / secondary text                  */
+  --emerald-deep: #059669;  /* literal site brand color — for SOLID fills/bars  */
+  --amber:        #F59E0B;  /* warm accent (CTAs, emphasis)                     */
+  --cream:        #F5F0E8;  /* soft off-white body text                         */
+  --white:        #FFFFFF;
+  --ink:          #0A0A0A;  /* near-black composition background                */
+  --danger:       #EF4444;
+
+  /* Convenience aliases so generic comp markup (var(--accent)/var(--bg)) works
+     the same across both themes without per-theme edits. */
+  --brand:  var(--emerald);
+  --accent: var(--amber);
+  --bg:     var(--ink);
+  --text:   var(--cream);
+}
+
+/* ── Font helpers (SHARED contract) ─────────────────────────────────────────
+   .cool  → impact / hook / big numbers (Coolvetica, Inter fallback)
+   .gsans → running captions / body (Product Sans, Inter fallback) */
+.cool {
+  /* ⚠ Coolvetica lacks Turkish glyphs → ş/ğ/İ fall back to Plus Jakarta Sans */
+  font-family: 'Coolvetica', 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+.gsans {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-weight: 700;
+}
+
+/* ── Glow helpers (SHARED contract) ─────────────────────────────────────────
+   Neon text-shadow, tuned exactly like the proven .glow-g pattern:
+   text-shadow:0 0 20px rgba(R,G,B,.6),0 0 60px rgba(R,G,B,.2)
+   Apply to text colored with the matching var for a clean neon read on video. */
+.glow-emerald { text-shadow: 0 0 20px rgba(16, 185, 129, .6), 0 0 60px rgba(16, 185, 129, .2); }
+.glow-mint    { text-shadow: 0 0 20px rgba(52, 211, 153, .6), 0 0 60px rgba(52, 211, 153, .2); }
+.glow-amber   { text-shadow: 0 0 20px rgba(245, 158, 11, .6),  0 0 60px rgba(245, 158, 11, .2); }
+.glow-danger  { text-shadow: 0 0 20px rgba(239, 68, 68, .6),   0 0 60px rgba(239, 68, 68, .2); }
+
+/* ── Atmosphere set (SHARED contract) ───────────────────────────────────────
+   L1 stack — drop four sibling divs at the top of the stage, .atmo-bot LAST:
+     <div class="atmo-vig"></div><div class="atmo-rim"></div><div class="atmo-grain"></div><div class="atmo-bot"></div>
+   Structure mirrors the proven nwn-incele-reel atmosphere, recolored to
+   emerald + amber. All are pointer-events:none and fill the stage. */
+
+/* Feathered radial vignette — darkens corners, keeps center clean. */
+.atmo-vig {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 66% at 50% 47%, transparent 46%, rgba(0, 0, 0, .5) 100%);
+}
+
+/* Inset rim glow — emerald primary tint + black contain + faint amber kicker. */
+.atmo-rim {
+  position: absolute; inset: 0; pointer-events: none;
+  box-shadow:
+    inset 0 0 210px rgba(16, 185, 129, .10),
+    inset 0 0 76px  rgba(0, 0, 0, .55),
+    inset 0 0 10px  rgba(245, 158, 11, .10);
+}
+
+/* SVG fractalNoise film grain (inline data-URI), soft-light blended. */
+.atmo-grain {
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: .09; mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* Cinematic bottom fade — REQUIRED in EVERY composition. The hyperframes
+   renderer intermittently drops the bottom ~86px of the VIDEO layer (a
+   per-seek-time artifact; NOT fixable by source encoding/keyframes/CSS scale —
+   all tested). Regular DIVs paint to the bottom fine, so this near-opaque
+   bottom gradient masks the intermittent black band, reads as an intentional
+   cinematic vignette, AND sits in the IG bottom-UI zone anyway. Tinted to the
+   theme ink. Add `<div class="atmo-bot"></div>` as the LAST child of the
+   atmosphere layer. */
+.atmo-bot {
+  position: absolute; left: 0; bottom: 0; width: 1080px; height: 300px;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(7, 9, 8, .98) 0%, rgba(7, 9, 8, .82) 28%, rgba(7, 9, 8, .4) 60%, transparent 100%);
+}

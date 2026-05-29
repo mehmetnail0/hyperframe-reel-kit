@@ -1,0 +1,184 @@
+<!-- ============================================================================
+     KIT: components.html  —  Drawn / vector overlay snippet GALLERY (1080×1920)
+     COPY-PASTE source of truth. This file is NOT a composition — never rendered
+     directly. Copy a block's HTML into a composition's <body>, wrap it in a
+     `.clip` element with data-start/data-duration/data-track-index, and animate
+     it from the composition's own GSAP timeline.
+
+     Theme-agnostic: colors via shared theme vars (--emerald,--mint,--amber,
+     --cream,--white,--ink,--danger). Fonts via the shared .cool / .gsans
+     contract. The hex after each comma is only a no-theme fallback.
+
+     ── PROVEN STROKE-DRAW RECIPE (mirror this everywhere) ──────────────────────
+     1. Author the SVG path/line HIDDEN: stroke-dasharray:N; stroke-dashoffset:N
+        (set BOTH to the same value = the path's total length, so it starts
+         fully retracted / invisible).
+     2. Reveal it from the composition timeline:
+        tl.to('#id',{strokeDashoffset:0,duration:.6,ease:'power2.inOut'}, t)
+     Each block lists its exact // GSAP: hint inline.
+     Every id below is namespaced (streak- / scroll- / curve- / xm- / badge- /
+     punch-) so multiple snippets coexist in one composition without collisions.
+     ============================================================================ -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     a) STREAK BAR  —  horizontal progress/streak bar that fills
+        700px track, emerald→mint gradient fill, "3-4 YIL" + "ARALIKSIZ" labels.
+        Drop inside a centered .clip container (e.g. left:190px → centered 700px).
+     ════════════════════════════════════════════════════════════════════════════ -->
+<div id="streak-wrap" style="width:700px;text-align:center">
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px">
+    <span id="streak-label" class="cool" style="font-size:64px;color:var(--white,#fff);letter-spacing:.02em">3-4 YIL</span>
+    <span id="streak-sub" class="gsans" style="font-size:30px;color:var(--mint,#34D399);letter-spacing:.18em">ARALIKSIZ</span>
+  </div>
+  <!-- Track + animated fill. SVG so the fill draws as a stroke sweep. -->
+  <svg width="700" height="28" viewBox="0 0 700 28" style="overflow:visible">
+    <defs>
+      <linearGradient id="streak-grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="var(--emerald,#10B981)"/>
+        <stop offset="1" stop-color="var(--mint,#34D399)"/>
+      </linearGradient>
+    </defs>
+    <!-- background track -->
+    <rect x="0" y="9" width="700" height="10" rx="5" fill="rgba(255,255,255,.07)"/>
+    <!-- fill: a rounded stroke line that sweeps left→right -->
+    <line id="streak-fill" x1="6" y1="14" x2="694" y2="14"
+          stroke="url(#streak-grad)" stroke-width="14" stroke-linecap="round"
+          stroke-dasharray="688" stroke-dashoffset="688"/>
+  </svg>
+</div>
+<!-- // GSAP: streak label pop, then fill sweep
+     tl.from('#streak-label',{scale:0,opacity:0,duration:.4,ease:'back.out(1.7)'},t);
+     tl.from('#streak-sub',{x:40,opacity:0,duration:.35,ease:'power2.out'},t+.2);
+     tl.to('#streak-fill',{strokeDashoffset:0,duration:2.4,ease:'power2.inOut'},t+.3); -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     b) SCROLL-DOWN ARROW  —  vertical drawn shaft + 3 chevrons ("scroll down")
+        stroke-draw reveal + a subtle continuous bob (bob is the comp's job).
+        Optional .cool "KAYDIR" label above.
+     ════════════════════════════════════════════════════════════════════════════ -->
+<div id="scroll-wrap" style="width:160px;text-align:center">
+  <div id="scroll-label" class="cool" style="font-size:34px;color:var(--cream,#F5F0E8);letter-spacing:.16em;margin-bottom:18px;opacity:.7">KAYDIR</div>
+  <svg width="120" height="260" viewBox="0 0 120 260" style="overflow:visible">
+    <!-- shaft -->
+    <line id="scroll-shaft" x1="60" y1="0" x2="60" y2="150"
+          stroke="var(--mint,#34D399)" stroke-width="5" stroke-linecap="round"
+          stroke-dasharray="150" stroke-dashoffset="150"/>
+    <!-- chevrons (each a drawn V); offset down the shaft -->
+    <polyline id="scroll-ch1" points="22,120 60,158 98,120" fill="none"
+              stroke="var(--mint,#34D399)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+              stroke-dasharray="108" stroke-dashoffset="108"/>
+    <polyline id="scroll-ch2" points="22,170 60,208 98,170" fill="none"
+              stroke="var(--emerald,#10B981)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+              stroke-dasharray="108" stroke-dashoffset="108"/>
+    <polyline id="scroll-ch3" points="22,220 60,258 98,220" fill="none"
+              stroke="var(--emerald,#10B981)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+              stroke-dasharray="108" stroke-dashoffset="108" opacity=".5"/>
+  </svg>
+</div>
+<!-- // GSAP: draw shaft → chevrons in sequence, then loop a gentle bob
+     tl.to('#scroll-shaft',{strokeDashoffset:0,duration:.5,ease:'power2.inOut'},t);
+     tl.to('#scroll-ch1',{strokeDashoffset:0,duration:.3,ease:'power2.inOut'},t+.4);
+     tl.to('#scroll-ch2',{strokeDashoffset:0,duration:.3,ease:'power2.inOut'},t+.55);
+     tl.to('#scroll-ch3',{strokeDashoffset:0,duration:.3,ease:'power2.inOut'},t+.7);
+     tl.to('#scroll-wrap',{y:18,duration:.7,ease:'sine.inOut',yoyo:true,repeat:-1},t+1); -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     c) GROWTH CURVE  —  upward line chart that draws bottom-left → top-right,
+        with arrowhead + glowing endpoint dot. "4 AY" x-label, faint axis ticks.
+        emerald stroke + drop-shadow glow.
+     ════════════════════════════════════════════════════════════════════════════ -->
+<div id="curve-wrap" style="width:640px">
+  <svg width="640" height="420" viewBox="0 0 640 420" style="overflow:visible;filter:drop-shadow(0 0 16px rgba(16,185,129,.45))">
+    <defs>
+      <marker id="curve-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="var(--emerald,#10B981)"/>
+      </marker>
+    </defs>
+    <!-- faint axes -->
+    <line x1="40" y1="20" x2="40" y2="360" stroke="rgba(255,255,255,.12)" stroke-width="2"/>
+    <line x1="40" y1="360" x2="620" y2="360" stroke="rgba(255,255,255,.12)" stroke-width="2"/>
+    <!-- x-axis ticks -->
+    <line x1="180" y1="356" x2="180" y2="364" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    <line x1="330" y1="356" x2="330" y2="364" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    <line x1="480" y1="356" x2="480" y2="364" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    <!-- the rising curve (length ≈ 700; dash set high to fully hide) -->
+    <path id="curve-line" d="M40,360 C200,330 300,210 420,150 S560,70 600,40" fill="none"
+          stroke="var(--emerald,#10B981)" stroke-width="6" stroke-linecap="round"
+          marker-end="url(#curve-arrow)"
+          stroke-dasharray="760" stroke-dashoffset="760"/>
+    <!-- glowing endpoint dot -->
+    <circle id="curve-dot" cx="600" cy="40" r="11" fill="var(--mint,#34D399)" opacity="0"
+            style="filter:drop-shadow(0 0 14px rgba(52,211,153,.9))"/>
+  </svg>
+  <div id="curve-xlabel" class="cool" style="text-align:center;font-size:40px;color:var(--cream,#F5F0E8);letter-spacing:.04em;margin-top:6px">4 AY</div>
+</div>
+<!-- // GSAP: draw the curve, pop the endpoint dot, then the label
+     tl.to('#curve-line',{strokeDashoffset:0,duration:1.1,ease:'power2.inOut'},t);
+     tl.to('#curve-dot',{opacity:1,scale:1.3,duration:.3,ease:'back.out(2)'},t+1.0);
+     tl.to('#curve-dot',{scale:1,duration:.3,ease:'power2.out'},t+1.3);
+     tl.from('#curve-xlabel',{y:20,opacity:0,duration:.35,ease:'power2.out'},t+.9); -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     d) X-MARK  —  two crossed drawn strokes over a negated word ("şans ❌").
+        danger color. Position the word, overlay the SVG cross on top of it.
+     ════════════════════════════════════════════════════════════════════════════ -->
+<div id="xm-wrap" style="position:relative;display:inline-block">
+  <span id="xm-word" class="cool" style="font-size:80px;color:var(--cream,#F5F0E8);letter-spacing:.02em">şans</span>
+  <!-- cross sits on top of the word; size to roughly cover it -->
+  <svg id="xm-svg" width="220" height="120" viewBox="0 0 220 120"
+       style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:visible;pointer-events:none">
+    <line id="xm-l1" x1="20" y1="20" x2="200" y2="100"
+          stroke="var(--danger,#EF4444)" stroke-width="9" stroke-linecap="round"
+          stroke-dasharray="200" stroke-dashoffset="200"/>
+    <line id="xm-l2" x1="200" y1="20" x2="20" y2="100"
+          stroke="var(--danger,#EF4444)" stroke-width="9" stroke-linecap="round"
+          stroke-dasharray="200" stroke-dashoffset="200"/>
+  </svg>
+</div>
+<!-- // GSAP: word first, then strike it out with the two crossing strokes
+     tl.from('#xm-word',{scale:.7,opacity:0,duration:.3,ease:'back.out(1.5)'},t);
+     tl.to('#xm-l1',{strokeDashoffset:0,duration:.25,ease:'power2.inOut'},t+.3);
+     tl.to('#xm-l2',{strokeDashoffset:0,duration:.25,ease:'power2.inOut'},t+.45); -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     e) BADGE  —  rounded pill callout (border + translucent fill) with a slot
+        for big .cool text + emoji. Recolor by swapping the var pair below.
+     ════════════════════════════════════════════════════════════════════════════ -->
+<div id="badge-pill" style="display:inline-block;padding:20px 56px;border-radius:60px;
+     background:rgba(245,158,11,.12);border:3px solid rgba(245,158,11,.4)">
+  <span id="badge-text" class="cool glow-amber" style="font-size:56px;color:var(--amber,#F59E0B);letter-spacing:.02em">ANLADIK ✋</span>
+</div>
+<!-- // GSAP: pop the whole pill in (springy)
+     tl.from('#badge-pill',{scale:0,opacity:0,duration:.4,ease:'back.out(2)'},t); -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════════
+     f) FULL-BG PUNCH SCENE  —  full 1080×1920 scene that briefly COVERS the
+        video for an emphasis cut (scene-to-scene full-background beat).
+        Centered huge .cool word + optional drawn underline. Uses the proven
+        .diagram-scene safe padding (160px top/bottom, 60px sides) so the word
+        never touches the IG UI zones. Give the OUTER .clip its own timing.
+     ════════════════════════════════════════════════════════════════════════════ -->
+<div id="punch-scene" style="position:absolute;left:0;top:0;width:1080px;height:1920px;
+     background:var(--ink,#0A0A0A);display:flex;flex-direction:column;
+     align-items:center;justify-content:center;text-align:center;padding:160px 60px">
+  <div id="punch-word" class="cool glow-emerald" style="font-size:150px;line-height:1;color:var(--white,#fff);letter-spacing:.03em">
+    BIRAKTIM
+  </div>
+  <!-- optional drawn underline (swap to the X-MARK strokes for a negation beat) -->
+  <svg width="600" height="12" viewBox="0 0 600 12" style="margin-top:32px;overflow:visible">
+    <line id="punch-underline" x1="6" y1="6" x2="594" y2="6"
+          stroke="var(--emerald,#10B981)" stroke-width="6" stroke-linecap="round"
+          stroke-dasharray="588" stroke-dashoffset="588"/>
+  </svg>
+</div>
+<!-- // GSAP: punch the scene IN, draw the underline, then the comp cuts it OUT
+     tl.from('#punch-scene',{opacity:0,duration:.12},t);
+     tl.from('#punch-word',{scale:.6,opacity:0,duration:.4,ease:'back.out(1.6)'},t);
+     tl.to('#punch-underline',{strokeDashoffset:0,duration:.6,ease:'power2.inOut'},t+.3);
+     tl.to('#punch-scene',{scale:1.08,opacity:0,duration:.35,ease:'power2.in'},tEnd); -->
