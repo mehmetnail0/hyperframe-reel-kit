@@ -98,15 +98,14 @@
 }
 
 /* Cinematic bottom fade — REQUIRED in EVERY composition (same as nail.css,
-   tinted to this theme's espresso ink). The hyperframes renderer intermittently
-   drops the bottom ~86px of the VIDEO layer (a per-seek-time artifact; NOT
-   fixable by source encoding/keyframes/CSS scale — all tested). Regular DIVs
-   paint to the bottom fine, so this near-opaque gradient masks the intermittent
-   black band, reads as an intentional cinematic vignette, AND sits in the IG
-   bottom-UI zone anyway. Add `<div class="atmo-bot"></div>` as the LAST child of
-   the atmosphere layer. */
+   tinted to this theme's espresso ink). PRIMARY fix for the renderer's
+   intermittent bottom-~86px VIDEO-layer drop is authoring 2040 tall + cropping
+   to 1920 (see CLAUDE.md); this soft gradient is the SECONDARY safety mask +
+   cinematic vignette, and sits in the IG bottom-UI zone anyway. Keep it LIGHT
+   (≈.82 peak / 230px) — a near-opaque .98/300px fade reads as too heavy. Add
+   `<div class="atmo-bot"></div>` as the LAST child of the atmosphere layer. */
 .atmo-bot {
-  position: absolute; left: 0; bottom: 0; width: 1080px; height: 300px;
+  position: absolute; left: 0; bottom: 0; width: 1080px; height: 230px;
   pointer-events: none;
-  background: linear-gradient(to top, rgba(18, 13, 12, .98) 0%, rgba(18, 13, 12, .82) 28%, rgba(18, 13, 12, .4) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(18, 13, 12, .82) 0%, rgba(18, 13, 12, .46) 34%, rgba(18, 13, 12, .16) 66%, transparent 100%);
 }

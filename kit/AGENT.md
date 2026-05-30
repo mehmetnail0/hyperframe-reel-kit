@@ -19,7 +19,11 @@ Ask one batch, wait for answers, don't assume:
    (IG Reel / TikTok / Shorts). Platform sets the safe-zone map (this kit defaults
    to IG 1080×1920 danger zones).
 2. **Script / captions** — is there an existing script or caption file, or should
-   you transcribe it? If transcribe → Whisper (word-level), then clean.
+   you transcribe it? If transcribe → **whisper.cpp** (`whisper-cli -ojf` for
+   word/token-level offsets), then clean. Prefer whisper.cpp over the Python
+   `openai-whisper` CLI: the latter can **segfault on CPU** (seen on macOS, every
+   model size). Turkish ASR garbles some words → re-read, correct, and flag the
+   1–2 you can't be sure of to the user before baking them into captions.
 3. **Theme** — their own brand tokens, or a preset (`fork-sunset` is the default
    public identity; `nail` is reserved for nailingai). If brand: get colors + fonts.
 4. **Baked vs. open** — which overlays are ALREADY burned into the video (e.g. a
@@ -97,6 +101,23 @@ selfie) · `.cap-mid` 856 (split/empty mid) · `.cap-lower` 1330 (chin clear onl
    Sans on `nail`); pick a Turkish-capable display font for Turkish hooks.
 
 5. **`npm run check` must report 0 errors** before declaring the job done.
+
+6. **Always show the user a CROPPED preview** (1080×1920), never the raw 2040-tall
+   render — the sacrificial pad reads as a "black band / deleted frame" and gets
+   flagged. Verify caption placement from a draft render (contact sheets at each
+   caption midpoint), fix collisions, THEN do the `standard`/`high` final.
+
+7. **Dense already-edited reaction reels** (collage walls, reference clips with
+   their own baked captions, screen-shares, a baked payoff card): the job is
+   **SFX-primary + captions ONLY on the user's still-uncaptioned narration**. Don't
+   re-caption sections that already carry baked text — "don't break existing work."
+   Lower band (chest) by default; chip ONLY over bright screens; one rare drawn
+   accent on the CTA, never over a close-up face.
+
+8. **Appended outro / extra clip** → build it as a **standalone captioned
+   composition** (`extra.html`, render with `-c extra.html`), crop to 1920, then
+   `ffmpeg` concat after the main with a soft whoosh bridge at the seam. Ship both
+   the base version and the appended version when asked.
 
 ---
 

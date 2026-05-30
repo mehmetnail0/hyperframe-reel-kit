@@ -28,8 +28,10 @@ When that happens, run the workflow below. **Detailed brief: `kit/AGENT.md`.**
 4. **Measure safe zones** — extract frames at each caption window's midpoint, LOOK at them,
    and place captions where they never cover the speaker's **eyes or mouth**, never collide
    with a baked-in overlay, and stay out of the IG danger zones (below).
-5. **Script → captions** — transcribe (Whisper) if needed, clean it, then chunk into
-   **3–5 word** on-screen reveals. Low text, high image.
+5. **Script → captions** — transcribe with **whisper.cpp** if needed
+   (`whisper-cli -ojf` for word-level timing; the Python `openai-whisper` CLI can
+   segfault on CPU), clean it, then chunk into **3–5 word** on-screen reveals.
+   Low text, high image.
 6. **Assemble `index.html`** — inline the chosen theme block + caption bands + drawn
    components from `kit/`. Follow the track-index convention and HyperFrames rules below.
 7. **`npm run check`** until **0 errors**. Fix everything.
