@@ -13,3 +13,8 @@ node_modules/
 **/.DS_Store
 *.mp4
 *.mov
+
+# new example reels (personal footage) — NOT public
+nwn-sablon-reel/
+nwn-uzmanlik-reel*/
+*.m4a
