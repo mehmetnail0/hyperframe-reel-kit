@@ -1,0 +1,20 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 3840
+PlayResY: 2160
+ScaledBorderAndShadow: yes
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cine,Google Sans Flex,138,&H00FFFFFF,&H00FFFFFF,&HCC000000,&H00000000,0,0,0,0,100,100,1,0,1,5,0,5,60,60,60,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.08,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bağlantıları her
+Dialogue: 0,0:00:00.08,0:00:00.25,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}anlamda
+Dialogue: 0,0:00:00.25,0:00:00.91,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}değerlidir
+Dialogue: 0,0:00:00.91,0:00:01.24,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ve bence
+Dialogue: 0,0:00:01.24,0:00:01.93,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}en değerlisi
+Dialogue: 0,0:00:01.93,0:00:03.00,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ürettiğin o
+Dialogue: 0,0:00:03.00,0:00:03.78,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}çıktıyla ortaya

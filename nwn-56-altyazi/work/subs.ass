@@ -1,0 +1,213 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 3840
+PlayResY: 2160
+ScaledBorderAndShadow: yes
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cine,Google Sans Flex,138,&H00FFFFFF,&H00FFFFFF,&HCC000000,&H00000000,0,0,0,0,100,100,1,0,1,5,0,5,60,60,60,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.05,0:00:00.83,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}şeyi anlamıyorum
+Dialogue: 0,0:00:00.83,0:00:01.11,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bak
+Dialogue: 0,0:00:01.11,0:00:01.74,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bu ticarette
+Dialogue: 0,0:00:01.74,0:00:02.24,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}çok para
+Dialogue: 0,0:00:02.24,0:00:02.97,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}var diyorlar
+Dialogue: 0,0:00:02.97,0:00:03.26,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}millet
+Dialogue: 0,0:00:03.26,0:00:04.10,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}dropshipping
+Dialogue: 0,0:00:04.10,0:00:04.70,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}o bu
+Dialogue: 0,0:00:04.70,0:00:05.30,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ya da
+Dialogue: 0,0:00:05.30,0:00:05.60,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}stokluyor
+Dialogue: 0,0:00:05.60,0:00:06.05,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}satıyor ama
+Dialogue: 0,0:00:06.05,0:00:06.57,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}paketlerken
+Dialogue: 0,0:00:06.57,0:00:07.08,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}falan video
+Dialogue: 0,0:00:07.08,0:00:07.60,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}çekiyor
+Dialogue: 0,0:00:07.60,0:00:08.45,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}içerik üretiyor
+Dialogue: 0,0:00:08.45,0:00:08.83,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}buna niye
+Dialogue: 0,0:00:08.83,0:00:09.50,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ihtiyacı var
+Dialogue: 0,0:00:09.50,0:00:10.00,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ki bu
+Dialogue: 0,0:00:10.00,0:00:10.49,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}adamların
+Dialogue: 0,0:00:10.49,0:00:10.66,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}para
+Dialogue: 0,0:00:10.66,0:00:11.11,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kazanıyorlarsa
+Dialogue: 0,0:00:11.11,0:00:11.99,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}niye içerik
+Dialogue: 0,0:00:11.99,0:00:12.85,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}üretiyorlar lan
+Dialogue: 0,0:00:12.85,0:00:13.04,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bak tam
+Dialogue: 0,0:00:13.04,0:00:13.45,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}burada neyi
+Dialogue: 0,0:00:13.45,0:00:14.26,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kaçırıyorsun
+Dialogue: 0,0:00:14.26,0:00:14.81,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}biliyor musun
+Dialogue: 0,0:00:14.81,0:00:15.56,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}markanın olması
+Dialogue: 0,0:00:15.56,0:00:15.98,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}harika
+Dialogue: 0,0:00:15.98,0:00:16.67,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}satış yapman
+Dialogue: 0,0:00:16.67,0:00:17.27,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}harika
+Dialogue: 0,0:00:17.27,0:00:17.87,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kendi marketin
+Dialogue: 0,0:00:17.87,0:00:18.12,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}var
+Dialogue: 0,0:00:18.12,0:00:18.77,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}özgürsün
+Dialogue: 0,0:00:18.77,0:00:19.42,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kendi işinin
+Dialogue: 0,0:00:19.42,0:00:19.98,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}patronusun
+Dialogue: 0,0:00:19.98,0:00:20.42,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}aynı zamanda
+Dialogue: 0,0:00:20.42,0:00:20.62,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bu bir
+Dialogue: 0,0:00:20.62,0:00:21.17,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}girişim
+Dialogue: 0,0:00:21.17,0:00:21.84,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}herkesin yaptığı
+Dialogue: 0,0:00:21.84,0:00:22.12,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bir şey
+Dialogue: 0,0:00:22.12,0:00:22.56,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}değil
+Dialogue: 0,0:00:22.56,0:00:22.88,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sonuçta
+Dialogue: 0,0:00:22.88,0:00:23.27,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}e-ticaret
+Dialogue: 0,0:00:23.27,0:00:23.52,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ve bu
+Dialogue: 0,0:00:23.52,0:00:23.98,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}iş bir
+Dialogue: 0,0:00:23.98,0:00:25.07,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}girişim ya
+Dialogue: 0,0:00:25.07,0:00:25.66,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}girişim de
+Dialogue: 0,0:00:25.66,0:00:26.48,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}aslen normal
+Dialogue: 0,0:00:26.48,0:00:27.12,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bir işten
+Dialogue: 0,0:00:27.12,0:00:27.75,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}beyaz yakalı
+Dialogue: 0,0:00:27.75,0:00:28.31,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bir işten
+Dialogue: 0,0:00:28.31,0:00:28.59,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}daha da
+Dialogue: 0,0:00:28.59,0:00:29.40,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}büyük aslında
+Dialogue: 0,0:00:29.40,0:00:29.79,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kendini
+Dialogue: 0,0:00:29.79,0:00:30.50,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}garantiye alma
+Dialogue: 0,0:00:30.50,0:00:30.97,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sanatı
+Dialogue: 0,0:00:30.97,0:00:31.54,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kendini daha
+Dialogue: 0,0:00:31.54,0:00:32.01,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}garantiye alma
+Dialogue: 0,0:00:32.01,0:00:32.91,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}işidir girişim
+Dialogue: 0,0:00:32.91,0:00:33.44,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}en garantici
+Dialogue: 0,0:00:33.44,0:00:33.83,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}adamlar
+Dialogue: 0,0:00:33.83,0:00:34.58,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}girişimcilerdir
+Dialogue: 0,0:00:34.58,0:00:35.17,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}aslında
+Dialogue: 0,0:00:35.17,0:00:35.69,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}çünkü her
+Dialogue: 0,0:00:35.69,0:00:36.07,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}an mutlu
+Dialogue: 0,0:00:36.07,0:00:37.06,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}mesut çalıştığı
+Dialogue: 0,0:00:37.06,0:00:37.47,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}işten de
+Dialogue: 0,0:00:37.47,0:00:38.40,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ayrılabilir
+Dialogue: 0,0:00:38.40,0:00:38.58,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}her şey
+Dialogue: 0,0:00:38.58,0:00:39.11,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}olabilir
+Dialogue: 0,0:00:39.11,0:00:39.71,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ama girişimci
+Dialogue: 0,0:00:39.71,0:00:40.13,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bir insan
+Dialogue: 0,0:00:40.13,0:00:40.58,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}evladı
+Dialogue: 0,0:00:40.58,0:00:41.26,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bu kuralları
+Dialogue: 0,0:00:41.26,0:00:41.43,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}da ben
+Dialogue: 0,0:00:41.43,0:00:41.93,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}koyayım
+Dialogue: 0,0:00:41.93,0:00:42.49,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}en azından
+Dialogue: 0,0:00:42.49,0:00:43.39,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kaybedeceksem de
+Dialogue: 0,0:00:43.39,0:00:43.76,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kendim
+Dialogue: 0,0:00:43.76,0:00:44.56,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kaybedeyim
+Dialogue: 0,0:00:44.56,0:00:45.30,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kazanacaksam da
+Dialogue: 0,0:00:45.30,0:00:46.07,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kendim kazanayım
+Dialogue: 0,0:00:46.07,0:00:46.83,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}garantisini alır
+Dialogue: 0,0:00:46.83,0:00:47.27,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kendini
+Dialogue: 0,0:00:47.27,0:00:47.57,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ve iş
+Dialogue: 0,0:00:47.57,0:00:48.21,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}burada da
+Dialogue: 0,0:00:48.21,0:00:49.21,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}e-ticaretçinin
+Dialogue: 0,0:00:49.21,0:00:50.15,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kişisel marka
+Dialogue: 0,0:00:50.15,0:00:50.68,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kurma
+Dialogue: 0,0:00:50.68,0:00:51.04,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}içerik
+Dialogue: 0,0:00:51.04,0:00:51.70,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}üretmesinin
+Dialogue: 0,0:00:51.70,0:00:52.26,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}amacını buraya
+Dialogue: 0,0:00:52.26,0:00:53.03,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bağlayacağım
+Dialogue: 0,0:00:53.03,0:00:53.49,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}işte bir
+Dialogue: 0,0:00:53.49,0:00:54.43,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}e-ticaretçinin
+Dialogue: 0,0:00:54.43,0:00:54.87,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}de içerik
+Dialogue: 0,0:00:54.87,0:00:55.91,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}üretmesi aslında
+Dialogue: 0,0:00:55.91,0:00:56.28,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}benzer
+Dialogue: 0,0:00:56.28,0:00:57.00,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sebeplerden
+Dialogue: 0,0:00:57.00,0:00:57.79,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}dolayı kendini
+Dialogue: 0,0:00:57.79,0:00:58.51,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}garanti altına
+Dialogue: 0,0:00:58.51,0:00:59.51,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}almayı içeriyor
+Dialogue: 0,0:00:59.51,0:01:00.37,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}en basitinden
+Dialogue: 0,0:01:00.37,0:01:00.92,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}e-ticaretçinin
+Dialogue: 0,0:01:00.92,0:01:01.18,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}diğer
+Dialogue: 0,0:01:01.18,0:01:02.01,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ticaretçilerle
+Dialogue: 0,0:01:02.01,0:01:02.80,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bağlantı kurma
+Dialogue: 0,0:01:02.80,0:01:03.38,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ihtimali ve
+Dialogue: 0,0:01:03.38,0:01:03.94,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}farklı farklı
+Dialogue: 0,0:01:03.94,0:01:04.65,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}işlere ortak
+Dialogue: 0,0:01:04.65,0:01:05.41,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}olma ihtimali
+Dialogue: 0,0:01:05.41,0:01:06.11,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}içeri küretmen
+Dialogue: 0,0:01:06.11,0:01:06.41,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}seni bu
+Dialogue: 0,0:01:06.41,0:01:06.82,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}anlamda
+Dialogue: 0,0:01:06.82,0:01:07.57,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}güçlendirir
+Dialogue: 0,0:01:07.57,0:01:08.12,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sonra belki
+Dialogue: 0,0:01:08.12,0:01:08.98,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ticaret odaklı
+Dialogue: 0,0:01:08.98,0:01:09.44,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}değil
+Dialogue: 0,0:01:09.44,0:01:10.43,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}doğrudan nişine
+Dialogue: 0,0:01:10.43,0:01:10.93,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}odaklı
+Dialogue: 0,0:01:10.93,0:01:11.33,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}uzmanlığına
+Dialogue: 0,0:01:11.33,0:01:11.84,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}odaklı bir
+Dialogue: 0,0:01:11.84,0:01:12.75,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}içerik üretirsin
+Dialogue: 0,0:01:12.75,0:01:13.61,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sporcusundur
+Dialogue: 0,0:01:13.61,0:01:14.11,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}supplement'inden
+Dialogue: 0,0:01:14.11,0:01:15.21,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}direnç lastiğine
+Dialogue: 0,0:01:15.21,0:01:15.59,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}her şeyi
+Dialogue: 0,0:01:15.59,0:01:16.31,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}satabilirsin
+Dialogue: 0,0:01:16.31,0:01:16.89,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bir uzmanlık
+Dialogue: 0,0:01:16.89,0:01:17.78,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}üzerinden bir
+Dialogue: 0,0:01:17.78,0:01:18.44,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ticaret ağı
+Dialogue: 0,0:01:18.44,0:01:18.87,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}oluşturursun ve
+Dialogue: 0,0:01:18.87,0:01:19.31,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ticaretine
+Dialogue: 0,0:01:19.31,0:01:19.80,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}dönüşüm
+Dialogue: 0,0:01:19.80,0:01:20.53,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sağlarsın
+Dialogue: 0,0:01:20.53,0:01:20.86,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ve biraz
+Dialogue: 0,0:01:20.86,0:01:21.67,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}daha fazlasını
+Dialogue: 0,0:01:21.67,0:01:22.64,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}istiyorsundur
+Dialogue: 0,0:01:22.64,0:01:23.16,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}tişört
+Dialogue: 0,0:01:23.16,0:01:23.67,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}satıyorsundur
+Dialogue: 0,0:01:23.67,0:01:24.36,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ayakkabı satmak
+Dialogue: 0,0:01:24.36,0:01:25.03,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}istersin
+Dialogue: 0,0:01:25.03,0:01:25.36,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}başka bir
+Dialogue: 0,0:01:25.36,0:01:26.07,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sektördesindir
+Dialogue: 0,0:01:26.07,0:01:26.46,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}başka bir
+Dialogue: 0,0:01:26.46,0:01:27.03,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sektöre girmek
+Dialogue: 0,0:01:27.03,0:01:27.67,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}istersin
+Dialogue: 0,0:01:27.67,0:01:28.08,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kuracağın
+Dialogue: 0,0:01:28.08,0:01:29.08,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bağlantıları her
+Dialogue: 0,0:01:29.08,0:01:29.25,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}anlamda
+Dialogue: 0,0:01:29.25,0:01:29.91,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}değerlidir
+Dialogue: 0,0:01:29.91,0:01:30.24,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ve bence
+Dialogue: 0,0:01:30.24,0:01:30.93,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}en değerlisi
+Dialogue: 0,0:01:30.93,0:01:32.00,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ürettiğin o
+Dialogue: 0,0:01:32.00,0:01:32.78,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}çıktıyla ortaya
+Dialogue: 0,0:01:32.78,0:01:33.40,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}çıkardığın
+Dialogue: 0,0:01:33.40,0:01:34.19,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kanıtla ticarete
+Dialogue: 0,0:01:34.19,0:01:34.45,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}girmek
+Dialogue: 0,0:01:34.45,0:01:35.20,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}isteyenlere yol
+Dialogue: 0,0:01:35.20,0:01:36.01,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}gösterebilirsin
+Dialogue: 0,0:01:36.01,0:01:36.42,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}artık sana
+Dialogue: 0,0:01:36.42,0:01:36.92,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}inanacaklar
+Dialogue: 0,0:01:36.92,0:01:37.43,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}çünkü bir
+Dialogue: 0,0:01:37.43,0:01:38.05,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}süre içerik
+Dialogue: 0,0:01:38.05,0:01:38.72,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ürettin kanıt
+Dialogue: 0,0:01:38.72,0:01:39.31,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ürettin ve
+Dialogue: 0,0:01:39.31,0:01:40.38,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kanıtladın
+Dialogue: 0,0:01:40.38,0:01:41.00,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}yapabildiğini
+Dialogue: 0,0:01:41.00,0:01:41.69,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}gösterdin
+Dialogue: 0,0:01:41.69,0:01:42.25,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}artık stok
+Dialogue: 0,0:01:42.25,0:01:43.10,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}tutma derdi
+Dialogue: 0,0:01:43.10,0:01:43.53,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}olmayan bir
+Dialogue: 0,0:01:43.53,0:01:44.56,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}info-marketing'e
+Dialogue: 0,0:01:44.56,0:01:45.39,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}sadece strateji
+Dialogue: 0,0:01:45.39,0:01:46.19,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}anlatacağım ve
+Dialogue: 0,0:01:46.19,0:01:46.98,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}para kazanacağım
+Dialogue: 0,0:01:46.98,0:01:47.35,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}modeline
+Dialogue: 0,0:01:47.35,0:01:47.94,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}evrilmiş olur
+Dialogue: 0,0:01:47.94,0:01:48.69,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}artık işin
+Dialogue: 0,0:01:48.69,0:01:49.39,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}tabii istiyorsan
+Dialogue: 0,0:01:49.39,0:01:50.10,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}istediğin gibi
+Dialogue: 0,0:01:50.10,0:01:50.81,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}yönlenirsin
+Dialogue: 0,0:01:50.81,0:01:50.98,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ve bu
+Dialogue: 0,0:01:50.98,0:01:51.94,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}anlamda işini
+Dialogue: 0,0:01:51.94,0:01:52.37,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}birazcık daha
+Dialogue: 0,0:01:52.37,0:01:53.22,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}garantiye almış
+Dialogue: 0,0:01:53.22,0:01:53.89,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}olursun
+Dialogue: 0,0:01:53.89,0:01:54.46,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}mevzu kafanı
+Dialogue: 0,0:01:54.46,0:01:55.29,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}rahata almak
+Dialogue: 0,0:01:55.29,0:01:55.71,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}stressiz bir
+Dialogue: 0,0:01:55.71,0:01:56.54,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}hayat sürmek
+Dialogue: 0,0:01:56.54,0:01:56.92,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}kendini
+Dialogue: 0,0:01:56.92,0:01:57.68,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}garantiye almak
+Dialogue: 0,0:01:57.68,0:01:58.17,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bu kadar
+Dialogue: 0,0:01:58.17,0:01:58.93,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}ama hiçbirimizin
+Dialogue: 0,0:01:58.93,0:01:59.54,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}yüzde yüz
+Dialogue: 0,0:01:59.54,0:02:00.09,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}garantisi yok
+Dialogue: 0,0:02:00.09,0:02:00.75,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}bunu unutmamak
+Dialogue: 0,0:02:00.75,0:02:01.82,Cine,,0,0,0,,{\an5\pos(1920,1080)\blur9}lazım
