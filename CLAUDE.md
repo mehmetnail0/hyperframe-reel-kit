@@ -3,22 +3,13 @@
 This repo turns a **near-ready talking-head video** into a polished vertical reel
 (captions + drawn/vector motion + atmosphere) using a config-driven kit.
 It runs on the **HyperFrames CLI** (`npx hyperframes@0.6.49`) — HTML + CSS + GSAP,
-**not** Remotion. You (the agent) read this file when the repo opens.
+**not** Remotion.
 
-## THE FLOW (what the user expects)
-
-> User drops a video into the repo and says *"make me a reel about X"* (Turkish or
-> English). You produce a rendered `.mp4` — asking only for what you genuinely need.
-
-When that happens, run the workflow below. **Detailed brief: `kit/AGENT.md`.**
+User drops a video and says *"make me a reel about X"* (Turkish or English): produce a rendered `.mp4`, asking only for what you genuinely need. **Detailed brief: `kit/AGENT.md`.**
 
 ## Workflow (per reel)
 
-1. **Intake** — confirm: the video file path + what it's about + platform (IG Reel /
-   TikTok / Shorts). Ask: is there a script, or should you transcribe it? Which theme
-   (the user's brand = `kit/themes/nail.css`, or the shareable `kit/themes/fork-sunset.css`)?
-   Are any overlays already baked into the video, or left to you? Any image assets (PNG/
-   screenshots/logo) to feature? **Ask for these — don't guess.**
+1. **Intake** — ask (don't guess): video path, topic, platform (IG Reel / TikTok / Shorts), script or transcribe?, theme, overlays already baked in?, image assets to feature?
 2. **New project folder** — `cp -r` the structure of `personal-brand-reel/` (package.json,
    meta.json, hyperframes.json, assets/) into `<your-reel>/`. It's the canonical example.
 3. **Encode the source** into `assets/source.mp4` — full-range + padded to 2040 (the extra
@@ -48,28 +39,19 @@ When that happens, run the workflow below. **Detailed brief: `kit/AGENT.md`.**
   RIGHT action rail `x 960–1080, y ~1050–1700`. Keep centered captions ≤900px wide.
   Caption bands live in `kit/captions.css` (`.cap-upper` **470** = over forehead, close to
   the face · `.cap-seg1` 1200 when a baked overlay owns the top · `.cap-mid` 856 · `.cap-lower` 1330).
-- **Bottom black band → render TALL + crop.** The renderer intermittently drops the
-  bottom ~86px of the VIDEO layer (NOT fixable by encoding/keyframes/CSS scale/atmosphere
-  fade — all tested). The fix: author the canvas at **2040** tall (1920 visible + 120
-  sacrificial pad), pad the source video to 2040 (`pad=1080:2040:0:0:black`), keep all
-  overlays in the top 1920, render, then **crop the output to the top 1920**:
-  `ffmpeg -i renders/<raw>.mp4 -vf "crop=1080:1920:0:0" -c:a copy renders/FINAL.mp4`.
-- **Source encode = full-range** (`-pix_fmt yuvj420p -color_range pc`). Limited-range
-  `yuv420p`/tv worsens the drop. Recipe in step 3.
+- **Bottom black band → render TALL + crop** (step 3 + 8): canvas 2040 tall, source padded to 2040, all overlays in the top 1920, crop output to the top 1920. Source encode must be full-range (`yuvj420p`, `-color_range pc`).
 - **Fonts: Product Sans ("Google Sans") — self-hosted, HAS Turkish (ş ğ İ).** Use it for
   hooks AND captions (one consistent face). cdnfonts woff is live:
   `https://fonts.cdnfonts.com/s/13998/ProductSans-Regular.woff`. ⚠ **Coolvetica has NO
   Turkish glyphs** — dropped for Turkish content (mixing Coolvetica+fallback looks broken).
   Self-host the woff in `assets/fonts/` (Google Fonts `<link>` fails in render).
 - **SFX must be PRE-MIXED into the source audio via ffmpeg** (hyperframes barely mixes
-  secondary `<audio>` tracks when a main track is present — a 0dB tone vanished in testing).
-  Keep the speaker's audio RAW — do NOT de-reverb/process it unless they explicitly ask
-  (it sounds worse, not better). Use the USER'S OWN sfx library. Place SPARINGLY and with
-  intent: a riser + whoosh on the intro, a riser building into the big reveal/punch (a
-  sub-hit riser lands on the key word), a whoosh on scene cuts, and a subtle CLICK on only
-  a FEW key text reveals — **NOT on every caption**, and **no electric/flicker zaps**. Bake
-  with `adelay` + `atrim`(risers, `LC_ALL=C awk` for dot-decimal) + `volume` +
-  `amix=inputs=N:normalize=0` + `alimiter`, output an AUDIO-ONLY file for `#aud`.
+  secondary `<audio>` tracks when a main track is present). Keep the speaker's audio RAW
+  (no de-reverb). Use the USER'S OWN sfx library. Place SPARINGLY: a riser + whoosh on the
+  intro, a riser into the big reveal, a whoosh on scene cuts, a subtle CLICK on only a FEW
+  key text reveals — **NOT on every caption**, no electric/flicker zaps. Bake with `adelay` +
+  `atrim` (`LC_ALL=C awk` for dot-decimal) + `volume` + `amix=inputs=N:normalize=0` +
+  `alimiter`, output an AUDIO-ONLY file for `#aud`.
 - **Deterministic only** — no `Date.now()`, `Math.random()`, or network in the timeline.
 - Every timed element: `class="clip"` + `data-start` + `data-duration` + `data-track-index`.
   Timeline `paused` and registered on `window.__timelines["main"]`.
@@ -80,25 +62,15 @@ When that happens, run the workflow below. **Detailed brief: `kit/AGENT.md`.**
 - **Track-index convention:** 0 video · 1 atmosphere · 2 full-screen scenes/big text ·
   3 captions · 4 micro drawn overlays · 6 pops · 7 whoosh SFX · 8 audio.
 
-## Themes (drop-in swappable)
+## Themes and map
 
-Both expose the SAME class contract (`.cool` `.gsans` `.atmo-vig/rim/grain/bot` + glow set),
-so swapping ONE theme block re-skins everything:
-- `kit/themes/nail.css` — nailingai.co brand ("Reel-tuned": emerald `#10B981` glow + amber
-  `#F59E0B`, Product Sans for hooks + captions — Turkish-safe). **Use for the repo owner.**
-- `kit/themes/fork-sunset.css` — a distinct public-fork identity ("Sunset Editorial": coral
-  `#FB7185` + peach, Cabinet Grotesk + General Sans). **Use when sharing with other people.**
-
-## Map
-
-- `kit/` — the design system: `themes/`, `captions.css`, `components.html` (drawn SVG snippets),
-  `anim.js` (HFKit GSAP helpers), `assets/sfx/` (pops), `README.md` (capability menu), `AGENT.md`.
+- Themes (same class contract, swap ONE block): `kit/themes/nail.css` = repo owner (default) · `kit/themes/fork-sunset.css` = when sharing with other people.
+- `kit/` — design system: `themes/`, `captions.css`, `components.html` (drawn SVG snippets), `anim.js` (HFKit GSAP helpers), `assets/sfx/`, `README.md`, `AGENT.md`.
 - `personal-brand-reel/` — **canonical example** (an 18s reel). Copy its structure for new reels.
-- `nail-ai-reel/`, `nwn-incele-reel/` — older example reels.
-- `docs/superpowers/specs/` — the design spec (internal).
-- `references/` — reference videos/frames.
 
 ## Commands (per reel folder)
 
 `npm run dev` (long-running preview server — run in background) · `npm run check` (lint +
 validate + inspect; fix all errors) · `npm run render` (→ `renders/*.mp4`) · `npm run publish`.
+
+Older notes and history: CLAUDE-arsiv.md (open only when needed).
