@@ -1,0 +1,96 @@
+<!-- ============================================================================
+     KIT: split-motion components — COPY-PASTE snippets (markup + the GSAP call)
+     Needs split-motion.css + sm-anim.js (window.SMKit) inlined in index.html.
+     Everything below lives INSIDE the panel clip:
+       <div id="panel" class="clip" data-start="0" data-duration="VT" data-track-index="2"
+            style="position:absolute;left:0;top:0;width:1080px;height:1920px">
+         <div class="sm-panel"> <div class="sm-grid" id="grid"></div> <div class="sm-spot" id="spot"></div>
+           <div class="sm-vig"></div>  …heroes / headers / chapter…  </div>
+         <div class="sm-card-edge"></div>
+       </div>
+     ============================================================================ -->
+
+<!-- 1. HEADER — bold sans + serif italic accent (red underline draws on) -->
+<div class="sm-head" id="hA"><span class="w">keep</span> <span class="w acc">dropping</span></div>
+<!-- SMKit.typeHeader(tl,'#hA',t,.13); SMKit.headerOut(tl,'#hA',tEnd-.2); -->
+
+<!-- 2. SEAM CAPTION — one clip per spoken word (generate from words.json) -->
+<div class="clip sm-cap" id="w0" data-start="0.320" data-duration="0.590" data-track-index="3">instant</div>
+<div class="clip sm-cap hl" id="w1" data-start="0.920" data-duration="0.196" data-track-index="3">gratification</div>
+<!-- document.querySelectorAll('.sm-cap').forEach(el => SMKit.word(tl, el, +el.dataset.start)); -->
+
+<!-- 3. HERO FRAME — any object goes inside .stage (centre of the panel) -->
+<div class="sm-hero" data-layout-allow-overflow id="H1"><div class="stage" style="width:820px;height:560px">
+  <!-- object markup -->
+</div></div>
+<!-- SMKit.hero(tl,'#H1',t0,t1,{drift:12}) — add sub-events inside (pop/draw/counter) every ~1 s -->
+
+<!-- 4. CHAPTER DEVICE (recurring) — glowing ring with orbiting light dots.
+        Swap the SVG for your own device (loop, key, eye…) — keep it ONE recognisable shape. -->
+<div class="abs" data-layout-allow-overflow id="ring" style="position:absolute;left:240px;top:380px;width:600px;height:600px;opacity:0">
+  <svg width="600" height="600" viewBox="0 0 600 600" style="overflow:visible">
+    <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a86"/><stop offset=".5" stop-color="#ff1f36"/><stop offset="1" stop-color="#7a0010"/></linearGradient></defs>
+    <g class="glow-r">
+      <circle cx="300" cy="300" r="210" fill="none" stroke="url(#rg)" stroke-width="58"/>
+      <circle cx="300" cy="300" r="232" fill="none" stroke="rgba(255,220,225,.55)" stroke-width="3"/>
+    </g>
+    <g id="ringDots"><circle cx="510" cy="300" r="9" fill="#39ff8f"/><circle cx="90" cy="300" r="9" fill="#ffc53d"/><circle cx="300" cy="90" r="9" fill="#fff"/></g>
+  </svg>
+</div>
+<div class="sm-chap" data-layout-allow-overflow id="ch1"><div class="num">1<small>the shout-out</small></div></div>
+<!-- SMKit.chapter(tl,'#ring','#ch1',t,1.3);
+     tl.to('#ringDots',{rotate:360*6,svgOrigin:'300 300',duration:VT,ease:'none'},0); -->
+
+<!-- 5. COIN LIST — one row per spoken item -->
+<div class="coinlist" style="display:flex;flex-direction:column;gap:34px">
+  <div class="sm-coin-row" id="c1"><div class="sm-coin">1</div><div class="t">money</div></div>
+  <div class="sm-coin-row" id="c2"><div class="sm-coin">2</div><div class="t">attention</div></div>
+  <div class="sm-coin-row" id="c3"><div class="sm-coin">3</div><div class="t">followers</div></div>
+</div>
+<!-- SMKit.pop(tl,'#c1',tWord1,{from:.6}); …one per spoken item -->
+
+<!-- 6. CONNECTOR LINE between two objects -->
+<svg width="900" height="600" viewBox="0 0 900 600" style="position:absolute;left:0;top:0">
+  <path id="ln1" class="sm-line" pathLength="1" d="M90 90 C 250 120, 300 250, 450 300"/>
+</svg>
+<!-- SMKit.draw(tl,'#ln1',t,.45) -->
+
+<!-- 7. CHIPS -->
+<div class="sm-chip">the catalog</div> <div class="sm-chip red">2 posts</div>
+<div class="sm-chip gold">+ shout-out</div> <div class="sm-chip white">1 · recap label</div>
+
+<!-- 8. COUNTER (phone follower count racing up, then stalling) -->
+<div id="cnt" style="font-weight:900;font-size:96px">0</div>
+<!-- SMKit.counter(tl,'#cnt',t,3.3,0,48920,undefined,'power2.in') -->
+
+<!-- 9. DRAWN CURVE (chart: green up, red flat) -->
+<svg width="820" height="560" viewBox="0 0 820 560">
+  <path id="up" class="glow-g" pathLength="1" d="M80 470 C 200 460, 260 330, 330 250 S 420 120, 470 110"
+        fill="none" stroke="#39ff8f" stroke-width="9" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+</svg>
+<!-- SMKit.draw(tl,'#up',t,.9,'power2.out') -->
+
+<!-- 10. WIREFRAME DOCUMENT (script / contract): lines draw on one by one -->
+<div style="width:520px;height:690px;border-radius:22px;border:4px solid rgba(255,255,255,.9);position:relative;box-shadow:0 0 30px rgba(255,255,255,.35)">
+  <div style="position:absolute;top:40px;width:100%;text-align:center;font-weight:900;font-size:40px;letter-spacing:.18em">SCRIPT</div>
+  <svg width="520" height="690" viewBox="0 0 520 690" style="position:absolute;left:0;top:0">
+    <path class="sm-line dl" pathLength="1" d="M60 140 H460"/><path class="sm-line dl" pathLength="1" d="M60 184 H420"/>
+  </svg>
+</div>
+<!-- tl.fromTo('#doc .dl',{strokeDashoffset:1},{strokeDashoffset:0,duration:.25,stagger:.09},t) -->
+
+<!-- 11. B-ROLL CARD with green chip (put a <video class="clip"> or <img> inside) -->
+<div class="sm-card" style="width:620px;height:780px">
+  <img src="assets/broll/still.jpg" style="width:100%;height:100%;object-fit:cover" alt="">
+  <div class="sm-chip">10k followers</div>
+</div>
+
+<!-- 12. PUNCH-IN — base video already holds the full 9:16 crop for [t0,t1]; this hides the
+         panel, punches the video scale and flashes. PUNCH = [[t0,t1],…] from edl.json -->
+<div id="flash" class="clip sm-flash" data-start="0" data-duration="VT" data-track-index="4" style="width:1080px;height:1920px"></div>
+<!-- tl.set('#flash',{opacity:0},0); PUNCH.forEach(([a,b]) => SMKit.punch(tl,'#panel','#vid','#flash',a,b)); -->
+
+<!-- 13. RECAP — the device + every chapter label around it + closing header -->
+<div class="sm-chip white rl" style="position:absolute;left:110px;top:400px;opacity:0">1 · the shout-out</div>
+<!-- tl.fromTo('#ring',{autoAlpha:0,scale:2.6,filter:'blur(14px)'},{autoAlpha:1,scale:1,filter:'blur(0px)',duration:.45},tR);
+     tl.fromTo('.rl',{autoAlpha:0,scale:.4},{autoAlpha:1,scale:1,duration:.25,stagger:.22},tR+.3); -->

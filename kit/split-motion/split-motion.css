@@ -1,0 +1,166 @@
+/* ============================================================================
+   KIT: split-motion.css — "split-motion" reel style (top motion panel + bottom
+   speaker card + one-word seam captions + glowing hero objects)
+   Canvas: 1080 x 2040 (1920 visible + 120 sacrificial, cropped after render).
+
+   Paste inside a <style> block. Fonts: self-host in assets/fonts/ and declare
+   the @font-face block below (paths relative to index.html).
+
+   Geometry tokens (change in ONE place):
+     --seam      y where the panel ends and the speaker card begins (1150)
+     --card-x    inset of the speaker card from the canvas sides     (28)
+     --cap-y     baseline zone of the seam caption (just above the seam)
+   ============================================================================ */
+
+@font-face { font-family: "Product Sans"; font-weight: 400; src: url("assets/fonts/ProductSans-Regular.woff") format("woff"); }
+@font-face { font-family: "Product Sans"; font-weight: 500; src: url("assets/fonts/ProductSans-Medium.woff") format("woff"); }
+@font-face { font-family: "Product Sans"; font-weight: 700; src: url("assets/fonts/ProductSans-Bold.woff") format("woff"); }
+@font-face { font-family: "Product Sans"; font-weight: 900; src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+@font-face { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); }
+
+:root {
+  --seam: 1150px;
+  --card-x: 28px;
+  --card-r: 44px;
+  --cap-y: 1046px;
+
+  --bg: #070708;
+  --bg-2: #0d0d10;
+  --ink: #ffffff;
+  --ink-dim: rgba(255, 255, 255, .55);
+  --line: rgba(255, 255, 255, .07);
+
+  --red: #ff3346;     /* neon red: chapter device, warnings, accent underline */
+  --green: #39ff8f;   /* neon green: progress, "yes", curves               */
+  --gold: #ffc53d;    /* gold: coins, numbers, money                        */
+  --blue: #59b8ff;    /* optional cool accent                               */
+
+  --glow-w: drop-shadow(0 0 6px rgba(255,255,255,.85)) drop-shadow(0 0 22px rgba(255,255,255,.45));
+  --glow-r: drop-shadow(0 0 6px rgba(255,51,70,.95)) drop-shadow(0 0 26px rgba(255,51,70,.6));
+  --glow-g: drop-shadow(0 0 6px rgba(57,255,143,.95)) drop-shadow(0 0 26px rgba(57,255,143,.55));
+  --glow-gold: drop-shadow(0 0 6px rgba(255,197,61,.95)) drop-shadow(0 0 24px rgba(255,197,61,.5));
+
+  --sans: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
+  --serif: "Instrument Serif", Georgia, serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 2040px; overflow: hidden; background: #000; }
+body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif; color: var(--ink); }
+
+/* ---------- panel: near-black, dot/plus grid, soft spotlight --------------- */
+/* The panel covers the WHOLE visible canvas and cuts a rounded hole for the
+   speaker card with an even-odd clip-path, so card margins + corners read as
+   part of the panel (the reference look). */
+.sm-panel {
+  position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+  background: var(--bg);
+  clip-path: path(evenodd, "M0 0H1080V1920H0Z M28 1194 A44 44 0 0 1 72 1150 H1008 A44 44 0 0 1 1052 1194 V1920 H28 Z");
+  overflow: hidden;
+}
+.sm-grid {
+  position: absolute; inset: -90px;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90'><path d='M45 39v12M39 45h12' stroke='white' stroke-opacity='.55' stroke-width='2'/></svg>"),
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 90px 90px, 90px 90px, 90px 90px;
+  background-position: 0 0, 45px 45px, 45px 45px;
+  opacity: .55;
+}
+.sm-spot {
+  position: absolute; left: 90px; top: 120px; width: 900px; height: 900px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.13) 0%, rgba(255,255,255,.05) 38%, transparent 70%);
+}
+.sm-vig {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 34%, transparent 55%, rgba(0,0,0,.65) 100%);
+}
+/* thin highlight on the speaker card edge */
+.sm-card-edge {
+  position: absolute; left: 28px; top: 1150px; width: 1024px; height: 800px;
+  border: 2px solid rgba(255,255,255,.10); border-bottom: none;
+  border-radius: 44px 44px 0 0; pointer-events: none;
+}
+
+/* ---------- header: bold sans + serif italic accent w/ red underline ------- */
+.sm-head {
+  position: absolute; left: 90px; width: 900px; top: 168px;
+  text-align: center; font-weight: 700; font-size: 66px; line-height: 1.04;
+  letter-spacing: -.02em; filter: var(--glow-w);
+}
+.sm-head .w { display: inline-block; margin: 0 .12em; }
+.sm-head .acc {
+  font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; font-size: 1.12em;
+  letter-spacing: 0; position: relative;
+}
+.sm-head .acc::after {
+  content: ""; position: absolute; left: 4%; right: 4%; bottom: .02em; height: 5px;
+  border-radius: 3px; background: var(--red); box-shadow: 0 0 14px var(--red);
+  transform-origin: left center; transform: scaleX(var(--ul, 1));
+}
+
+/* ---------- seam caption: ONE word, every spoken word ---------------------- */
+.sm-cap {
+  position: absolute; left: 90px; width: 900px; top: var(--cap-y); height: 84px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 60px; letter-spacing: -.01em; color: #fff;
+  text-shadow: 0 2px 0 rgba(0,0,0,.35), 0 0 18px rgba(0,0,0,.55);
+  white-space: nowrap;
+}
+.sm-cap.hl { color: var(--gold); }
+.sm-cap.hl-r { color: #ff5a6a; }
+.sm-cap.hl-g { color: var(--green); }
+
+/* ---------- hero object frame (center of the panel) ----------------------- */
+.sm-hero {
+  position: absolute; left: 40px; top: 0; width: 1000px; height: 1150px;   /* <1080 so drift/scale stays inside */
+  padding-top: 210px;            /* optical centre ~y 680: between header and seam caption */
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; will-change: transform, opacity, filter;
+}
+.sm-hero .stage { position: relative; }
+.glow-w { filter: var(--glow-w); }
+.glow-r { filter: var(--glow-r); }
+.glow-g { filter: var(--glow-g); }
+.glow-gold { filter: var(--glow-gold); }
+
+/* connector line (SVG path with pathLength="1") — draw with stroke-dashoffset */
+.sm-line { fill: none; stroke: rgba(255,255,255,.85); stroke-width: 3; stroke-linecap: round;
+  stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+/* chip / label */
+.sm-chip {
+  display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px;
+  border-radius: 999px; font-weight: 700; font-size: 30px; white-space: nowrap;
+  background: rgba(57,255,143,.12); border: 2px solid var(--green); color: var(--green);
+  box-shadow: 0 0 18px rgba(57,255,143,.35);
+}
+.sm-chip.red  { background: rgba(255,51,70,.12);  border-color: var(--red);  color: #ff6b79; box-shadow: 0 0 18px rgba(255,51,70,.35); }
+.sm-chip.gold { background: rgba(255,197,61,.12); border-color: var(--gold); color: var(--gold); box-shadow: 0 0 18px rgba(255,197,61,.35); }
+.sm-chip.white{ background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.7); color: #fff; box-shadow: 0 0 18px rgba(255,255,255,.2); }
+
+/* gold coin list item: numbered coin + small text line */
+.sm-coin-row { display: flex; align-items: center; gap: 22px; opacity: 0; }
+.sm-coin {
+  width: 74px; height: 74px; border-radius: 50%; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 36px; color: #2a1a00;
+  background: radial-gradient(circle at 35% 30%, #fff3c4 0%, #ffd25e 30%, #d99a12 70%, #8a5a00 100%);
+  border: 4px dashed rgba(90,55,0,.55); box-shadow: 0 0 22px rgba(255,197,61,.55);
+}
+.sm-coin-row .t { font-weight: 500; font-size: 38px; color: #fff; filter: var(--glow-w); }
+
+/* chapter device: number + label over the device */
+.sm-chap { position: absolute; left: 40px; top: 0; width: 1000px; height: 1150px; opacity: 0; }
+.sm-chap .num { position: absolute; left: 0; width: 100%; top: 190px; text-align: center;
+  font-weight: 900; font-size: 150px; line-height: 1; filter: var(--glow-w); }
+.sm-chap .num small { font-weight: 700; font-size: 74px; margin-left: 18px; letter-spacing: -.02em; }
+
+/* b-roll card with green chip */
+.sm-card { position: relative; border-radius: 34px; overflow: hidden;
+  border: 2px solid rgba(255,255,255,.18); box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 40px rgba(255,255,255,.08); }
+.sm-card .sm-chip { position: absolute; left: 22px; top: 22px; }
+
+/* punch-in flash (white veil on cut) */
+.sm-flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }

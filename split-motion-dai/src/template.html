@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=2040" />
+<title>split-motion-dai</title>
+<script src="assets/vendor/gsap.min.js"></script>
+<style>
+/*{{CSS}}*/
+
+/* ---- reel-specific objects (split-motion-dai) ---- */
+.abs { position: absolute; }
+.center { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.phone { width: 380px; height: 740px; border-radius: 60px; border: 5px solid rgba(255,255,255,.9);
+  background: linear-gradient(180deg, #15151b, #07070a); box-shadow: 0 0 30px rgba(255,255,255,.35), inset 0 0 30px rgba(255,255,255,.05);
+  position: relative; overflow: hidden; }
+.phone .notch { position: absolute; left: 130px; top: 16px; width: 110px; height: 30px; border-radius: 20px; background: #000; }
+.phone .ava { position: absolute; left: 140px; top: 90px; width: 100px; height: 100px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #8a8a95, #2a2a33); border: 3px solid rgba(255,255,255,.6); }
+.phone .handle { position: absolute; left: 0; width: 100%; top: 205px; text-align: center; font-size: 28px; color: var(--ink-dim); }
+.phone .cnt { position: absolute; left: 0; width: 100%; top: 270px; text-align: center; font-weight: 900; font-size: 96px; letter-spacing: -.03em; }
+.phone .lbl { position: absolute; left: 0; width: 100%; top: 380px; text-align: center; font-size: 30px; color: var(--green); font-weight: 700; }
+.phone .bars { position: absolute; left: 50px; bottom: 60px; width: 280px; height: 190px; display: flex; align-items: flex-end; gap: 14px; }
+.phone .bars i { flex: 1; border-radius: 8px 8px 0 0; background: linear-gradient(180deg, var(--green), rgba(57,255,143,.15)); box-shadow: 0 0 14px rgba(57,255,143,.5); transform-origin: bottom; }
+.heart { position: absolute; width: 46px; height: 46px; }
+.coinlist { display: flex; flex-direction: column; gap: 34px; }
+.cardbox { border-radius: 34px; border: 3px solid rgba(255,255,255,.75); background: rgba(10,10,14,.75);
+  box-shadow: 0 0 26px rgba(255,255,255,.25); position: relative; }
+.stop { width: 300px; height: 300px; }
+.bubble { position: absolute; padding: 26px 34px; border-radius: 40px; font-size: 44px; font-weight: 700; line-height: 1.15; }
+.bubble.in { background: #26262e; color: #fff; border-bottom-left-radius: 10px; box-shadow: 0 0 24px rgba(255,255,255,.18); }
+.bubble.out { background: var(--red); color: #fff; border-bottom-right-radius: 10px; box-shadow: 0 0 34px rgba(255,51,70,.7); }
+.typing { position: absolute; display: flex; gap: 12px; padding: 26px 30px; border-radius: 40px; background: #26262e; }
+.typing i { width: 18px; height: 18px; border-radius: 50%; background: #aaa; }
+.tile { position: absolute; border-radius: 18px; }
+.tile.full { background: linear-gradient(135deg, #3b3b48, #15151c); border: 2px solid rgba(255,255,255,.55); box-shadow: 0 0 18px rgba(255,255,255,.2); }
+.tile.empty { border: 3px dashed rgba(255,255,255,.22); }
+.tile.g { background: linear-gradient(135deg, rgba(57,255,143,.55), rgba(57,255,143,.12)); border: 2px solid var(--green); box-shadow: 0 0 16px rgba(57,255,143,.45); }
+.tile .play { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0;
+  border-left: 30px solid rgba(255,255,255,.9); border-top: 18px solid transparent; border-bottom: 18px solid transparent; }
+.day { position: absolute; width: 96px; height: 96px; border-radius: 22px; border: 2px solid rgba(255,255,255,.18); }
+.day .fill { position: absolute; inset: 0; border-radius: 20px; background: var(--green); box-shadow: 0 0 20px rgba(57,255,143,.7); opacity: 0; }
+.day svg { position: absolute; inset: 18px; opacity: 0; }
+.pcard { position: absolute; width: 230px; height: 330px; border-radius: 26px; background: linear-gradient(160deg, #24242d, #0e0e13);
+  border: 3px solid rgba(255,255,255,.75); box-shadow: 0 0 22px rgba(255,255,255,.25); transform-origin: 50% 120%; }
+.pcard b { position: absolute; left: 20px; top: 16px; font-size: 34px; color: var(--gold); }
+.pcard .play { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0;
+  border-left: 44px solid rgba(255,255,255,.9); border-top: 27px solid transparent; border-bottom: 27px solid transparent; }
+.orb { position: absolute; padding: 26px 40px; border-radius: 999px; font-weight: 900; font-size: 46px; letter-spacing: .02em; }
+.orb.opp { color: #241600; background: radial-gradient(circle at 40% 30%, #fff1bf, var(--gold) 55%, #b77900); box-shadow: 0 0 40px rgba(255,197,61,.8), 0 0 90px rgba(255,197,61,.35); }
+.orb.prep { color: #002612; background: radial-gradient(circle at 40% 30%, #d9ffe9, var(--green) 55%, #10a958); box-shadow: 0 0 40px rgba(57,255,143,.8), 0 0 90px rgba(57,255,143,.35); }
+.bigq { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 520px; line-height: 1; color: var(--gold); filter: var(--glow-gold); }
+.meter { display: flex; align-items: flex-end; gap: 20px; height: 420px; }
+.meter i { width: 64px; border-radius: 12px; transform-origin: bottom; }
+.notif { width: 820px; padding: 30px 34px; border-radius: 36px; background: rgba(38,38,46,.92); border: 2px solid rgba(255,255,255,.3);
+  box-shadow: 0 0 36px rgba(255,255,255,.22); display: flex; gap: 28px; align-items: center; }
+.notif .ic { width: 110px; height: 110px; border-radius: 26px; background: linear-gradient(135deg, var(--gold), #b77900); flex: none; position: relative; }
+.notif .t1 { font-size: 28px; color: var(--ink-dim); }
+.notif .t2 { font-size: 44px; font-weight: 700; margin-top: 6px; }
+.paper { width: 520px; height: 690px; border-radius: 22px; border: 4px solid rgba(255,255,255,.9); background: rgba(12,12,16,.85);
+  box-shadow: 0 0 30px rgba(255,255,255,.35); position: relative; }
+.paper .ttl { position: absolute; left: 0; width: 100%; top: 40px; text-align: center; font-weight: 900; font-size: 40px; letter-spacing: .18em; }
+.who { position: absolute; width: 120px; height: 120px; border-radius: 50%; border: 3px solid rgba(255,255,255,.6); background: #1b1b22; }
+.who .q { position: absolute; right: -12px; top: -14px; width: 52px; height: 52px; border-radius: 50%; background: var(--red); color: #fff;
+  font-weight: 900; font-size: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 18px rgba(255,51,70,.8); }
+.xmark { color: var(--red); font-weight: 900; margin-left: 14px; filter: var(--glow-r); }
+.lbl-big { font-weight: 900; font-size: 64px; letter-spacing: -.02em; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="{{VT}}" data-width="1080" data-height="2040">
+
+  <!-- 0 · speaker video (video-only file: split layout baked in, punch-ins full 9:16) -->
+  <video id="vid" class="clip" src="assets/video.mp4" data-start="0" data-duration="{{VT}}" data-track-index="0" muted playsinline
+    style="position:absolute;left:0;top:0;width:1080px;height:2040px;transform-origin:50% 40%"></video>
+
+  <!-- 2 · the motion panel (hidden during punch-ins) -->
+  <div id="panel" class="clip" data-start="0" data-duration="{{VT}}" data-track-index="2"
+    style="position:absolute;left:0;top:0;width:1080px;height:1920px">
+    <div class="sm-panel" data-layout-allow-overflow>
+      <div class="abs" data-layout-allow-overflow style="left:0;top:0;width:1080px;height:1920px;overflow:hidden">
+        <div data-layout-allow-overflow class="sm-grid" id="grid"></div>
+      <div class="sm-spot" id="spot"></div>
+      </div>
+      <div class="sm-vig"></div>
+
+      <!-- ===== headers (one per section, type on word by word) ===== -->
+      <div class="sm-head" id="hA"><span class="w">instant</span> <span class="w acc">gratification</span></div>
+      <div class="sm-head" id="hB"><span class="w">they</span> <span class="w">want</span> <span class="w">it</span> <span class="w acc">now</span></div>
+      <div class="sm-head" id="hC"><span class="w">can</span> <span class="w">you</span> <span class="w acc">shout&nbsp;me&nbsp;out?</span></div>
+      <div class="sm-head" id="hD"><span class="w">no</span> <span class="w acc">catalog</span> <span class="w">=</span> <span class="w">no</span> <span class="w">shout-out</span></div>
+      <div class="sm-head" id="hE"><span class="w">keep</span> <span class="w acc">dropping</span></div>
+      <div class="sm-head" id="hF"><span class="w">opportunity</span> <span class="w">meets</span><br><span class="w acc">preparation</span></div>
+      <div class="sm-head" id="hG"><span class="w">the</span> <span class="w">wrong</span> <span class="w acc">order</span></div>
+      <div class="sm-head" id="hH"><span class="w">a</span> <span class="w">whole</span> <span class="w">new</span> <span class="w acc">level</span></div>
+      <div class="sm-head" id="hI"><span class="w">the</span> <span class="w acc">contract</span> <span class="w">moment</span></div>
+      <div class="sm-head" id="hJ"><span class="w">step</span> <span class="w">zero</span> <span class="w">→</span> <span class="w">step</span> <span class="w acc">A</span></div>
+      <div class="sm-head" id="hR"><span class="w">preparation</span> <span class="w">meets</span><br><span class="w acc">opportunity</span></div>
+
+      <!-- ===== A1 · phone, follower counter races ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="A1"><div class="stage" style="transform:scale(1.18);width:900px;height:800px">
+        <div class="abs" id="A1phone" style="left:260px;top:30px">
+          <div class="phone"><div class="notch"></div><div class="ava"></div><div class="handle">@you</div>
+            <div class="cnt" id="A1cnt">0</div><div class="lbl">followers</div>
+            <div class="bars"><i style="height:22%"></i><i style="height:35%"></i><i style="height:48%"></i><i style="height:66%"></i><i style="height:84%"></i><i style="height:100%"></i></div>
+          </div>
+        </div>
+        <svg class="heart abs h1" style="left:170px;top:520px" viewBox="0 0 24 24"><path fill="#ff3346" d="M12 21s-7-4.6-9.5-9C.9 8.6 3 5 6.5 5c2 0 3.3 1.1 4 2.2.7-1.1 2-2.2 4-2.2C18 5 20.1 8.6 19.5 12 17 16.4 12 21 12 21z"/></svg>
+        <svg class="heart abs h2" style="left:690px;top:470px" viewBox="0 0 24 24"><path fill="#ff3346" d="M12 21s-7-4.6-9.5-9C.9 8.6 3 5 6.5 5c2 0 3.3 1.1 4 2.2.7-1.1 2-2.2 4-2.2C18 5 20.1 8.6 19.5 12 17 16.4 12 21 12 21z"/></svg>
+        <svg class="heart abs h3" style="left:200px;top:300px" viewBox="0 0 24 24"><path fill="#ffc53d" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-1.2c-1.4-.3-2.5-1.2-2.6-2.6h1.8c.1.7.7 1.2 1.8 1.2 1.2 0 1.6-.6 1.6-1.1 0-.6-.4-1-1.9-1.4-1.8-.4-3-1.1-3-2.6 0-1.2.9-2.1 2.3-2.4V5.7h2v1.2c1.4.3 2.2 1.3 2.3 2.4h-1.8c-.1-.7-.6-1.1-1.5-1.1-1 0-1.5.5-1.5 1 0 .5.4.8 1.9 1.2 1.9.5 3 1.2 3 2.8 0 1.3-1 2.2-2.4 2.5V17z"/></svg>
+        <svg class="heart abs h4" style="left:700px;top:240px" viewBox="0 0 24 24"><path fill="#39ff8f" d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg>
+        <!-- A2 coin list (phone slides left) -->
+        <div class="abs coinlist" id="A2list" style="left:470px;top:250px">
+          <div class="sm-coin-row" id="A2c1"><div class="sm-coin">1</div><div class="t">money</div></div>
+          <div class="sm-coin-row" id="A2c2"><div class="sm-coin">2</div><div class="t">attention</div></div>
+          <div class="sm-coin-row" id="A2c3"><div class="sm-coin">3</div><div class="t">followers</div></div>
+        </div>
+      </div></div>
+
+      <!-- ===== A3 · growth chart: up now... then flat ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="A3"><div class="stage" style="transform:scale(1.15);width:820px;height:560px">
+        <div class="cardbox abs" style="left:0;top:0;width:820px;height:560px"></div>
+        <svg class="abs" style="left:0;top:0" width="820" height="560" viewBox="0 0 820 560">
+          <path d="M70 70 V480 H770" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3"/>
+          <path id="A3up" class="glow-g" pathLength="1" d="M80 470 C 200 460, 260 330, 330 250 S 420 120, 470 110" fill="none" stroke="#39ff8f" stroke-width="9" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+          <path id="A3flat" class="glow-r" pathLength="1" d="M470 110 C 520 108, 560 112, 600 120 S 700 128, 760 126" fill="none" stroke="#ff3346" stroke-width="9" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+          <circle id="A3dot" cx="470" cy="110" r="14" fill="#fff" class="glow-w" opacity="0"/>
+        </svg>
+        <div class="abs sm-chip" id="A3chip" style="left:120px;top:56px;opacity:0">want it now</div>
+        <div class="abs sm-chip red" id="A3chip2" style="left:520px;top:170px;opacity:0">no result → stop</div>
+      </div></div>
+
+      <!-- ===== A4 · STOP sign ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="A4"><div class="stage" style="width:340px;height:340px">
+        <svg class="stop glow-r abs" style="left:20px;top:20px" viewBox="0 0 100 100">
+          <polygon points="30,3 70,3 97,30 97,70 70,97 30,97 3,70 3,30" fill="rgba(255,51,70,.18)" stroke="#ff3346" stroke-width="4"/>
+          <text x="50" y="61" text-anchor="middle" font-family="Product Sans" font-weight="900" font-size="28" fill="#fff">STOP</text>
+        </svg>
+      </div></div>
+
+      <!-- ===== B0 · DM: "can you shout me out?" → "no." ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="B0"><div class="stage" style="transform:scale(1.12);width:860px;height:640px">
+        <div class="cardbox abs" style="left:0;top:0;width:860px;height:640px"></div>
+        <div class="abs" style="left:34px;top:30px;font-size:30px;color:var(--ink-dim)">● DM · new request</div>
+        <div class="typing" id="B0typ" style="left:50px;top:110px;opacity:0"><i></i><i></i><i></i></div>
+        <div class="bubble in" id="B0in" style="left:50px;top:100px;opacity:0">hey, can you<br>shout me out?</div>
+        <div class="bubble out" id="B0out" style="right:50px;top:310px;opacity:0">no.</div>
+        <div class="abs" id="B0ready" style="left:50px;top:480px;width:760px;opacity:0">
+          <div style="display:flex;justify-content:space-between;font-size:32px;font-weight:700"><span>ready for a shout-out</span><span id="B0pct" style="color:var(--red)">0%</span></div>
+          <div style="margin-top:14px;height:22px;border-radius:12px;background:rgba(255,255,255,.12);overflow:hidden">
+            <div id="B0bar" style="height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:var(--red);box-shadow:0 0 16px var(--red)"></div></div>
+        </div>
+      </div></div>
+
+      <!-- ===== B1 · megaphone (the shout-out) ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="B1"><div class="stage" style="transform:scale(1.3);width:820px;height:560px">
+        <svg class="abs glow-w" id="B1mega" style="left:120px;top:90px;transform-origin:30% 50%" width="420" height="380" viewBox="0 0 120 108">
+          <path d="M10 40 L10 68 L30 68 L80 98 L80 10 L30 40 Z" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M28 68 L36 96 L48 96 L42 72" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+        </svg>
+        <svg class="abs" style="left:470px;top:110px" width="320" height="340" viewBox="0 0 320 340">
+          <path class="wave glow-gold" id="B1w1" d="M30 110 Q70 170 30 230" fill="none" stroke="#ffc53d" stroke-width="10" stroke-linecap="round"/>
+          <path class="wave glow-gold" id="B1w2" d="M90 60 Q160 170 90 280" fill="none" stroke="#ffc53d" stroke-width="10" stroke-linecap="round"/>
+          <path class="wave glow-gold" id="B1w3" d="M150 10 Q250 170 150 330" fill="none" stroke="#ffc53d" stroke-width="10" stroke-linecap="round"/>
+        </svg>
+        <div class="abs sm-chip gold" id="B1chip" style="left:250px;top:470px;opacity:0">+ shout-out</div>
+      </div></div>
+
+      <!-- ===== B2 · people come to your page ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="B2"><div class="stage" style="transform:scale(1.12);width:900px;height:600px">
+        <svg class="abs" style="left:0;top:0" width="900" height="600" viewBox="0 0 900 600">
+          <path class="sm-line" pathLength="1" d="M90 90 C 250 120, 300 250, 450 300"/>
+          <path class="sm-line" pathLength="1" d="M60 330 C 200 330, 300 310, 450 300"/>
+          <path class="sm-line" pathLength="1" d="M110 540 C 250 500, 330 360, 450 300"/>
+          <path class="sm-line" pathLength="1" d="M810 90 C 650 120, 600 250, 450 300"/>
+          <path class="sm-line" pathLength="1" d="M840 330 C 700 330, 600 310, 450 300"/>
+          <path class="sm-line" pathLength="1" d="M790 540 C 650 500, 570 360, 450 300"/>
+        </svg>
+        <div class="who abs u" style="left:30px;top:30px"></div><div class="who abs u" style="left:0;top:270px"></div><div class="who abs u" style="left:50px;top:480px"></div>
+        <div class="who abs u" style="left:750px;top:30px"></div><div class="who abs u" style="left:780px;top:270px"></div><div class="who abs u" style="left:730px;top:480px"></div>
+        <div class="cardbox abs" id="B2page" style="left:300px;top:190px;width:300px;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px">
+          <div style="width:86px;height:86px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#8a8a95,#2a2a33);border:3px solid #fff"></div>
+          <div style="font-size:34px;font-weight:700">your page</div>
+        </div>
+      </div></div>
+
+      <!-- ===== B3 · the grid: two posts ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="B3"><div class="stage" style="transform:scale(1.25);width:600px;height:640px">
+        <div class="tile full" id="B3t1" style="left:0;top:0;width:190px;height:190px"><div class="play"></div></div>
+        <div class="tile full" id="B3t2" style="left:205px;top:0;width:190px;height:190px"><div class="play"></div></div>
+        <div class="tile empty e" style="left:410px;top:0;width:190px;height:190px"></div>
+        <div class="tile empty e" style="left:0;top:205px;width:190px;height:190px"></div>
+        <div class="tile empty e" style="left:205px;top:205px;width:190px;height:190px"></div>
+        <div class="tile empty e" style="left:410px;top:205px;width:190px;height:190px"></div>
+        <div class="tile empty e" style="left:0;top:410px;width:190px;height:190px"></div>
+        <div class="tile empty e" style="left:205px;top:410px;width:190px;height:190px"></div>
+        <div class="tile empty e" style="left:410px;top:410px;width:190px;height:190px"></div>
+        <div class="abs sm-chip red" id="B3chip" style="left:225px;top:330px;opacity:0;font-size:40px">only 2 posts</div>
+      </div></div>
+
+      <!-- ===== B4 · nothing to binge vs. the catalog ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="B4"><div class="stage" style="transform:scale(1.12);width:900px;height:600px">
+        <div class="abs" style="left:0;top:40px;width:330px;height:430px">
+          <div class="tile full" style="left:0;top:0;width:100px;height:100px"></div><div class="tile full" style="left:110px;top:0;width:100px;height:100px"></div>
+          <div class="tile empty" style="left:220px;top:0;width:100px;height:100px"></div>
+          <div class="tile empty" style="left:0;top:110px;width:100px;height:100px"></div><div class="tile empty" style="left:110px;top:110px;width:100px;height:100px"></div><div class="tile empty" style="left:220px;top:110px;width:100px;height:100px"></div>
+          <div class="tile empty" style="left:0;top:220px;width:100px;height:100px"></div><div class="tile empty" style="left:110px;top:220px;width:100px;height:100px"></div><div class="tile empty" style="left:220px;top:220px;width:100px;height:100px"></div>
+          <div class="abs sm-chip red" style="left:30px;top:350px">nothing to watch</div>
+        </div>
+        <div class="abs lbl-big" style="left:380px;top:180px;color:var(--ink-dim)">vs</div>
+        <div class="abs" id="B4cat" style="left:520px;top:0;width:380px;height:520px"><!--{{B4TILES}}-->
+          <div class="abs sm-chip" id="B4chip" style="left:60px;top:470px;opacity:0">the catalog</div>
+        </div>
+      </div></div>
+
+      <!-- ===== B5 · consistency calendar ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="B5"><div class="stage" style="transform:scale(1.22);width:800px;height:620px">
+        <div class="abs" style="left:0;top:0;width:800px;font-size:34px;font-weight:700;display:flex;justify-content:space-between">
+          <span>posting streak</span><span style="color:var(--green)"><span id="B5cnt">0</span> days</span></div>
+        <div class="abs" style="left:20px;top:80px"><!--{{B5DAYS}}--></div>
+      </div></div>
+
+      <!-- ===== B6 · drop after drop (catalog stack) ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="B6"><div class="stage" style="transform:scale(1.18);width:820px;height:560px">
+        <div class="pcard pc" style="left:295px;top:80px"><b>#1</b><div class="play"></div></div>
+        <div class="pcard pc" style="left:295px;top:80px"><b>#2</b><div class="play"></div></div>
+        <div class="pcard pc" style="left:295px;top:80px"><b>#3</b><div class="play"></div></div>
+        <div class="pcard pc" style="left:295px;top:80px"><b>#4</b><div class="play"></div></div>
+        <div class="pcard pc" style="left:295px;top:80px"><b>#5</b><div class="play"></div></div>
+        <div class="pcard pc" style="left:295px;top:80px"><b>#30</b><div class="play"></div></div>
+      </div></div>
+
+      <!-- ===== C1 · opportunity ↔ preparation ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="C1"><div class="stage" style="transform:scale(1.0);width:1000px;height:520px">
+        <svg class="abs" style="left:0;top:0" width="1000" height="520" viewBox="0 0 1000 520">
+          <path id="C1line" class="sm-line" pathLength="1" d="M250 260 L750 260" style="stroke-dasharray:1;stroke:#fff;stroke-width:4"/>
+        </svg>
+        <div class="orb opp" id="C1opp" style="left:0;top:110px">OPPORTUNITY</div>
+        <div class="orb prep" id="C1prep" style="right:0;top:300px">PREPARATION</div>
+      </div></div>
+
+      <!-- ===== C2 · fireworks ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="C2"><div class="stage" style="width:1000px;height:760px">
+        <svg class="abs" style="left:0;top:0;overflow:visible" width="1000" height="760" viewBox="0 0 1000 760"><!--{{FIREWORKS}}--></svg>
+        <div class="abs lbl-big" id="C2txt" style="left:0;width:1000px;top:330px;text-align:center;opacity:0;filter:var(--glow-gold);color:#fff">BOOM.</div>
+      </div></div>
+
+      <!-- ===== C2b · it will come (hourglass) ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="C2b"><div class="stage" style="transform:scale(1.35);width:400px;height:560px">
+        <svg class="abs glow-w" id="C2glass" style="left:50px;top:20px" width="300" height="520" viewBox="0 0 100 170">
+          <path d="M10 5 H90 M10 165 H90 M18 5 C18 60, 48 70, 50 85 C 52 100, 82 110, 82 165 M82 5 C82 60, 52 70, 50 85 C 48 100, 18 110, 18 165" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+          <path id="C2top" d="M26 22 H74 C70 55, 54 66, 50 80 C46 66, 30 55, 26 22 Z" fill="#ffc53d" style="transform-origin:50px 80px"/>
+          <path id="C2bot" d="M50 112 C 58 128, 72 140, 76 158 H24 C 28 140, 42 128, 50 112 Z" fill="#ffc53d" style="transform-origin:50px 158px"/>
+          <line id="C2stream" x1="50" y1="80" x2="50" y2="158" stroke="#ffc53d" stroke-width="2.5"/>
+        </svg>
+      </div></div>
+
+      <!-- ===== C3 · the wrong order ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="C3"><div class="stage" style="transform:scale(1.05);width:960px;height:520px">
+        <svg class="abs" style="left:0;top:0" width="960" height="520" viewBox="0 0 960 520">
+          <path id="C3track" class="sm-line" pathLength="1" d="M60 330 H900" style="stroke-width:6"/>
+          <circle cx="250" cy="330" r="16" fill="#fff" class="glow-w"/><circle cx="700" cy="330" r="16" fill="#fff" class="glow-w"/>
+        </svg>
+        <div class="abs" style="left:205px;top:370px;font-size:34px;color:var(--ink-dim);font-weight:700">first</div>
+        <div class="abs" style="left:650px;top:370px;font-size:34px;color:var(--ink-dim);font-weight:700">then</div>
+        <div class="orb prep" id="C3prep" style="left:60px;top:190px;font-size:38px;padding:20px 32px">PREPARATION</div>
+        <div class="orb opp" id="C3opp" style="left:520px;top:190px;font-size:38px;padding:20px 32px">OPPORTUNITY</div>
+        <div class="abs" id="C3x" style="left:380px;top:20px;width:200px;height:200px;opacity:0">
+          <svg class="glow-r" width="200" height="200" viewBox="0 0 100 100"><path d="M20 20 L80 80 M80 20 L20 80" stroke="#ff3346" stroke-width="12" stroke-linecap="round"/></svg></div>
+      </div></div>
+
+      <!-- ===== C4 · what are you gonna do with it? ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="C4"><div class="stage" style="transform:scale(1.0);width:600px;height:600px">
+        <svg class="abs" id="C4ring" style="left:0;top:0" width="600" height="600" viewBox="0 0 600 600"><!--{{RINGDOTS}}--></svg>
+        <div class="abs bigq" style="left:0;width:600px;top:20px;text-align:center">?</div>
+      </div></div>
+
+      <!-- ===== D1 · level of opportunity ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="D1"><div class="stage" style="transform:scale(1.3);width:760px;height:560px">
+        <div class="abs meter" style="left:60px;top:40px"><!--{{METER}}--></div>
+        <div class="abs" style="left:0;width:760px;top:480px;text-align:center;font-weight:900;font-size:56px"><span style="color:var(--ink-dim)">LVL</span> <span id="D1cnt" class="glow-gold" style="color:var(--gold)">1</span></div>
+      </div></div>
+
+      <!-- ===== D2 · the message ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="D2"><div class="stage" style="transform:scale(1.15);width:820px;height:400px">
+        <div class="notif abs" id="D2n" style="left:0;top:100px">
+          <div class="ic"><svg width="110" height="110" viewBox="0 0 110 110"><rect x="32" y="22" width="46" height="62" rx="5" fill="none" stroke="#241600" stroke-width="5"/><path d="M41 40 H69 M41 52 H69 M41 64 H60" stroke="#241600" stroke-width="5" stroke-linecap="round"/></svg></div>
+          <div><div class="t1">new message · now</div><div class="t2">"hey, I got a contract<br>for you right now"</div></div>
+        </div>
+      </div></div>
+
+      <!-- ===== D3 · the contract ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="D3"><div class="stage" style="transform:scale(1.05);width:1000px;height:740px">
+        <div class="abs" id="D3doc" style="left:240px;top:20px">
+          <div class="paper"><div class="ttl">CONTRACT</div>
+            <svg class="abs" style="left:0;top:0" width="520" height="690" viewBox="0 0 520 690"><!--{{DOCLINES}}-->
+              <path id="D3sig" class="sm-line" pathLength="1" d="M60 620 H300" style="stroke:#ffc53d;stroke-width:4"/>
+              <text x="60" y="605" font-family="Product Sans" font-size="40" fill="#ffc53d">✕</text>
+            </svg>
+            <div class="abs hlbar" style="left:44px;top:190px;width:400px;height:30px;border-radius:6px;background:rgba(255,51,70,.35);box-shadow:0 0 16px rgba(255,51,70,.6);transform-origin:left;transform:scaleX(0)"></div>
+            <div class="abs hlbar" style="left:44px;top:322px;width:350px;height:30px;border-radius:6px;background:rgba(255,51,70,.35);box-shadow:0 0 16px rgba(255,51,70,.6);transform-origin:left;transform:scaleX(0)"></div>
+            <div class="abs hlbar" style="left:44px;top:454px;width:420px;height:30px;border-radius:6px;background:rgba(255,51,70,.35);box-shadow:0 0 16px rgba(255,51,70,.6);transform-origin:left;transform:scaleX(0)"></div>
+            <div class="abs sm-chip red qc" style="left:430px;top:178px;opacity:0;font-size:26px">?</div>
+            <div class="abs sm-chip red qc" style="left:380px;top:310px;opacity:0;font-size:26px">?</div>
+            <div class="abs sm-chip red qc" style="left:440px;top:442px;opacity:0;font-size:26px">?</div>
+          </div>
+        </div>
+        <div class="who abs w3" style="left:40px;top:120px"><div class="q">?</div></div>
+        <div class="who abs w3" style="left:20px;top:420px"><div class="q">?</div></div>
+        <div class="who abs w3" style="left:840px;top:250px"><div class="q">?</div></div>
+        <!-- lawyer (enters later) -->
+        <svg class="abs" id="D3conn" style="left:0;top:0" width="1000" height="740" viewBox="0 0 1000 740">
+          <path id="D3line" class="sm-line" pathLength="1" d="M560 360 C 650 360, 680 300, 760 300" style="stroke:#39ff8f"/>
+        </svg>
+        <div class="abs" id="D3law" style="left:700px;top:150px;width:300px;opacity:0">
+          <svg class="glow-g" width="300" height="260" viewBox="0 0 120 104">
+            <path d="M60 8 V92 M30 92 H90 M20 22 H100" stroke="#39ff8f" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <path d="M20 22 L6 56 H34 Z M100 22 L86 56 H114 Z" fill="rgba(57,255,143,.2)" stroke="#39ff8f" stroke-width="4" stroke-linejoin="round"/>
+            <circle cx="60" cy="10" r="6" fill="#39ff8f"/>
+          </svg>
+          <div class="sm-chip" style="margin-top:8px;font-size:28px">entertainment lawyer?</div>
+        </div>
+      </div></div>
+
+      <!-- ===== D5 · you don't know none of this ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="D5"><div class="stage" style="transform:scale(1.45);width:640px;height:420px">
+        <div class="coinlist">
+          <div class="sm-coin-row" id="D5c1"><div class="sm-coin">1</div><div class="t">the terms <span class="xmark">✕</span></div></div>
+          <div class="sm-coin-row" id="D5c2"><div class="sm-coin">2</div><div class="t">who to call <span class="xmark">✕</span></div></div>
+          <div class="sm-coin-row" id="D5c3"><div class="sm-coin">3</div><div class="t">a lawyer <span class="xmark">✕</span></div></div>
+        </div>
+      </div></div>
+
+      <!-- ===== E1 · step zero → step A ===== -->
+      <div data-layout-allow-overflow class="sm-hero" id="E1"><div class="stage" style="transform:scale(1.08);width:960px;height:700px"><div class="abs" id="E1cam" style="left:0;top:0;width:960px;height:700px;transform-origin:85% 15%">
+        <svg class="abs" style="left:0;top:0;overflow:visible" width="960" height="700" viewBox="0 0 960 700">
+          <defs><radialGradient id="halo"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><linearGradient id="cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset="1" stop-color="#fff" stop-opacity=".38"/></linearGradient></defs>
+          <g id="E1cone" opacity="0"><ellipse cx="830" cy="140" rx="190" ry="70" fill="url(#halo)"/><path d="M830 -150 L720 130 M830 -150 L940 130" stroke="rgba(255,255,255,.35)" stroke-width="3"/><path d="M830 -150 L720 130 L940 130 Z" fill="rgba(255,255,255,.07)"/></g>
+          <path id="E1stairs" class="glow-g" pathLength="1" d="M60 640 H200 V540 H340 V440 H480 V340 H620 V240 H760 V150 H900" fill="none" stroke="#39ff8f" stroke-width="8" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+          <path id="E1path" pathLength="1" d="M130 600 C 300 560, 560 360, 830 120" fill="none" stroke="#fff" stroke-width="5" stroke-dasharray=".02 .02" stroke-dashoffset="0" opacity="0"/>
+          <circle id="E1dot" cx="130" cy="610" r="22" fill="#ff3346" class="glow-r" opacity="0"/>
+        </svg>
+        <div class="abs lbl-big" id="E1zero" style="left:80px;top:650px;color:#ff6b79;opacity:0;filter:var(--glow-r)">step 0</div>
+        <div class="abs lbl-big" id="E1A" style="left:770px;top:20px;color:var(--green);opacity:0;filter:var(--glow-g);font-size:110px">A</div>
+      </div></div></div>
+
+      <!-- ===== chapter device: the PREP RING (recurring) ===== -->
+      <div class="abs" data-layout-allow-overflow style="left:0;top:0;width:1080px;height:1920px;overflow:hidden">
+      <div data-layout-allow-overflow class="abs" id="ring" style="left:240px;top:380px;width:600px;height:600px;opacity:0">
+        <svg width="600" height="600" viewBox="0 0 600 600" style="overflow:visible">
+          <defs>
+            <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a86"/><stop offset=".5" stop-color="#ff1f36"/><stop offset="1" stop-color="#7a0010"/></linearGradient>
+          </defs>
+          <g class="glow-r">
+            <circle cx="300" cy="300" r="210" fill="none" stroke="url(#rg)" stroke-width="58"/>
+            <circle cx="300" cy="300" r="232" fill="none" stroke="rgba(255,220,225,.55)" stroke-width="3"/>
+            <circle cx="300" cy="300" r="190" fill="none" stroke="rgba(255,220,225,.35)" stroke-width="2"/>
+          </g>
+          <g id="ringDots"><!--{{RINGLIGHTS}}--></g>
+        </svg>
+      </div>
+      </div>
+      <div data-layout-allow-overflow class="sm-chap" id="ch1"><div class="num">1<small>the shout-out</small></div></div>
+      <div data-layout-allow-overflow class="sm-chap" id="ch2"><div class="num">2<small>preparation</small></div></div>
+      <div data-layout-allow-overflow class="sm-chap" id="ch3"><div class="num">3<small>the moment</small></div></div>
+      <div data-layout-allow-overflow class="sm-chap" id="ch4"><div class="num">4<small>step zero</small></div></div>
+      <!-- recap labels around the ring -->
+      <div class="abs sm-chip white rl" style="left:110px;top:400px;opacity:0;font-size:34px">1 · the shout-out</div>
+      <div class="abs sm-chip white rl" style="left:640px;top:400px;opacity:0;font-size:34px">2 · preparation</div>
+      <div class="abs sm-chip gold rl" style="left:660px;top:930px;opacity:0;font-size:34px">3 · the moment</div>
+      <div class="abs sm-chip red rl" style="left:120px;top:930px;opacity:0;font-size:34px">4 · step zero</div>
+    </div>
+    <div class="sm-card-edge"></div>
+  </div>
+
+  <!-- white flash for punch-ins (above video, below captions) -->
+  <div id="flash" class="clip sm-flash" data-start="0" data-duration="{{VT}}" data-track-index="4" style="width:1080px;height:1920px"></div>
+
+  <!-- 3 · seam captions: ONE word, every spoken word -->
+{{CAPTIONS}}
+
+  <!-- 8 · audio (speech + pre-mixed SFX) -->
+  <audio id="aud" class="clip" src="assets/mix.wav" data-start="0" data-duration="{{VT}}" data-track-index="8"></audio>
+</div>
+
+<script>
+/*{{SMKIT}}*/
+</script>
+<script>
+(function () {
+  const tl = gsap.timeline({ paused: true });
+  const K = window.SMKit;
+  const PUNCH = {{PUNCH}};
+  const VT = {{VT}};
+
+  // ---- always-on atmosphere: grid drift + spotlight breathing (never static) ----
+  tl.fromTo('#grid', { x: 0, y: 0 }, { x: -90, y: -45, duration: VT, ease: 'none' }, 0);
+  tl.fromTo('#spot', { x: -60, scale: .95 }, { x: 60, scale: 1.08, duration: VT / 4, ease: 'sine.inOut', repeat: 3, yoyo: true }, 0);
+  tl.set('.sm-head, .sm-hero, .sm-chap, #ring', { autoAlpha: 0 }, 0);
+  tl.set('#flash', { opacity: 0 }, 0);
+  tl.set('#vid', { scale: 1 }, 0);
+
+  // ---- headers: [id, in, out] ----
+  const H = [['#hA', .1, 6.2], ['#hB', 6.28, 9.75], ['#hC', 10.95, 15.82], ['#hD', 17.2, 29.6],
+             ['#hE', 29.65, 32.92], ['#hF', 34.3, 39.03], ['#hG', 40.38, 46.23], ['#hH', 48.7, 51.6],
+             ['#hI', 51.65, 60.33], ['#hJ', 61.68, 65.3], ['#hR', 65.4, VT + 1]];
+  H.forEach(([id, a, b]) => { K.typeHeader(tl, id, a, .13); if (b < VT) K.headerOut(tl, id, b - .2); });
+
+  // ---- A1/A2 · phone + follower counter, then coin list ----
+  K.hero(tl, '#A1', .15, 6.0, { drift: 10 });
+  K.counter(tl, '#A1cnt', .25, 3.3, 0, 48920, undefined, 'power2.in');
+  tl.fromTo('#A1 .bars i', { scaleY: 0 }, { scaleY: 1, duration: .5, stagger: .32, ease: 'back.out(2)' }, .3);
+  ['.h1', '.h2', '.h3', '.h4'].forEach((h, i) => {
+    tl.fromTo('#A1 ' + h, { autoAlpha: 0, y: 40, scale: .4 }, { autoAlpha: 1, y: -60, scale: 1.1, duration: .6, ease: 'power2.out' }, .5 + i * .55);
+    tl.to('#A1 ' + h, { autoAlpha: 0, y: -160, duration: .7, ease: 'power1.in' }, 1.1 + i * .55);
+  });
+  tl.set('#A2list', { autoAlpha: 1 }, 0);
+  tl.to('#A1phone', { x: -250, scale: .82, duration: .4, ease: 'power3.inOut' }, 3.42);
+  tl.to('#A1phone', { scale: 1.07, y: -10, duration: .35, ease: 'power3.out' }, 1.85);
+  tl.to('#A1phone', { scale: 1, y: 0, duration: .3, ease: 'power2.inOut' }, 3.1);
+  K.pop(tl, '#A2c1', 3.6, { from: .6 }); K.pop(tl, '#A2c2', 4.57, { from: .6 }); K.pop(tl, '#A2c3', 5.52, { from: .6 });
+
+  // ---- A3 · chart: want it now → flat ----
+  K.hero(tl, '#A3', 6.2, 9.18, { drift: 12 });
+  K.draw(tl, '#A3up', 6.35, .9, 'power2.out');
+  K.pop(tl, '#A3chip', 6.6);
+  tl.to('#A3dot', { opacity: 1, duration: .1 }, 7.25);
+  K.draw(tl, '#A3flat', 7.8, 1.0, 'none');
+  tl.to('#A3dot', { attr: { cx: 760, cy: 126 }, duration: 1.0, ease: 'none' }, 7.8);
+  K.pop(tl, '#A3chip2', 8.75);
+
+  // ---- A4 · STOP ----
+  tl.fromTo('#A4', { autoAlpha: 0, scale: 2.4, rotate: -12, filter: 'blur(10px)' },
+    { autoAlpha: 1, scale: 1, rotate: 0, filter: 'blur(0px)', duration: .2, ease: 'power4.in' }, 9.18);
+  tl.to('#A4', { x: -14, duration: .05, yoyo: true, repeat: 3 }, 9.38);
+  tl.to('#A4', { scale: 1.12, duration: .3, ease: 'none' }, 9.5);
+  tl.to('#A4', { autoAlpha: 0, scale: .2, filter: 'blur(10px)', duration: .18, ease: 'power2.in' }, 9.72);
+
+  // ---- chapter fly-ins through the PREP RING ----
+  const CH = [['#ch1', 9.8], ['#ch2', 15.83], ['#ch3', 32.93], ['#ch4', 60.36]];
+  CH.forEach(([c, t]) => K.chapter(tl, '#ring', c, t, 1.3));
+  tl.to('#ringDots', { rotate: 360 * 6, svgOrigin: '300 300', duration: VT, ease: 'none' }, 0);
+
+  // ---- B0 · DM ----
+  K.hero(tl, '#B0', 11.08, 11.87, { keep: true, drift: 6 });
+  K.pop(tl, '#B0typ', 11.12); tl.to('#B0typ', { autoAlpha: 0, duration: .08 }, 11.38);
+  K.pop(tl, '#B0in', 11.4);
+  // (punch-in 11.87–13.27 "I say no. why?") — DM stays underneath; reply lands on return
+  K.pop(tl, '#B0out', 13.3, { from: .2 });
+  tl.to('#B0', { y: -20, duration: 2.5, ease: 'none' }, 13.3);
+  K.pop(tl, '#B0ready', 14.2);
+  tl.to('#B0bar', { scaleX: .12, duration: .6, ease: 'power2.out' }, 14.35);
+  K.counter(tl, '#B0pct', 14.35, .6, 0, 12, (v) => Math.round(v) + '%', 'power2.out');
+  tl.to('#B0', { autoAlpha: 0, scale: 1.15, filter: 'blur(10px)', duration: .22, ease: 'power2.in' }, 15.62);
+  tl.set('#B0', { autoAlpha: 0, scale: 1, y: 0, filter: 'none' }, 15.86);
+
+  // ---- B1 · megaphone ----
+  K.hero(tl, '#B1', 17.12, 19.42, { drift: 14 });
+  ['#B1w1', '#B1w2', '#B1w3'].forEach((w, i) => {
+    tl.fromTo(w, { opacity: 0, x: -20 }, { opacity: 1, x: 10, duration: .35, ease: 'power1.out', repeat: 3, yoyo: true }, 17.3 + i * .12);
+  });
+  K.pop(tl, '#B1chip', 18.72, { from: 2.2 });
+  tl.to('#B1mega', { rotate: -14, x: -60, scale: 1.12, duration: .3, ease: 'back.out(2)' }, 18.65);
+  tl.to('#B1 .wave', { scale: 1.25, x: 30, duration: .3, ease: 'power2.out' }, 18.65);
+
+  // ---- B2 · people come to your page ----
+  K.hero(tl, '#B2', 19.42, 21.03, { drift: 10 });
+  tl.fromTo('#B2 .u', { autoAlpha: 0, scale: .3 }, { autoAlpha: 1, scale: 1, duration: .25, stagger: .07, ease: 'back.out(2)' }, 19.6);
+  tl.fromTo('#B2 .sm-line', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .45, stagger: .06, ease: 'power2.inOut' }, 20.05);
+  tl.to('#B2 .u', { x: (i) => [380, 410, 360, -380, -410, -360][i], y: (i) => [200, 0, -200, 200, 0, -200][i], scale: .3, autoAlpha: 0, duration: .5, stagger: .05, ease: 'power2.in' }, 20.45);
+  tl.set('#B2 .u', { autoAlpha: 0 }, 21.0);
+  tl.to('#B2page', { scale: 1.15, duration: .3, ease: 'back.out(3)' }, 20.75);
+
+  // ---- B3 · two posts ----
+  K.hero(tl, '#B3', 23.1, 24.7, { drift: 12 });
+  tl.fromTo('#B3 .e', { autoAlpha: 0 }, { autoAlpha: 1, duration: .2, stagger: .03 }, 23.15);
+  K.pop(tl, '#B3t1', 23.38); K.pop(tl, '#B3t2', 23.8); K.pop(tl, '#B3chip', 24.0);
+
+  // ---- B4 · vs the catalog ----
+  K.hero(tl, '#B4', 24.86, 27.03, { drift: 10, keep: true, fromScale: .3 });
+  tl.fromTo('#B4 .stage > .abs:first-child', { x: -300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .3, ease: 'power3.out' }, 24.86);
+  tl.fromTo('#B4cat .tile', { autoAlpha: 0, scale: .3 }, { autoAlpha: 1, scale: 1, duration: .18, stagger: .055, ease: 'back.out(2)' }, 25.3);
+  tl.to('#B4cat .tile', { background: 'linear-gradient(135deg, rgba(57,255,143,.75), rgba(57,255,143,.2))', borderColor: '#39ff8f', duration: .25, stagger: .02 }, 26.45);
+  K.pop(tl, '#B4chip', 26.5);
+  tl.to('#B4cat', { scale: 1.12, x: -40, duration: .4, ease: 'power3.inOut' }, 26.0);
+  tl.set('#B4', { autoAlpha: 0 }, 29.59);
+
+  // ---- B5 · consistency calendar ----
+  K.hero(tl, '#B5', 29.62, 31.4, { drift: 10 });
+  tl.to('#B5 .day .fill', { opacity: 1, duration: .08, stagger: .05 }, 29.75);
+  tl.to('#B5 .day svg', { opacity: 1, duration: .08, stagger: .05 }, 29.78);
+  K.counter(tl, '#B5cnt', 29.75, 1.4, 0, 28, undefined, 'none');
+
+  // ---- B6 · drop after drop ----
+  K.hero(tl, '#B6', 31.4, 32.9, { drift: 8, fromScale: .8 });
+  tl.fromTo('#B6 .pc', { y: 420, rotate: 0, autoAlpha: 0 },
+    { y: 0, autoAlpha: 1, rotate: (i) => (i - 2.5) * 11, x: (i) => (i - 2.5) * 60, duration: .3, stagger: .2, ease: 'back.out(1.4)' }, 31.45);
+
+  // ---- C1 · opportunity meets preparation ----
+  K.hero(tl, '#C1', 34.25, 36.22, { drift: 6, keep: true });
+  tl.fromTo('#C1opp', { x: -260, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: 'power3.out' }, 34.08);
+  tl.fromTo('#C1prep', { x: 260, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: 'power3.out' }, 35.42);
+  K.draw(tl, '#C1line', 34.5, 1.2, 'power1.inOut');
+  tl.to('#C1opp', { x: 160, y: 60, duration: .7, ease: 'power3.in' }, 35.55);
+  tl.to('#C1prep', { x: -160, y: -60, duration: .7, ease: 'power3.in' }, 35.55);
+  tl.to('#C1', { autoAlpha: 0, scale: 1.4, filter: 'blur(12px)', duration: .12 }, 36.24);
+  tl.set('#C1', { autoAlpha: 0, scale: 1, filter: 'none' }, 36.38);
+
+  // ---- C2 · fireworks (riser lands at 36.30) ----
+  tl.set('#C2', { autoAlpha: 1 }, 36.26);
+  tl.to('#C2', { scale: 1.06, duration: 1.6, ease: 'none' }, 36.26);
+  [['.b1', 36.28], ['.b2', 36.83], ['.b3', 37.2]].forEach(([b, t]) => {
+    tl.fromTo('#C2 ' + b + ' .ray', { strokeDashoffset: 1, opacity: 1 }, { strokeDashoffset: 0, duration: .45, ease: 'power3.out' }, t);
+    tl.to('#C2 ' + b + ' .ray', { opacity: 0, duration: .5, ease: 'power1.in' }, t + .45);
+    tl.fromTo('#C2 ' + b + ' .pt', { x: 0, y: 0, opacity: 1, scale: 1 },
+      { x: (i, el) => +el.dataset.dx, y: (i, el) => +el.dataset.dy + 40, opacity: 0, scale: .4, duration: 1.0, ease: 'power2.out' }, t);
+  });
+  K.pop(tl, '#C2txt', 36.3, { from: .3 });
+  tl.to('#C2txt', { autoAlpha: 0, duration: .25 }, 37.1);
+  tl.to('#C2', { autoAlpha: 0, duration: .2 }, 37.86);
+  K.hero(tl, '#C2b', 37.88, 39.03, { drift: 6, keep: true });
+  tl.fromTo('#C2top', { scale: 1 }, { scale: .25, duration: 1.1, ease: 'none' }, 37.9);
+  tl.fromTo('#C2bot', { scale: .2 }, { scale: 1, duration: 1.1, ease: 'none' }, 37.9);
+  tl.set('#C2b', { autoAlpha: 0 }, 40.32);
+
+  // ---- C3 · the wrong order ----
+  K.hero(tl, '#C3', 40.35, 45.18, { drift: 10 });
+  K.draw(tl, '#C3track', 40.4, .5);
+  tl.to('#C3opp', { x: -460, y: -120, duration: .35, ease: 'power2.out' }, 41.9);
+  tl.to('#C3opp', { y: 0, duration: .25, ease: 'bounce.out' }, 42.25);
+  tl.to('#C3prep', { x: 460, duration: .45, ease: 'power3.inOut' }, 42.5);
+  tl.to('#C3prep', { opacity: .45, duration: .3 }, 43.0);
+  tl.to('#C3opp', { scale: 1.35, y: -40, duration: .35, ease: 'back.out(2)' }, 43.1);
+  tl.to('#C3opp', { scale: 1, y: 0, duration: .3, ease: 'power2.inOut' }, 44.0);
+  K.pop(tl, '#C3x', 44.34, { from: 2 });
+  tl.to('#C3x', { rotate: 8, duration: .06, yoyo: true, repeat: 5 }, 44.6);
+
+  // ---- C4 · ? ----
+  K.hero(tl, '#C4', 45.18, 46.23, { drift: 8, keep: true });
+  tl.to('#C4ring', { rotate: 120, svgOrigin: '300 300', duration: 1.1, ease: 'none' }, 45.18);
+  tl.set('#C4', { autoAlpha: 0 }, 48.66);
+
+  // ---- D1 · level meter ----
+  K.hero(tl, '#D1', 48.68, 49.84, { drift: 6 });
+  tl.fromTo('#D1 .meter i', { scaleY: 0 }, { scaleY: 1, duration: .25, stagger: .07, ease: 'back.out(2)' }, 48.72);
+  K.counter(tl, '#D1cnt', 48.72, .8, 1, 99, undefined, 'power1.out');
+
+  // ---- D2 · message ----
+  K.hero(tl, '#D2', 49.86, 51.62, { drift: 6, fromScale: .8 });
+  tl.fromTo('#D2n', { y: -260 }, { y: 0, duration: .45, ease: 'bounce.out' }, 49.86);
+  tl.to('#D2n', { x: 8, duration: .05, yoyo: true, repeat: 5 }, 51.68 - .7);
+
+  // ---- D3 · contract → who → words → lawyer ----
+  K.hero(tl, '#D3', 51.64, 58.88, { drift: 14, grow: .02 });
+  tl.fromTo('#D3 .dl', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .25, stagger: .09, ease: 'power1.out' }, 51.75);
+  K.draw(tl, '#D3sig', 52.9, .4);
+  tl.fromTo('#D3 .w3', { autoAlpha: 0, scale: .3 }, { autoAlpha: 1, scale: 1, duration: .25, stagger: .25, ease: 'back.out(2)' }, 53.28);
+  tl.to('#D3doc', { scale: 1.16, y: 30, duration: .45, ease: 'power3.inOut' }, 54.55);
+  tl.to('#D3 .w3', { autoAlpha: 0, scale: .5, duration: .2, stagger: .05 }, 54.55);
+  tl.to('#D3doc', { scale: 1, y: 0, duration: .35, ease: 'power3.inOut' }, 55.45);
+  tl.to('#D3 .hlbar', { scaleX: 1, duration: .25, stagger: .3, ease: 'power2.out' }, 55.5);
+  tl.fromTo('#D3 .qc', { autoAlpha: 0, scale: .3 }, { autoAlpha: 1, scale: 1, duration: .2, stagger: .3, ease: 'back.out(3)' }, 55.65);
+  tl.to('#D3doc', { x: -180, scale: .82, duration: .4, ease: 'power3.inOut' }, 56.9);
+  K.draw(tl, '#D3line', 57.2, .5);
+  K.pop(tl, '#D3law', 57.5, { from: .5 });
+
+  // ---- D5 · none of this ----
+  K.hero(tl, '#D5', 58.9, 60.3, { drift: 8 });
+  K.pop(tl, '#D5c1', 58.94, { from: .6 }); K.pop(tl, '#D5c2', 59.2, { from: .6 }); K.pop(tl, '#D5c3', 59.48, { from: .6 });
+
+  // ---- E1 · stairs ----
+  K.hero(tl, '#E1', 61.66, 65.28, { drift: 10, grow: .03 });
+  K.draw(tl, '#E1stairs', 61.7, .8, 'power2.out');
+  tl.fromTo('#E1dot', { opacity: 0, scale: .2, svgOrigin: '130 610' }, { opacity: 1, scale: 1, duration: .25, ease: 'back.out(3)' }, 62.2);
+  K.pop(tl, '#E1zero', 62.72, { from: 1.8 });
+  tl.to('#E1cam', { scale: 1.35, x: 420, y: -300, duration: .45, ease: 'power3.inOut' }, 62.55);
+  tl.to('#E1cam', { scale: 1.28, x: -40, y: 40, duration: .6, ease: 'power3.inOut' }, 63.7);
+  tl.to('#E1cone', { opacity: 1, duration: .3 }, 63.75);
+  tl.fromTo('#E1cone', { rotate: -14, svgOrigin: '830 -150' }, { rotate: 4, duration: 1.4, ease: 'sine.inOut' }, 63.75);
+  tl.set('#E1path', { opacity: 1 }, 64.0);
+  tl.fromTo('#E1path', { strokeDashoffset: 1, strokeDasharray: '1 1' }, { strokeDashoffset: 0, duration: .8, ease: 'power1.inOut' }, 64.0);
+  tl.to('#E1dot', { attr: { cx: 830, cy: 125 }, duration: .8, ease: 'power2.inOut' }, 64.2);
+  K.pop(tl, '#E1A', 64.98, { from: 2.2 });
+
+  // ---- recap: the ring + all chapter labels ----
+  tl.fromTo('#ring', { autoAlpha: 0, scale: 2.6, filter: 'blur(14px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: .45, ease: 'power3.out' }, 65.3);
+  tl.to('#ring', { scale: 1.06, duration: VT - 65.75, ease: 'none' }, 65.75);
+  tl.fromTo('.rl', { autoAlpha: 0, scale: .4 }, { autoAlpha: 1, scale: 1, duration: .25, stagger: .22, ease: 'back.out(2)' }, 65.6);
+
+  // ---- punch-ins: panel off, video punches, flash ----
+  PUNCH.forEach(([a, b]) => K.punch(tl, '#panel', '#vid', '#flash', a, b));
+
+  // ---- seam captions: pop each word ----
+  document.querySelectorAll('.sm-cap').forEach((el) => K.word(tl, el, +el.dataset.start));
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['main'] = tl;
+})();
+</script>
+</body>
+</html>

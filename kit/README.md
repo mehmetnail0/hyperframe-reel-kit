@@ -170,3 +170,10 @@ npm run render   # MP4'e render
 
 > `npm run dev` uzun-ömürlü preview server'dır (bloklar). Claude Code'da
 > `run_in_background: true` ile başlat — foreground'da timeout olur, server ölür.
+
+## Style: split-motion (podcast → motion-panel reel)
+
+`kit/split-motion/` — top motion panel (dot grid, glowing hero objects every 1.5–3 s,
+recurring chapter device fly-ins) over a bottom speaker card, one-word seam captions on
+every word, 4–5 full-screen punch-ins, recap ending. Start with `kit/split-motion/SKILL.md`;
+worked example: `split-motion-dai/`.
