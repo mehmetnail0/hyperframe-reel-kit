@@ -3,7 +3,8 @@
 
 usage:
   python3 -I sfx_mix.py gain  MAP.json LIBRARY_DIR SPEECH.wav     # measure + write gain_db into MAP
-  python3 -I sfx_mix.py mix   MAP.json LIBRARY_DIR SPEECH.wav OUT.wav TOTAL_SECONDS
+  python3 -I sfx_mix.py mix   MAP.json LIBRARY_DIR SPEECH.wav OUT.wav TOTAL_SECONDS [--music BED.wav]
+  (sounds carrying "max_m" from sfx/palette.json are not re-measured: one voice measurement total)
 
 MAP.json (commit this, never the library):
   "sounds": { name: { "file": path inside LIBRARY_DIR, "peak_ms": where the sound's
@@ -56,8 +57,17 @@ def gain(mp, lib, speech):
     json.dump(m, open(mp, "w"), indent=1, ensure_ascii=False)
 
 
-def mix(mp, lib, speech, out, total):
+def mix(mp, lib, speech, out, total, music=None, music_db=-17.0):
     m = json.load(open(mp))
+    vI = None
+    if any("gain_db" not in s for s in m["sounds"].values()):
+        _, vI, _ = loud(speech, "anull")  # one measurement; per-file max_m comes cached from the palette
+        for s in m["sounds"].values():
+            if "gain_db" not in s:
+                mm = s.get("max_m")
+                if mm is None:
+                    mm, _, _ = loud(os.path.join(lib, s["file"]), chain(s) + ",apad=pad_dur=0.6")
+                s["gain_db"] = round(vI - s["under_voice_db"] - mm, 1)
     inputs, fl, labels = ["-i", speech], [f"[0:a]apad=whole_dur={total:.3f},atrim=0:{total:.3f}[sp]"], ["[sp]"]
     for k, e in enumerate(sorted(m["events"], key=lambda e: e["t"])):
         s = m["sounds"][e["sound"]]
@@ -69,6 +79,17 @@ def mix(mp, lib, speech, out, total):
         ms = int(round(start * 1000))
         fl.append(f"[{k + 1}:a]{chain(s, head)},volume={g:.1f}dB,adelay={ms}|{ms}[s{k}]")
         labels.append(f"[s{k}]")
+    if music:  # licensed bed: level music_db under the voice (Kallaway median -17), ducked by the speech
+        if vI is None:
+            _, vI, _ = loud(speech, "anull")
+        _, mI, _ = loud(music, "anull")
+        k = len(inputs) // 2
+        inputs += ["-stream_loop", "-1", "-i", music]
+        fl.append(f"[{k}:a]atrim=0:{total:.3f},aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,"
+                  f"volume={vI + music_db - mI:.1f}dB,afade=t=in:d=0.6,afade=t=out:st={max(0, total - 1.2):.2f}:d=1.2[bed]")
+        fl[0] = fl[0].replace("[sp]", "[sp0]") + ";[sp0]asplit=2[sp][key]"
+        fl.append("[bed][key]sidechaincompress=threshold=0.05:ratio=3:attack=20:release=350[mus]")
+        labels.append("[mus]")
     fc = ";".join(fl) + ";" + "".join(labels) + \
         f"amix=inputs={len(labels)}:normalize=0:dropout_transition=0,atrim=0:{total:.3f}[m]"
     pre = out + ".pre.wav"
@@ -93,4 +114,5 @@ if __name__ == "__main__":
     if a[0] == "gain":
         gain(a[1], a[2], a[3])
     else:
-        mix(a[1], a[2], a[3], a[4], float(a[5]))
+        mus = a[a.index("--music") + 1] if "--music" in a else None
+        mix(a[1], a[2], a[3], a[4], float(a[5]), mus)

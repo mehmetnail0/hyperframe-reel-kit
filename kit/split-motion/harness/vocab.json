@@ -1,0 +1,39 @@
+{
+ "_comment": "Motion vocabulary of the split-motion harness (from research/kallaway-20.md). The planner picks from it; scenes.py compiles it; memory/history.json records what each reel used so the next reel picks differently (novelty.py).",
+ "layouts": {
+  "split":   "top motion panel (y 0-1370) + speaker card (y 1372-1900) + seam caption; Kallaway ~70 % of screen time",
+  "speaker": "full-screen 9:16 speaker, caption below the chin; Kallaway ~27 %, 1.5-4 s runs, every 4-8 s",
+  "graphic": "full-screen graphic, no speaker (caption mid-screen); Kallaway rare (0-30 %, 2 of 20 reels)"
+ },
+ "scenes": {
+  "orbit":    {"fields": "center (short label), items[3-6] (thumb captions)", "use": "a concept with many examples (formats, creators, ideas)", "sfx": "glow on land, ticks on items"},
+  "doc":      {"fields": "title, rows[3-6] {label}", "use": "a script / template / plan with parts", "sfx": "draw or tick per row"},
+  "list":     {"fields": "items[3-6]", "use": "numbered steps / top-N; unrevealed rows are ghost-blurred", "sfx": "counter run of soft ticks (1-2-3)"},
+  "phone":    {"fields": "headline, sub, rows[0-4]", "use": "an app / a post / a platform / followers", "sfx": "whoosh_soft in, tick on chips"},
+  "grid":     {"fields": "n (6-12), highlight (index), label", "use": "a catalog / library / many videos", "sfx": "swap whoosh, glow on highlight"},
+  "tree":     {"fields": "root, children[2-4]", "use": "a split / levels / cause-effect", "sfx": "draw on branches"},
+  "radar":    {"fields": "label, n (4-14)", "use": "targeting / reach / attention", "sfx": "ticks on dots"},
+  "network":  {"fields": "center, value (number), items[3-6]", "use": "audience / reach / community / followers", "sfx": "riser into the number"},
+  "counter":  {"fields": "value, prefix, suffix, label", "use": "a number the speaker says", "sfx": "tick run then ding"},
+  "compare":  {"fields": "left {title, items}, right {title, items}", "use": "A vs B, wrong vs right, before/after", "sfx": "whoosh between, ding on the winner"},
+  "quote":    {"fields": "text (<= 6 words, *serif* allowed)", "use": "a punchline / a rule", "sfx": "riser_short into it, or nothing"},
+  "bars":     {"fields": "values[3-6] (0-100), labels[]", "use": "growth / ranking / comparison", "sfx": "tick per bar"},
+  "browser":  {"fields": "title, rows[2-5]", "use": "a website / tool / search / dashboard", "sfx": "tick (click) once"},
+  "chapter":  {"fields": "n, title", "use": "a new section (1-2-3 device); camera flies through the number", "sfx": "riser_cine peaking on the number"},
+  "cta":      {"fields": "word, sub", "use": "the closing 'comment WORD to get X'", "sfx": "riser + ding"},
+  "steps":    {"fields": "items[3-5]", "use": "a path / process / stairs to a goal", "sfx": "ticks on steps"},
+  "icon":     {"fields": "icon (see icons), label", "use": "one concrete object the speaker names", "sfx": "glow or nothing"},
+  "chat":     {"fields": "messages[2-4] {from: in|out, text}", "use": "a DM / dialogue / a question someone asks", "sfx": "tick per bubble"},
+  "hero3d":   {"fields": "preset (phone|coins|ring|cube|bars), label", "use": "1-3 per reel, the strongest object beats only (costly)", "sfx": "riser_cine or glow"},
+  "custom_svg": {"fields": "svg (viewBox 0 0 900 800, <=40 elements, stroke-based line art, classes: d = draw, p = pop)", "use": "a NEW drawing for a concept the library lacks — the novelty slot", "sfx": "draw"}
+ },
+ "enter": ["rise", "pop", "slideL", "slideR", "drop", "flipY", "tilt3d", "iris", "wipe", "unfold", "zoomIn", "swing", "focus"],
+ "exit": ["fade", "blur", "whipL", "whipR", "shrink", "pushUp", "zoomPast", "collapse", "irisOut", "dropOut"],
+ "camera": ["push", "pull", "driftL", "driftR", "rise", "tilt", "orbit", "none"],
+ "header_styles": ["box", "underline", "serif", "plain"],
+ "caption_styles": ["pop", "slam"],
+ "accent2": ["#ffd23f", "#2ee6d6", "#b05cff", "#3dff8b", "#ff8a3d"],
+ "themes": ["dark", "light"],
+ "icons": ["bulb", "target", "rocket", "clock", "money", "chart", "warning", "check", "cross", "megaphone", "eye", "heart", "user", "users", "play", "camera", "mic", "calendar", "lock", "key", "fire", "star", "trophy", "brain", "doc", "search", "chat", "gift", "hourglass", "mountain"],
+ "three_presets": ["phone", "coins", "ring", "cube", "bars"]
+}

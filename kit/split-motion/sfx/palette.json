@@ -1,0 +1,541 @@
+{
+ "_comment": "SFX palette: categories -> files in the member's OWN library (names only; audio never committed). Built by kit/split-motion/sfx/build_palette.py from research/tools/sfx_library.py measurements.",
+ "categories": {
+  "riser_cine": {
+   "lowpass": 0,
+   "fade_in_ms": 30,
+   "under_voice_db": 12,
+   "note": "light cinematic swell, peak on the hit (chapter / reveal / punch-in)",
+   "files": [
+    {
+     "file": "Hologram Appearing (1).wav",
+     "dur": 2.032,
+     "peak_ms": 1540,
+     "attack_ms": 1540,
+     "centroid": 423,
+     "max_m": -19.8
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh Logo 02 (1).wav",
+     "dur": 4.816,
+     "peak_ms": 1740,
+     "attack_ms": 1150,
+     "centroid": 305,
+     "max_m": -15.8
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh Logo 03 (1).wav",
+     "dur": 2.914,
+     "peak_ms": 1390,
+     "attack_ms": 1120,
+     "centroid": 330,
+     "max_m": -16.1
+    },
+    {
+     "file": "cinematic-whoosh-reverse-1-235604 (1).mp3",
+     "dur": 3.48,
+     "peak_ms": 2900,
+     "attack_ms": 2220,
+     "centroid": 98,
+     "max_m": -10.6
+    },
+    {
+     "file": "cinematic-whoosh-reverse-3-235601 (1).mp3",
+     "dur": 3.264,
+     "peak_ms": 2850,
+     "attack_ms": 2680,
+     "centroid": 205,
+     "max_m": -10.9
+    },
+    {
+     "file": "cinematic-whoosh-reverse-4-235602 (1).mp3",
+     "dur": 3.48,
+     "peak_ms": 2540,
+     "attack_ms": 2200,
+     "centroid": 241,
+     "max_m": -11.1
+    }
+   ]
+  },
+  "riser_short": {
+   "lowpass": 0,
+   "fade_in_ms": 20,
+   "under_voice_db": 12,
+   "note": "0.7-1 s swell into a scene swap",
+   "files": [
+    {
+     "file": "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav",
+     "dur": 1.338,
+     "peak_ms": 770,
+     "attack_ms": 750,
+     "centroid": 463,
+     "max_m": -12.3
+    }
+   ]
+  },
+  "riser_air": {
+   "lowpass": 6500,
+   "fade_in_ms": 40,
+   "under_voice_db": 16,
+   "note": "bright digital riser, low-passed; rare, under a big reveal",
+   "files": [
+    {
+     "file": "Riser 1 (1).mp3",
+     "dur": 4.056,
+     "peak_ms": 2840,
+     "attack_ms": 1570,
+     "centroid": 6037,
+     "max_m": -18.4
+    },
+    {
+     "file": "Riser 2 (1).mp3",
+     "dur": 3.72,
+     "peak_ms": 3370,
+     "attack_ms": 1020,
+     "centroid": 5846,
+     "max_m": -9.1
+    },
+    {
+     "file": "Riser 3 (1).mp3",
+     "dur": 3.24,
+     "peak_ms": 2009,
+     "attack_ms": 1330,
+     "centroid": 7348,
+     "max_m": -21.7
+    }
+   ]
+  },
+  "whoosh_soft": {
+   "lowpass": 9000,
+   "fade_in_ms": 10,
+   "under_voice_db": 15,
+   "note": "panel swap / object slide",
+   "files": [
+    {
+     "file": "Infographic Jan 8 2025 (1)/Infographic 03 Swipe (1).wav",
+     "dur": 0.455,
+     "peak_ms": 210,
+     "attack_ms": 140,
+     "centroid": 411,
+     "max_m": -26.9
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 13 (1).wav",
+     "dur": 2.54,
+     "peak_ms": 920,
+     "attack_ms": 160,
+     "centroid": 2016,
+     "max_m": -18.9
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 14 (1).wav",
+     "dur": 2.54,
+     "peak_ms": 940,
+     "attack_ms": 150,
+     "centroid": 980,
+     "max_m": -21.5
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 15 (1).wav",
+     "dur": 2.54,
+     "peak_ms": 920,
+     "attack_ms": 150,
+     "centroid": 427,
+     "max_m": -25.1
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 16 (1).wav",
+     "dur": 2.54,
+     "peak_ms": 1140,
+     "attack_ms": 230,
+     "centroid": 392,
+     "max_m": -23.3
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 18 (1).wav",
+     "dur": 1.667,
+     "peak_ms": 810,
+     "attack_ms": 150,
+     "centroid": 1536,
+     "max_m": -21.7
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 19 (1).wav",
+     "dur": 0.873,
+     "peak_ms": 380,
+     "attack_ms": 110,
+     "centroid": 1153,
+     "max_m": -26.4
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 20 (1).wav",
+     "dur": 0.873,
+     "peak_ms": 380,
+     "attack_ms": 100,
+     "centroid": 550,
+     "max_m": -31.2
+    }
+   ]
+  },
+  "whoosh_deep": {
+   "lowpass": 0,
+   "fade_in_ms": 15,
+   "under_voice_db": 14,
+   "note": "layout switch (panel <-> full speaker), chapter fly-through",
+   "files": [
+    {
+     "file": "Mountain Audio - Deep Whoosh (1).wav",
+     "dur": 1.5,
+     "peak_ms": 420,
+     "attack_ms": 340,
+     "centroid": 66,
+     "max_m": -13.1
+    },
+    {
+     "file": "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 1 (1).wav",
+     "dur": 2.0,
+     "peak_ms": 280,
+     "attack_ms": 200,
+     "centroid": 148,
+     "max_m": -8.5
+    },
+    {
+     "file": "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 2 (1).wav",
+     "dur": 2.0,
+     "peak_ms": 270,
+     "attack_ms": 180,
+     "centroid": 145,
+     "max_m": -9.7
+    },
+    {
+     "file": "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 3 (1).wav",
+     "dur": 2.0,
+     "peak_ms": 260,
+     "attack_ms": 110,
+     "centroid": 284,
+     "max_m": -6.0
+    },
+    {
+     "file": "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 4 (1).wav",
+     "dur": 2.0,
+     "peak_ms": 240,
+     "attack_ms": 110,
+     "centroid": 335,
+     "max_m": -5.7
+    },
+    {
+     "file": "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 5 (1).wav",
+     "dur": 1.25,
+     "peak_ms": 220,
+     "attack_ms": 70,
+     "centroid": 209,
+     "max_m": -6.9
+    },
+    {
+     "file": "Whoosh Single (1).wav",
+     "dur": 1.192,
+     "peak_ms": 370,
+     "attack_ms": 160,
+     "centroid": 119,
+     "max_m": -13.1
+    },
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 1 (1).wav",
+     "dur": 2.979,
+     "peak_ms": 470,
+     "attack_ms": 190,
+     "centroid": 162,
+     "max_m": -8.4
+    }
+   ]
+  },
+  "tick_soft": {
+   "lowpass": 7000,
+   "fade_in_ms": 3,
+   "under_voice_db": 18,
+   "note": "pit pit pit: counters, list rows, small text reveals",
+   "files": [
+    {
+     "file": "Infographic Jan 8 2025 (1)/Infographic 01 Plop (1).wav",
+     "dur": 0.549,
+     "peak_ms": 170,
+     "attack_ms": 40,
+     "centroid": 329,
+     "max_m": -16.9
+    },
+    {
+     "file": "Infographic Jan 8 2025 (1)/Infographic 04 Blip (1).wav",
+     "dur": 1.425,
+     "peak_ms": 190,
+     "attack_ms": 50,
+     "centroid": 799,
+     "max_m": -19.4
+    },
+    {
+     "file": "Infographic Jan 8 2025 (1)/Infographic 08 Bloop (1).wav",
+     "dur": 0.545,
+     "peak_ms": 90,
+     "attack_ms": 70,
+     "centroid": 168,
+     "max_m": -21.8
+    },
+    {
+     "file": "UI Draw Sound Effects (1)/UI Button 1 (1).wav",
+     "dur": 1.375,
+     "peak_ms": 60,
+     "attack_ms": 40,
+     "centroid": 544,
+     "max_m": -16.4
+    },
+    {
+     "file": "UI Draw Sound Effects (1)/UI Button 2 (1).wav",
+     "dur": 1.607,
+     "peak_ms": 60,
+     "attack_ms": 40,
+     "centroid": 571,
+     "max_m": -16.4
+    },
+    {
+     "file": "UI Draw Sound Effects (1)/UI Button 3 (1).wav",
+     "dur": 1.607,
+     "peak_ms": 60,
+     "attack_ms": 40,
+     "centroid": 637,
+     "max_m": -17.4
+    },
+    {
+     "file": "casual-click-pop-ui-1-262118 (1).mp3",
+     "dur": 0.36,
+     "peak_ms": 30,
+     "attack_ms": 20,
+     "centroid": 389,
+     "max_m": -12.7
+    },
+    {
+     "file": "start-13691 (1).mp3",
+     "dur": 0.209,
+     "peak_ms": 20,
+     "attack_ms": 10,
+     "centroid": 1692,
+     "max_m": -20.9
+    }
+   ]
+  },
+  "flash": {
+   "lowpass": 8500,
+   "fade_in_ms": 2,
+   "under_voice_db": 14,
+   "note": "white flash frame / camera-flash reveal; max 1-2 per reel",
+   "files": [
+    {
+     "file": "Flash Sound Effects  (1)/Flash 3 (1).wav",
+     "dur": 0.891,
+     "peak_ms": 10,
+     "attack_ms": 0,
+     "centroid": 4691,
+     "max_m": -15.0
+    },
+    {
+     "file": "Flash Sound Effects  (1)/Flash 2 (1).wav",
+     "dur": 0.896,
+     "peak_ms": 0,
+     "attack_ms": 0,
+     "centroid": 4771,
+     "max_m": -14.0
+    },
+    {
+     "file": "Flash Sound Effects  (1)/Flash 1 (1).wav",
+     "dur": 0.924,
+     "peak_ms": 10,
+     "attack_ms": 0,
+     "centroid": 4924,
+     "max_m": -14.6
+    }
+   ]
+  },
+  "glow": {
+   "lowpass": 8000,
+   "fade_in_ms": 25,
+   "under_voice_db": 13,
+   "note": "soft shimmer/glow on a hero landing; never two in a row",
+   "files": [
+    {
+     "file": "Hologram Appears (1).wav",
+     "dur": 1.538,
+     "peak_ms": 1040,
+     "attack_ms": 710,
+     "centroid": 287,
+     "max_m": -8.2
+    },
+    {
+     "file": "Progress Hover 01 (1).wav",
+     "dur": 2.91,
+     "peak_ms": 330,
+     "attack_ms": 180,
+     "centroid": 1068,
+     "max_m": -9.1
+    },
+    {
+     "file": "Progress Hover 03 (1).wav",
+     "dur": 2.689,
+     "peak_ms": 590,
+     "attack_ms": 380,
+     "centroid": 1415,
+     "max_m": -12.4
+    },
+    {
+     "file": "shine-6-268910 (1).mp3",
+     "dur": 6.744,
+     "peak_ms": 390,
+     "attack_ms": 190,
+     "centroid": 649,
+     "max_m": -10.7
+    },
+    {
+     "file": "sound-effect-twinklesparkle-115095 (1).mp3",
+     "dur": 2.038,
+     "peak_ms": 400,
+     "attack_ms": 150,
+     "centroid": 1733,
+     "max_m": -12.7
+    },
+    {
+     "file": "shine-4-268912 (1).mp3",
+     "dur": 7.584,
+     "peak_ms": 170,
+     "attack_ms": 110,
+     "centroid": 2745,
+     "max_m": -9.3
+    },
+    {
+     "file": "SyntheticDesign EC08_32_1 (1).wav",
+     "dur": 0.755,
+     "peak_ms": 220,
+     "attack_ms": 220,
+     "centroid": 2943,
+     "max_m": -12.5
+    },
+    {
+     "file": "shining-anime-sound-effect-240582 (1).mp3",
+     "dur": 1.254,
+     "peak_ms": 100,
+     "attack_ms": 40,
+     "centroid": 4094,
+     "max_m": -18.4
+    }
+   ]
+  },
+  "ding": {
+   "lowpass": 8000,
+   "fade_in_ms": 5,
+   "under_voice_db": 16,
+   "note": "soft bell/ding on a key word or a check mark",
+   "files": [
+    {
+     "file": "Confirmation Tone (1).wav",
+     "dur": 1.843,
+     "peak_ms": 0,
+     "attack_ms": 0,
+     "centroid": 1138,
+     "max_m": -9.0
+    },
+    {
+     "file": "Infographic Jan 8 2025 (1)/Infographic 19 Bell (1).wav",
+     "dur": 1.289,
+     "peak_ms": 30,
+     "attack_ms": 20,
+     "centroid": 1088,
+     "max_m": -14.0
+    },
+    {
+     "file": "Success (1).wav",
+     "dur": 1.3,
+     "peak_ms": 150,
+     "attack_ms": 60,
+     "centroid": 1193,
+     "max_m": -13.1
+    },
+    {
+     "file": "Successes (1)/Success 3 (1).wav",
+     "dur": 1.781,
+     "peak_ms": 220,
+     "attack_ms": 120,
+     "centroid": 1415,
+     "max_m": -10.1
+    },
+    {
+     "file": "Infographic Jan 8 2025 (1)/Infographic 02 Swipe Ding (1).wav",
+     "dur": 2.366,
+     "peak_ms": 200,
+     "attack_ms": 120,
+     "centroid": 3651,
+     "max_m": -14.7
+    }
+   ]
+  },
+  "draw": {
+   "lowpass": 7500,
+   "fade_in_ms": 10,
+   "under_voice_db": 20,
+   "note": "line / underline / highlighter draws",
+   "files": [
+    {
+     "file": "Marker Pen Draw Line_SFX (1)/OBJWrite_Marker Pen Highlighter Draw Line 03 (1).wav",
+     "dur": 0.785,
+     "peak_ms": 220,
+     "attack_ms": 200,
+     "centroid": 6428,
+     "max_m": -22.0
+    },
+    {
+     "file": "Marker Pen Draw Line_SFX (1)/OBJWrite_Marker Pen Highlighter Draw Line 04 (1).wav",
+     "dur": 0.935,
+     "peak_ms": 190,
+     "attack_ms": 110,
+     "centroid": 6271,
+     "max_m": -21.3
+    },
+    {
+     "file": "Marker Pen Draw Line_SFX (1)/OBJWrite_Marker Pen Highlighter Draw Line 05 (1).wav",
+     "dur": 0.872,
+     "peak_ms": 160,
+     "attack_ms": 90,
+     "centroid": 7235,
+     "max_m": -22.5
+    },
+    {
+     "file": "Marker Pen Draw Line_SFX (1)/OBJWrite_Marker Pen Highlighter Draw Line 02 (1).wav",
+     "dur": 0.698,
+     "peak_ms": 270,
+     "attack_ms": 150,
+     "centroid": 9033,
+     "max_m": -22.6
+    },
+    {
+     "file": "Marker Pen Draw Line_SFX (1)/OBJWrite_Marker Pen Highlighter Draw Line 01 (1).wav",
+     "dur": 0.827,
+     "peak_ms": 230,
+     "attack_ms": 150,
+     "centroid": 7951,
+     "max_m": -20.1
+    }
+   ]
+  },
+  "low_swell": {
+   "lowpass": 0,
+   "fade_in_ms": 20,
+   "under_voice_db": 16,
+   "note": "sub swell under the hook or the CTA (felt, not heard)",
+   "files": [
+    {
+     "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh Logo 01 (1).wav",
+     "dur": 5.449,
+     "peak_ms": 710,
+     "attack_ms": 220,
+     "centroid": 679,
+     "max_m": -19.2
+    }
+   ]
+  }
+ }
+}
