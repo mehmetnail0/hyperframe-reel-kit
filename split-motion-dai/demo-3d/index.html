@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>split-motion 3D demo</title>
+<script src="assets/vendor/gsap.min.js"></script>
+<script type="importmap">
+{ "imports": { "three": "./assets/vendor/three/build/three.module.min.js",
+               "three/addons/": "./assets/vendor/three/addons/" } }
+</script>
+<style>
+@font-face { font-family: "Product Sans"; font-weight: 700; src: url("assets/fonts/ProductSans-Bold.woff") format("woff"); }
+@font-face { font-family: "Product Sans"; font-weight: 900; src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+@font-face { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #070708; }
+body { font-family: "Product Sans", sans-serif; color: #fff; }
+#gl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+.head { position: absolute; left: 90px; width: 900px; top: 190px; text-align: center; font-weight: 700; font-size: 70px;
+  letter-spacing: -.02em; filter: drop-shadow(0 0 6px rgba(255,255,255,.85)) drop-shadow(0 0 22px rgba(255,255,255,.45)); opacity: 0; }
+.head .acc { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; font-size: 1.12em; position: relative; }
+.head .acc::after { content: ""; position: absolute; left: 4%; right: 4%; bottom: .02em; height: 5px; border-radius: 3px;
+  background: #ff3346; box-shadow: 0 0 14px #ff3346; }
+.chap { position: absolute; left: 0; width: 1080px; top: 230px; text-align: center; font-weight: 900; font-size: 160px; line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.85)) drop-shadow(0 0 22px rgba(255,255,255,.45)); opacity: 0; }
+.chap small { font-weight: 700; font-size: 80px; margin-left: 18px; letter-spacing: -.02em; }
+.tag { position: absolute; left: 0; width: 1080px; top: 1500px; text-align: center; font-weight: 700; font-size: 40px;
+  color: rgba(255,255,255,.55); letter-spacing: .3em; }
+#flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="7" data-width="1080" data-height="1920">
+  <canvas id="gl" class="clip" width="1080" height="1920" data-start="0" data-duration="7" data-track-index="1"></canvas>
+  <div id="chap" class="chap clip" data-start="0" data-duration="3.6" data-track-index="2">1<small>the shout-out</small></div>
+  <div id="head" class="head clip" data-start="3.5" data-duration="3.5" data-track-index="3">instant <span class="acc">gratification</span></div>
+  <div class="tag clip" data-start="0" data-duration="7" data-track-index="4">3D MODE · DEMO</div>
+  <div id="flash" class="clip" data-start="0" data-duration="7" data-track-index="5"></div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const W = 1080, H = 1920, DUR = 7;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x070708);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.55;
+
+const camera = new THREE.PerspectiveCamera(38, W / H, 0.05, 100);
+
+// ---- backdrop: the panel's plus grid as a far plane (deterministic canvas texture) ----
+const gc = document.createElement('canvas'); gc.width = 1024; gc.height = 1024;
+const g = gc.getContext('2d');
+g.fillStyle = '#070708'; g.fillRect(0, 0, 1024, 1024);
+g.strokeStyle = 'rgba(255,255,255,.07)'; g.lineWidth = 2;
+for (let i = 0; i <= 1024; i += 128) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 1024); g.stroke(); g.beginPath(); g.moveTo(0, i); g.lineTo(1024, i); g.stroke(); }
+g.strokeStyle = 'rgba(255,255,255,.32)'; g.lineWidth = 3;
+for (let x = 64; x < 1024; x += 128) for (let y = 64; y < 1024; y += 128) {
+  g.beginPath(); g.moveTo(x - 9, y); g.lineTo(x + 9, y); g.moveTo(x, y - 9); g.lineTo(x, y + 9); g.stroke(); }
+const gridTex = new THREE.CanvasTexture(gc); gridTex.wrapS = gridTex.wrapT = THREE.RepeatWrapping; gridTex.repeat.set(4, 6);
+gridTex.colorSpace = THREE.SRGBColorSpace;
+const grid = new THREE.Mesh(new THREE.PlaneGeometry(40, 60), new THREE.MeshBasicMaterial({ map: gridTex }));
+grid.position.z = -14; scene.add(grid);
+// soft spotlight disc behind the hero
+const sc = document.createElement('canvas'); sc.width = sc.height = 512;
+const sg = sc.getContext('2d'); const rg = sg.createRadialGradient(256, 256, 0, 256, 256, 256);
+rg.addColorStop(0, 'rgba(255,255,255,.10)'); rg.addColorStop(.4, 'rgba(255,255,255,.035)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+sg.fillStyle = rg; sg.fillRect(0, 0, 512, 512);
+const spot = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
+spot.position.set(0, 0.6, -10); scene.add(spot);
+
+const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(3, 5, 6); scene.add(key);
+const redL = new THREE.PointLight(0xff3346, 14, 14, 2); redL.position.set(-3, 2, 3); scene.add(redL);
+const grnL = new THREE.PointLight(0x39ff8f, 0, 14, 2); grnL.position.set(3, -2, 3); scene.add(grnL);
+
+// ---- HERO 1: the chapter ring as a glossy glass neon tube ----
+const ring = new THREE.Group(); scene.add(ring);
+const R = 1.08;
+const glass = new THREE.Mesh(new THREE.TorusGeometry(R, 0.27, 48, 220), new THREE.MeshPhysicalMaterial({
+  color: 0xd8102c, metalness: 0.0, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03,
+  transparent: true, opacity: 0.30, emissive: 0x3a000a, emissiveIntensity: 0.5, envMapIntensity: 1.1, depthWrite: false }));
+const core = new THREE.Mesh(new THREE.TorusGeometry(R, 0.085, 24, 220), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 0.06, 0.16), toneMapped: false }));
+const rim1 = new THREE.Mesh(new THREE.TorusGeometry(R + 0.4, 0.010, 8, 220), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.1, 0.75, 0.8), toneMapped: false }));
+const rim2 = new THREE.Mesh(new THREE.TorusGeometry(R - 0.38, 0.008, 8, 220), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.8, 0.5, 0.55), toneMapped: false }));
+ring.add(core, glass, rim1, rim2);
+const beads = [];
+const bcol = [new THREE.Color(0.3, 2.2, 1.0), new THREE.Color(2.2, 1.5, 0.3), new THREE.Color(1.8, 1.8, 1.8)];
+for (let k = 0; k < 10; k++) {
+  const b = new THREE.Mesh(new THREE.SphereGeometry(0.055, 20, 14), new THREE.MeshBasicMaterial({ color: bcol[k % 3], toneMapped: false }));
+  beads.push(b); ring.add(b);
+}
+
+// ---- HERO 2: glass phone + follower counter screen + gold coins ----
+const phone = new THREE.Group(); scene.add(phone);
+const body = new THREE.Mesh(new RoundedBoxGeometry(1.5, 3.0, 0.2, 8, 0.2), new THREE.MeshPhysicalMaterial({
+  color: 0x121218, metalness: 0.55, roughness: 0.16, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.8 }));
+const halo = new THREE.Mesh(new RoundedBoxGeometry(1.56, 3.06, 0.06, 8, 0.22), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.1, 1.1, 1.15), toneMapped: false }));
+halo.position.z = -0.09;
+const scr = document.createElement('canvas'); scr.width = 512; scr.height = 1024;
+const sx = scr.getContext('2d');
+const scrTex = new THREE.CanvasTexture(scr); scrTex.colorSpace = THREE.SRGBColorSpace;
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(1.34, 2.68), new THREE.MeshBasicMaterial({ map: scrTex, color: new THREE.Color(0.82, 0.82, 0.82), toneMapped: false }));
+screen.position.z = 0.102;
+const cover = new THREE.Mesh(new THREE.PlaneGeometry(1.34, 2.68), new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.03,
+  roughness: 0.02, metalness: 0, clearcoat: 1, envMapIntensity: 2.2, depthWrite: false }));
+cover.position.z = 0.106;
+phone.add(halo, body, screen, cover);
+const coins = [];
+const coinMat = new THREE.MeshPhysicalMaterial({ color: 0xffc53d, metalness: 1, roughness: 0.25, clearcoat: 0.6, emissive: 0x2a1a00, envMapIntensity: 1.2 });
+for (let k = 0; k < 3; k++) {
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.04, 48), coinMat);
+  coins.push(c); phone.add(c);
+}
+function drawScreen(n, bars) {
+  sx.fillStyle = '#0b0b10'; sx.fillRect(0, 0, 512, 1024);
+  const gr = sx.createRadialGradient(200, 190, 10, 256, 220, 90); gr.addColorStop(0, '#9a9aa6'); gr.addColorStop(1, '#2a2a33');
+  sx.fillStyle = gr; sx.beginPath(); sx.arc(256, 220, 86, 0, Math.PI * 2); sx.fill();
+  sx.lineWidth = 5; sx.strokeStyle = 'rgba(255,255,255,.7)'; sx.stroke();
+  sx.textAlign = 'center'; sx.fillStyle = 'rgba(255,255,255,.6)'; sx.font = '700 38px "Product Sans"'; sx.fillText('@you', 256, 360);
+  sx.fillStyle = '#fff'; sx.font = '900 118px "Product Sans"'; sx.fillText(Math.round(n).toLocaleString('en-US'), 256, 500);
+  sx.fillStyle = '#39ff8f'; sx.font = '700 44px "Product Sans"'; sx.fillText('followers', 256, 566);
+  const hs = [.22, .35, .48, .66, .84, 1];
+  for (let i = 0; i < 6; i++) {
+    const h = 300 * hs[i] * Math.min(1, Math.max(0, bars * 6 - i));
+    const x = 66 + i * 66, y = 960 - h;
+    const lg = sx.createLinearGradient(0, y, 0, 960); lg.addColorStop(0, '#39ff8f'); lg.addColorStop(1, 'rgba(57,255,143,.15)');
+    sx.fillStyle = lg; sx.shadowColor = '#39ff8f'; sx.shadowBlur = 18; sx.fillRect(x, y, 48, h); sx.shadowBlur = 0;
+  }
+  scrTex.needsUpdate = true;
+}
+
+// ---- post: bloom (the "glow") ----
+const composer = new EffectComposer(renderer);
+composer.setPixelRatio(1); composer.setSize(W, H);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), 0.7, 0.35, 0.92);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ---- deterministic frame: everything is a pure function of t ----
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const easeIn = (x) => Math.pow(clamp(x), 2.2);
+const back = (x) => { x = clamp(x); const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+function frame(t) {
+  // ring: 0 - 3.6 s (enter, slow glossy rotation, camera flies through the hole)
+  const rIn = back(t / 0.7);
+  ring.visible = t < 3.65;
+  ring.scale.setScalar(0.25 + 0.75 * rIn);
+  ring.rotation.set(0.55 * Math.sin(t * 0.7) + 0.35, 0.45 * Math.sin(t * 0.5 + 0.6), t * 0.35 - 0.8 * (1 - rIn));
+  beads.forEach((b, k) => { const a = (k / 10) * Math.PI * 2 + t * 0.9; b.position.set(Math.cos(a) * (R + 0.4), Math.sin(a) * (R + 0.4), 0); });
+  const fly = easeIn((t - 2.75) / 0.85);
+  // phone: 3.45 - 7 s
+  const pIn = back((t - 3.45) / 0.6);
+  phone.visible = t > 3.4;
+  phone.scale.setScalar(0.3 + 0.7 * pIn);
+  phone.rotation.set(0.12 * Math.sin(t * 0.9), -1.1 * (1 - pIn) + 0.38 * Math.sin((t - 3.45) * 0.85), 0.03 * Math.sin(t * 0.6));
+  phone.position.y = -0.4 + 0.05 * Math.sin(t * 1.3);
+  const cnt = 48920 * Math.pow(clamp((t - 3.8) / 2.6), 2);
+  drawScreen(cnt, clamp((t - 3.9) / 1.8));
+  coins.forEach((c, k) => {
+    const a = (k / 3) * Math.PI * 2 + (t - 3.45) * 1.1;
+    const on = ease((t - 4.1 - k * 0.25) / 0.4);
+    c.position.set(Math.cos(a) * 1.15, -0.7 + k * 0.6 + 0.1 * Math.sin(t * 2 + k), Math.sin(a) * 0.4);
+    c.rotation.set(Math.PI / 2 - 0.3, a * 1.6, 0.2);
+    c.scale.setScalar(Math.max(0.0001, on));
+  });
+  grnL.intensity = 10 * ease((t - 3.5) / 0.6);
+  redL.intensity = 14 * (1 - ease((t - 3.2) / 0.5));
+  // camera: a slow push, then the fly-in through the ring, then a new slow push on the phone
+  const z = t < 3.45 ? 10.0 - 0.6 * clamp(t / 2.75) - 9.3 * fly : 7.9 - 0.4 * clamp((t - 3.45) / 3.55);
+  camera.position.set(0.2 * Math.sin(t * 0.4), -0.15 + 0.08 * Math.sin(t * 0.5), z);
+  camera.lookAt(0, -0.15, -2);
+  grid.position.x = -0.25 * t; spot.position.x = 0.6 * Math.sin(t * 0.6);
+  bloom.strength = 0.7 + 0.5 * fly;
+  composer.render();
+}
+
+const tl = gsap.timeline({ paused: true });
+const P = { t: 0 };
+tl.to(P, { t: DUR, duration: DUR, ease: 'none', onUpdate: () => frame(P.t) }, 0);
+tl.fromTo('#chap', { autoAlpha: 0, scale: 1.6, filter: 'blur(14px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: .3, ease: 'power3.out' }, 0.45);
+tl.to('#chap', { scale: 1.08, duration: 2.0, ease: 'none' }, 0.75);
+tl.to('#chap', { autoAlpha: 0, scale: .8, filter: 'blur(10px)', duration: .25, ease: 'power2.in' }, 3.0);
+tl.fromTo('#flash', { opacity: 0 }, { opacity: .5, duration: .12, ease: 'power2.in' }, 3.38);
+tl.to('#flash', { opacity: 0, duration: .25, ease: 'power2.out' }, 3.5);
+tl.fromTo('#head', { autoAlpha: 0, y: 22, filter: 'blur(8px)' }, { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: .3, ease: 'power2.out' }, 3.7);
+frame(0);
+window.__timelines = window.__timelines || {};
+window.__timelines['main'] = tl;
+</script>
+</body>
+</html>

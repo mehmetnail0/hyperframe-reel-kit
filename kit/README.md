@@ -122,7 +122,7 @@ overlay'leri hazırlar. Bu akışı **`kit/AGENT.md`** sürer (agent-assisted co
 | 2 | full-screen scenes & big text |
 | 3 | captions |
 | 4 | micro overlays / camera frame |
-| 6 | pop sfx (`pop.wav` / `pop_hi.wav`) |
+| 6 | pop sfx (from the user's own library) |
 | 7 | whoosh / transition sfx |
 | 8 | audio |
 
@@ -140,9 +140,10 @@ overlay'leri hazırlar. Bu akışı **`kit/AGENT.md`** sürer (agent-assisted co
 
 ## SFX — "pıt" pops
 
-Overlay/caption pop-in'lerinde hafif "pıt" sesi: `kit/assets/sfx/pop.wav`
-(yumuşak ~920Hz, normal reveal) ve `kit/assets/sfx/pop_hi.wav` (keskin ~1320Hz,
-X-strike gibi vurgular). **Pop'ları whoosh/transition SFX'ten AYRI bir track'e
+Overlay/caption pop-in'lerinde hafif "pıt" sesi — **sadece kullanıcının KENDİ SFX
+kütüphanesinden** (kitte sentetik ses yok). Yumuşak, düşük-geçişli (low-pass) bir
+UI pop/tick seç, ses 14–20 dB altında; seçimi `sfx-map.json`'a yaz (bkz.
+`kit/split-motion/SKILL.md` §SFX ve `kit/split-motion/sfx_mix.py`). **Pop'ları whoosh/transition SFX'ten AYRI bir track'e
 koy** — pop'lar track 6, whoosh'lar track 7, ana ses track 8. ⚠️ hyperframes
 aynı track'te çakışan clip'lerde HATA verir; pop+whoosh asla aynı track'te olmaz.
 

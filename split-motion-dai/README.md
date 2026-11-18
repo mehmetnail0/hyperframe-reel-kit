@@ -8,10 +8,11 @@ full-screen punch-ins, and a recap ending.
 
 **Credit:** Footage from *Dai By Dai Podcast*, "The #1 Thing Holding Back Content Creators"
 (YouTube `HopW8EtFF8A`), licensed **CC-BY**. Edited into a vertical reel; the motion
-graphics (hand-written SVG/CSS) and the SFX (synthesised by `kit/split-motion/sfx/make_sfx.py`)
-are original. The corner "DAXON" logo is cropped out of every shot.
+graphics (hand-written SVG/CSS) are original. The SFX come from the member's own library
+(picks, times and gains in `data/sfx-map.json`; the library itself is not in the repo). The corner "DAXON" logo is cropped out of every shot.
 
-Output: `renders/FINAL.mp4` (1080×1920, 30 fps, −14 LUFS) · `renders/sheet.jpg` (2 fps contact sheet).
+Output: `renders/FINAL.mp4` (1080×1920, 30 fps, −14 LUFS, true peak ≤ −1 dBTP) · `renders/sheet.jpg`
+(2 fps contact sheet) · `renders/compare.jpg` (ours | reference) · `demo-3d/` (3D mode demo, separate).
 
 ## Story cut (65.3 s of speech + 2 s recap)
 
@@ -62,10 +63,9 @@ python3 -I scripts/edit.py RAW.mp4 WORK
 ffmpeg -i WORK/speech.wav -ac 1 -ar 16000 WORK/cut16.wav
 whisper-cli -m ggml-small.en.bin -f WORK/cut16.wav -ojf -of WORK/cut_words -ml 1 -sow --dtw small.en -nfa
 python3 -I scripts/captions.py WORK/cut_words.json WORK/cut16.wav     # -> data/words.json
-# 4. media: video-only + SFX pre-mix (-14 LUFS)
+# 4. media: video-only + SFX pre-mix from the member's library (-14 LUFS, TP <= -1)
 ffmpeg -i WORK/base.mp4 -c:v copy -an assets/video.mp4
-python3 -I ../kit/split-motion/sfx/make_sfx.py
-python3 -I scripts/mix.py WORK/speech.wav assets/mix.wav
+python3 -I scripts/mix.py WORK/speech.wav assets/mix.wav "SFX_LIBRARY/sound effects " [--regain]
 # 5. composition, check, render, crop
 python3 -I scripts/build.py && npm run check
 npm run render -- -o renders/raw.mp4
@@ -81,11 +81,12 @@ repeated SVG geometry). `assets/video.mp4` and `assets/mix.wav` are regenerated,
 
 ## Review rounds (ours vs reference, 2 fps sheets + `scripts/qc_motion.py`)
 
-| | round 1 | round 2 | round 3 (FINAL) | reference |
-| --- | --- | --- | --- | --- |
-| static runs > 3 s (panel) | 0 | 0 | **0** (longest 0.7 s) | 0 (longest 0.8 s) |
-| major panel changes | 104 (1 / 0.65 s) | 131 (1 / 0.51 s) | **134 (1 / 0.50 s)** | 154 (1 / 0.60 s) |
-| longest gap between major changes | 5.3 s | 3.9 s | 3.9 s* | 5.4 s |
+| | round 1 | round 2 | round 3 | round 4 (FINAL, polish) | reference |
+| --- | --- | --- | --- | --- | --- |
+| static runs > 3 s (panel) | 0 | 0 | 0 (longest 0.7 s) | **0** (longest 0.9 s) | 0 (longest 0.8 s) |
+| major panel changes | 104 (1 / 0.65 s) | 131 (1 / 0.51 s) | 134 (1 / 0.50 s) | **151 (1 / 0.45 s)** | 154 (1 / 0.60 s) |
+| longest gap between major changes | 5.3 s | 3.9 s | 3.9 s* | **2.8 s** | 5.4 s |
+| near-empty panel frames (10 fps) | – | – | 45 | **23** (all ≤ 0.4 s transitions) | – |
 
 \* 23.2–27.0 s: 2-post grid → "vs the catalog" grid → green fill. Things keep moving, but the
 dark tiles change less than the metric's threshold.
@@ -103,6 +104,23 @@ The "2 posts" chip collided with the seam caption (moved onto the grid). The ret
 a punch-in read as a grey frame (0.35 → 0.18). The catalog grid entrance was too faint (whip
 in, then a green fill). A few objects grew into the header/caption after scaling (zooms toned
 down, hero frame 1000 px wide so drift stays inside the panel).
+
+**Round 4 (polish) → fixes.** All synthesized SFX removed; the mix now uses 23 soft picks from
+the member's own library (`data/sfx-map.json`: glow swells peak-aligned on hero landings, deep
+whooshes on the four chapter fly-ins, one gentle low-passed riser + sparkle on "fireworks"
+instead of a boom, marker draws on line draws, four very quiet ticks/pops), each 15–20 dB under
+the voice, voice raw, −14 LUFS / −1.3 dBTP. Small objects scaled to ~60–70 % of the panel
+(STOP 340→630 px, OPPORTUNITY/PREPARATION re-laid out as a big vertical collision, the
+wrong-order pills, megaphone, people→page graph, coin lists, the message beat got a large
+glowing contract icon with ripples). Dark-on-dark grids brightened (the 2-post grid read as an
+empty panel). Seam caption box narrowed to x 120–960 (clear of the right action rail); captions
+lead the sound by 2 frames. Caption timings were re-derived with whisper.cpp DTW on the cut
+audio: identical to round 3.
+
+**3D mode demo** (`demo-3d/`, separate, 7 s): the chapter ring as a glossy glass neon tube and
+the follower phone as a glass slab with a live screen + gold coins, three.js r181 self-hosted,
+bloom, deterministic (`demo.mp4`, `compare.jpg` = flat vs 3D). Rendered on CPU (SwiftShader,
+no GPU here): 178 s for 210 frames with 4 workers.
 
 **Still different from the reference:** no real b-roll inside cards (the reference cuts to
 other footage and photo-real objects such as a slot machine, cards, and a price-chip phone;

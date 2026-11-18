@@ -22,6 +22,9 @@ HL = {"gratification": "hl", "now": "hl", "stop": "hl-r", "no": "hl-r", "ready":
       "preparation": "hl-g", "catalog": "hl", "dropping": "hl-g", "consistent": "hl-g",
       "opportunity": "hl", "fireworks": "hl", "wait": "hl", "contract": "hl", "lawyer": "hl-g",
       "zero": "hl-r", "a.": "hl-g", "level": "hl", "paper": "hl"}
+# captions lead the sound by 2 frames: the word pop takes 0.1 s to scale in, so a
+# caption that starts exactly on the acoustic onset reads as late.
+LEAD = 2 / 30
 caps = []
 for i, w in enumerate(words):
     raw = w["w"]
@@ -33,7 +36,7 @@ for i, w in enumerate(words):
         cls = "hl-g"
     if key == "now" and False:
         cls = ""
-    caps.append(f'  <div class="clip sm-cap {cls}" id="w{i}" data-start="{w["t"]:.3f}" '
+    caps.append(f'  <div class="clip sm-cap {cls}" id="w{i}" data-start="{max(0, w["t"] - LEAD):.3f}" '
                 f'data-duration="{w["d"]:.3f}" data-track-index="3">{low}</div>')
 
 # ---------- generated geometry --------------------------------------------------

@@ -1,0 +1,264 @@
+{
+ "_comment": "Soft SFX picks from the member's own library (file names relative to the library root; the library itself is NOT committed). gain_db is written by kit/split-motion/sfx_mix.py gain.",
+ "library_root_hint": "nail-sfx/sound effects /",
+ "sounds": {
+  "whoosh_deep": {
+   "file": "Mountain Audio - Deep Whoosh (1).wav",
+   "peak_ms": 449,
+   "fade_in_ms": 15,
+   "lowpass": 0,
+   "under_voice_db": 15,
+   "use": "chapter fly-in (camera into the ring)",
+   "gain_db": -26.2
+  },
+  "whoosh_deep2": {
+   "file": "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 2 (1).wav",
+   "peak_ms": 380,
+   "fade_in_ms": 15,
+   "lowpass": 9000,
+   "under_voice_db": 16,
+   "use": "alternate chapter fly-in (no repetition)",
+   "gain_db": -30.6
+  },
+  "whoosh_soft": {
+   "file": "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 15 (1).wav",
+   "peak_ms": 933,
+   "fade_in_ms": 15,
+   "lowpass": 0,
+   "under_voice_db": 19,
+   "use": "full-screen punch-in (only two of them)",
+   "gain_db": -18.2
+  },
+  "glow_holo": {
+   "file": "Hologram Appears (1).wav",
+   "peak_ms": 1066,
+   "fade_in_ms": 20,
+   "lowpass": 9000,
+   "under_voice_db": 18,
+   "use": "glow object materialises",
+   "gain_db": -34.1
+  },
+  "glow_shine": {
+   "file": "shine-02-355934 (1).mp3",
+   "peak_ms": 778,
+   "fade_in_ms": 20,
+   "lowpass": 8000,
+   "under_voice_db": 18,
+   "use": "shine on a hero landing",
+   "gain_db": -28.9
+  },
+  "glow_warm": {
+   "file": "shine-6-268910 (1).mp3",
+   "peak_ms": 353,
+   "fade_in_ms": 10,
+   "lowpass": 8000,
+   "under_voice_db": 18,
+   "use": "warm glow (meter / calendar)",
+   "gain_db": -31.6
+  },
+  "glow_shimmer": {
+   "file": "Shining (1).wav",
+   "peak_ms": 1455,
+   "fade_in_ms": 20,
+   "lowpass": 8000,
+   "under_voice_db": 17,
+   "use": "long shimmer under the recap",
+   "gain_db": -15.8
+  },
+  "sparkle": {
+   "file": "sound-effect-twinklesparkle-115095 (1).mp3",
+   "peak_ms": 408,
+   "fade_in_ms": 10,
+   "lowpass": 9000,
+   "under_voice_db": 16,
+   "use": "fireworks sparkle (instead of a boom)",
+   "gain_db": -27.6
+  },
+  "riser": {
+   "file": "Riser 1 (1).mp3",
+   "peak_ms": 2881,
+   "fade_in_ms": 20,
+   "lowpass": 6000,
+   "under_voice_db": 15,
+   "use": "gentle riser into the big reveal",
+   "gain_db": -20.5
+  },
+  "tick": {
+   "file": "Infographic Jan 8 2025 (1)/Infographic 08 Bloop (1).wav",
+   "peak_ms": 125,
+   "fade_in_ms": 5,
+   "lowpass": 5000,
+   "under_voice_db": 20,
+   "use": "very quiet tick on a list reveal",
+   "gain_db": -22.5
+  },
+  "pop": {
+   "file": "casual-click-pop-ui-1-262118 (1).mp3",
+   "peak_ms": 73,
+   "fade_in_ms": 5,
+   "lowpass": 5000,
+   "under_voice_db": 20,
+   "use": "very quiet pop on a key reveal",
+   "gain_db": -31.6
+  },
+  "marker": {
+   "file": "Marker Pen Draw Line_SFX (1)/OBJWrite_Marker Pen Highlighter Draw Line 03 (1).wav",
+   "peak_ms": 262,
+   "fade_in_ms": 10,
+   "lowpass": 6000,
+   "under_voice_db": 20,
+   "use": "line / path draws",
+   "gain_db": -21.1
+  },
+  "marker2": {
+   "file": "Marker Pen Draw Line_SFX (1)/OBJWrite_Marker Pen Highlighter Draw Line 01 (1).wav",
+   "peak_ms": 267,
+   "fade_in_ms": 10,
+   "lowpass": 6000,
+   "under_voice_db": 20,
+   "use": "line draw (variation)",
+   "gain_db": -22.2
+  }
+ },
+ "events": [
+  {
+   "t": 0.0,
+   "sound": "whoosh_deep",
+   "align": "start",
+   "why": "intro: panel opens"
+  },
+  {
+   "t": 0.5,
+   "sound": "glow_holo",
+   "align": "peak",
+   "why": "phone materialises"
+  },
+  {
+   "t": 3.6,
+   "sound": "tick",
+   "align": "start",
+   "why": "coin 1 'money'"
+  },
+  {
+   "t": 10.12,
+   "sound": "whoosh_deep",
+   "align": "peak",
+   "why": "chapter 1 fly-in"
+  },
+  {
+   "t": 11.87,
+   "sound": "whoosh_soft",
+   "align": "peak",
+   "why": "punch-in 'I say no. Why?'"
+  },
+  {
+   "t": 13.3,
+   "sound": "pop",
+   "align": "start",
+   "why": "reply bubble 'no.'"
+  },
+  {
+   "t": 16.15,
+   "sound": "whoosh_deep2",
+   "align": "peak",
+   "why": "chapter 2 fly-in"
+  },
+  {
+   "t": 17.42,
+   "sound": "glow_shine",
+   "align": "peak",
+   "why": "megaphone lands"
+  },
+  {
+   "t": 20.05,
+   "sound": "marker",
+   "align": "start",
+   "why": "connector lines draw to 'your page'"
+  },
+  {
+   "t": 29.85,
+   "sound": "glow_warm",
+   "align": "peak",
+   "why": "streak calendar lights up"
+  },
+  {
+   "t": 33.25,
+   "sound": "whoosh_deep",
+   "align": "peak",
+   "why": "chapter 3 fly-in"
+  },
+  {
+   "t": 36.27,
+   "sound": "riser",
+   "align": "peak",
+   "why": "riser lands on 'fireworks'"
+  },
+  {
+   "t": 36.4,
+   "sound": "sparkle",
+   "align": "peak",
+   "why": "fireworks burst"
+  },
+  {
+   "t": 44.34,
+   "sound": "pop",
+   "align": "start",
+   "why": "red X: wrong order"
+  },
+  {
+   "t": 46.25,
+   "sound": "whoosh_soft",
+   "align": "peak",
+   "why": "punch-in 'you don't even know how to handle...'"
+  },
+  {
+   "t": 48.9,
+   "sound": "glow_warm",
+   "align": "peak",
+   "why": "level meter shoots up"
+  },
+  {
+   "t": 51.75,
+   "sound": "marker",
+   "align": "start",
+   "why": "contract lines draw"
+  },
+  {
+   "t": 57.2,
+   "sound": "marker2",
+   "align": "start",
+   "why": "connector to the lawyer"
+  },
+  {
+   "t": 58.94,
+   "sound": "tick",
+   "align": "start",
+   "why": "list 'the terms'"
+  },
+  {
+   "t": 60.68,
+   "sound": "whoosh_deep2",
+   "align": "peak",
+   "why": "chapter 4 fly-in"
+  },
+  {
+   "t": 61.7,
+   "sound": "marker",
+   "align": "start",
+   "why": "stairs draw"
+  },
+  {
+   "t": 65.05,
+   "sound": "glow_shine",
+   "align": "peak",
+   "why": "step A lights up"
+  },
+  {
+   "t": 65.75,
+   "sound": "glow_shimmer",
+   "align": "peak",
+   "why": "recap ring"
+  }
+ ],
+ "voice_lufs_raw": -24.3
+}

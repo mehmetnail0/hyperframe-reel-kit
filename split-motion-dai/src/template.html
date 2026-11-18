@@ -33,8 +33,8 @@
 .typing { position: absolute; display: flex; gap: 12px; padding: 26px 30px; border-radius: 40px; background: #26262e; }
 .typing i { width: 18px; height: 18px; border-radius: 50%; background: #aaa; }
 .tile { position: absolute; border-radius: 18px; }
-.tile.full { background: linear-gradient(135deg, #3b3b48, #15151c); border: 2px solid rgba(255,255,255,.55); box-shadow: 0 0 18px rgba(255,255,255,.2); }
-.tile.empty { border: 3px dashed rgba(255,255,255,.22); }
+.tile.full { background: linear-gradient(135deg, #5a5a6e, #24242e); border: 3px solid rgba(255,255,255,.85); box-shadow: 0 0 26px rgba(255,255,255,.35), inset 0 0 30px rgba(255,255,255,.08); }
+.tile.empty { border: 3px dashed rgba(255,255,255,.42); background: rgba(255,255,255,.035); }
 .tile.g { background: linear-gradient(135deg, rgba(57,255,143,.55), rgba(57,255,143,.12)); border: 2px solid var(--green); box-shadow: 0 0 16px rgba(57,255,143,.45); }
 .tile .play { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0;
   border-left: 30px solid rgba(255,255,255,.9); border-top: 18px solid transparent; border-bottom: 18px solid transparent; }
@@ -46,7 +46,7 @@
 .pcard b { position: absolute; left: 20px; top: 16px; font-size: 34px; color: var(--gold); }
 .pcard .play { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0;
   border-left: 44px solid rgba(255,255,255,.9); border-top: 27px solid transparent; border-bottom: 27px solid transparent; }
-.orb { position: absolute; padding: 26px 40px; border-radius: 999px; font-weight: 900; font-size: 46px; letter-spacing: .02em; }
+.orb { position: absolute; padding: 34px 54px; border-radius: 999px; font-weight: 900; font-size: 64px; letter-spacing: .02em; }
 .orb.opp { color: #241600; background: radial-gradient(circle at 40% 30%, #fff1bf, var(--gold) 55%, #b77900); box-shadow: 0 0 40px rgba(255,197,61,.8), 0 0 90px rgba(255,197,61,.35); }
 .orb.prep { color: #002612; background: radial-gradient(circle at 40% 30%, #d9ffe9, var(--green) 55%, #10a958); box-shadow: 0 0 40px rgba(57,255,143,.8), 0 0 90px rgba(57,255,143,.35); }
 .bigq { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 520px; line-height: 1; color: var(--gold); filter: var(--glow-gold); }
@@ -56,7 +56,7 @@
   box-shadow: 0 0 36px rgba(255,255,255,.22); display: flex; gap: 28px; align-items: center; }
 .notif .ic { width: 110px; height: 110px; border-radius: 26px; background: linear-gradient(135deg, var(--gold), #b77900); flex: none; position: relative; }
 .notif .t1 { font-size: 28px; color: var(--ink-dim); }
-.notif .t2 { font-size: 44px; font-weight: 700; margin-top: 6px; }
+.notif .t2 { font-size: 50px; font-weight: 700; margin-top: 6px; }
 .paper { width: 520px; height: 690px; border-radius: 22px; border: 4px solid rgba(255,255,255,.9); background: rgba(12,12,16,.85);
   box-shadow: 0 0 30px rgba(255,255,255,.35); position: relative; }
 .paper .ttl { position: absolute; left: 0; width: 100%; top: 40px; text-align: center; font-weight: 900; font-size: 40px; letter-spacing: .18em; }
@@ -131,7 +131,7 @@
       </div></div>
 
       <!-- ===== A4 · STOP sign ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="A4"><div class="stage" style="width:340px;height:340px">
+      <div data-layout-allow-overflow class="sm-hero" id="A4"><div class="stage" style="transform:scale(1.85);width:340px;height:340px">
         <svg class="stop glow-r abs" style="left:20px;top:20px" viewBox="0 0 100 100">
           <polygon points="30,3 70,3 97,30 97,70 70,97 30,97 3,70 3,30" fill="rgba(255,51,70,.18)" stroke="#ff3346" stroke-width="4"/>
           <text x="50" y="61" text-anchor="middle" font-family="Product Sans" font-weight="900" font-size="28" fill="#fff">STOP</text>
@@ -153,7 +153,7 @@
       </div></div>
 
       <!-- ===== B1 · megaphone (the shout-out) ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="B1"><div class="stage" style="transform:scale(1.3);width:820px;height:560px">
+      <div data-layout-allow-overflow class="sm-hero" id="B1"><div class="stage" style="transform:scale(1.5);width:820px;height:560px">
         <svg class="abs glow-w" id="B1mega" style="left:120px;top:90px;transform-origin:30% 50%" width="420" height="380" viewBox="0 0 120 108">
           <path d="M10 40 L10 68 L30 68 L80 98 L80 10 L30 40 Z" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
           <path d="M28 68 L36 96 L48 96 L42 72" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
@@ -167,7 +167,7 @@
       </div></div>
 
       <!-- ===== B2 · people come to your page ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="B2"><div class="stage" style="transform:scale(1.12);width:900px;height:600px">
+      <div data-layout-allow-overflow class="sm-hero" id="B2"><div class="stage" style="transform:scale(1.2);width:900px;height:600px">
         <svg class="abs" style="left:0;top:0" width="900" height="600" viewBox="0 0 900 600">
           <path class="sm-line" pathLength="1" d="M90 90 C 250 120, 300 250, 450 300"/>
           <path class="sm-line" pathLength="1" d="M60 330 C 200 330, 300 310, 450 300"/>
@@ -185,7 +185,7 @@
       </div></div>
 
       <!-- ===== B3 · the grid: two posts ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="B3"><div class="stage" style="transform:scale(1.25);width:600px;height:640px">
+      <div data-layout-allow-overflow class="sm-hero" id="B3"><div class="stage" style="transform:scale(1.3);width:600px;height:640px">
         <div class="tile full" id="B3t1" style="left:0;top:0;width:190px;height:190px"><div class="play"></div></div>
         <div class="tile full" id="B3t2" style="left:205px;top:0;width:190px;height:190px"><div class="play"></div></div>
         <div class="tile empty e" style="left:410px;top:0;width:190px;height:190px"></div>
@@ -199,7 +199,7 @@
       </div></div>
 
       <!-- ===== B4 · nothing to binge vs. the catalog ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="B4"><div class="stage" style="transform:scale(1.12);width:900px;height:600px">
+      <div data-layout-allow-overflow class="sm-hero" id="B4"><div class="stage" style="transform:scale(1.18);width:900px;height:600px">
         <div class="abs" style="left:0;top:40px;width:330px;height:430px">
           <div class="tile full" style="left:0;top:0;width:100px;height:100px"></div><div class="tile full" style="left:110px;top:0;width:100px;height:100px"></div>
           <div class="tile empty" style="left:220px;top:0;width:100px;height:100px"></div>
@@ -231,12 +231,12 @@
       </div></div>
 
       <!-- ===== C1 · opportunity ↔ preparation ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="C1"><div class="stage" style="transform:scale(1.0);width:1000px;height:520px">
-        <svg class="abs" style="left:0;top:0" width="1000" height="520" viewBox="0 0 1000 520">
-          <path id="C1line" class="sm-line" pathLength="1" d="M250 260 L750 260" style="stroke-dasharray:1;stroke:#fff;stroke-width:4"/>
+      <div data-layout-allow-overflow class="sm-hero" id="C1"><div class="stage" style="width:1000px;height:640px">
+        <svg class="abs" style="left:0;top:0" width="1000" height="640" viewBox="0 0 1000 640">
+          <path id="C1line" class="sm-line" pathLength="1" d="M500 170 L500 470" style="stroke-dasharray:1;stroke:#fff;stroke-width:6"/>
         </svg>
-        <div class="orb opp" id="C1opp" style="left:0;top:110px">OPPORTUNITY</div>
-        <div class="orb prep" id="C1prep" style="right:0;top:300px">PREPARATION</div>
+        <div class="abs" style="left:0;top:0;width:1000px;display:flex;justify-content:center"><div class="orb opp" id="C1opp" style="position:relative;font-size:78px;padding:40px 64px">OPPORTUNITY</div></div>
+        <div class="abs" style="left:0;top:452px;width:1000px;display:flex;justify-content:center"><div class="orb prep" id="C1prep" style="position:relative;font-size:78px;padding:40px 64px">PREPARATION</div></div>
       </div></div>
 
       <!-- ===== C2 · fireworks ===== -->
@@ -258,15 +258,15 @@
       <!-- ===== C3 · the wrong order ===== -->
       <div data-layout-allow-overflow class="sm-hero" id="C3"><div class="stage" style="transform:scale(1.05);width:960px;height:520px">
         <svg class="abs" style="left:0;top:0" width="960" height="520" viewBox="0 0 960 520">
-          <path id="C3track" class="sm-line" pathLength="1" d="M60 330 H900" style="stroke-width:6"/>
-          <circle cx="250" cy="330" r="16" fill="#fff" class="glow-w"/><circle cx="700" cy="330" r="16" fill="#fff" class="glow-w"/>
+          <path id="C3track" class="sm-line" pathLength="1" d="M40 340 H920" style="stroke-width:7"/>
+          <circle cx="250" cy="340" r="20" fill="#fff" class="glow-w"/><circle cx="700" cy="340" r="20" fill="#fff" class="glow-w"/>
         </svg>
-        <div class="abs" style="left:205px;top:370px;font-size:34px;color:var(--ink-dim);font-weight:700">first</div>
-        <div class="abs" style="left:650px;top:370px;font-size:34px;color:var(--ink-dim);font-weight:700">then</div>
-        <div class="orb prep" id="C3prep" style="left:60px;top:190px;font-size:38px;padding:20px 32px">PREPARATION</div>
-        <div class="orb opp" id="C3opp" style="left:520px;top:190px;font-size:38px;padding:20px 32px">OPPORTUNITY</div>
-        <div class="abs" id="C3x" style="left:380px;top:20px;width:200px;height:200px;opacity:0">
-          <svg class="glow-r" width="200" height="200" viewBox="0 0 100 100"><path d="M20 20 L80 80 M80 20 L20 80" stroke="#ff3346" stroke-width="12" stroke-linecap="round"/></svg></div>
+        <div class="abs" style="left:200px;top:372px;font-size:46px;color:var(--ink-dim);font-weight:700">first</div>
+        <div class="abs" style="left:650px;top:372px;font-size:46px;color:var(--ink-dim);font-weight:700">then</div>
+        <div class="orb prep" id="C3prep" style="left:20px;top:170px;font-size:50px;padding:28px 40px">PREPARATION</div>
+        <div class="orb opp" id="C3opp" style="left:480px;top:170px;font-size:50px;padding:28px 40px">OPPORTUNITY</div>
+        <div class="abs" id="C3x" style="left:340px;top:-60px;width:280px;height:280px;opacity:0">
+          <svg class="glow-r" width="280" height="280" viewBox="0 0 100 100"><path d="M20 20 L80 80 M80 20 L20 80" stroke="#ff3346" stroke-width="12" stroke-linecap="round"/></svg></div>
       </div></div>
 
       <!-- ===== C4 · what are you gonna do with it? ===== -->
@@ -282,8 +282,13 @@
       </div></div>
 
       <!-- ===== D2 · the message ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="D2"><div class="stage" style="transform:scale(1.15);width:820px;height:400px">
-        <div class="notif abs" id="D2n" style="left:0;top:100px">
+      <div data-layout-allow-overflow class="sm-hero" id="D2"><div class="stage" style="transform:scale(1.12);width:820px;height:700px">
+        <div class="abs" id="D2big" style="left:260px;top:0;width:300px;height:300px">
+          <div class="abs d2r" style="left:0;top:0;width:300px;height:300px;border-radius:50%;border:4px solid rgba(255,197,61,.7);box-shadow:0 0 30px rgba(255,197,61,.5)"></div>
+          <div class="abs d2r" style="left:0;top:0;width:300px;height:300px;border-radius:50%;border:4px solid rgba(255,197,61,.7);box-shadow:0 0 30px rgba(255,197,61,.5)"></div>
+          <svg class="abs glow-gold" style="left:60px;top:40px" width="180" height="220" viewBox="0 0 90 110"><rect x="8" y="6" width="74" height="98" rx="8" fill="rgba(255,197,61,.16)" stroke="#ffc53d" stroke-width="5"/><path d="M22 30 H68 M22 46 H68 M22 62 H56" stroke="#ffc53d" stroke-width="5" stroke-linecap="round"/><path d="M22 86 C 30 76, 36 94, 46 82 S 60 84, 68 80" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="notif abs" id="D2n" style="left:0;top:380px">
           <div class="ic"><svg width="110" height="110" viewBox="0 0 110 110"><rect x="32" y="22" width="46" height="62" rx="5" fill="none" stroke="#241600" stroke-width="5"/><path d="M41 40 H69 M41 52 H69 M41 64 H60" stroke="#241600" stroke-width="5" stroke-linecap="round"/></svg></div>
           <div><div class="t1">new message · now</div><div class="t2">"hey, I got a contract<br>for you right now"</div></div>
         </div>
@@ -323,7 +328,7 @@
       </div></div>
 
       <!-- ===== D5 · you don't know none of this ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="D5"><div class="stage" style="transform:scale(1.45);width:640px;height:420px">
+      <div data-layout-allow-overflow class="sm-hero" id="D5"><div class="stage" style="transform:scale(1.7);width:560px;height:420px">
         <div class="coinlist">
           <div class="sm-coin-row" id="D5c1"><div class="sm-coin">1</div><div class="t">the terms <span class="xmark">✕</span></div></div>
           <div class="sm-coin-row" id="D5c2"><div class="sm-coin">2</div><div class="t">who to call <span class="xmark">✕</span></div></div>
@@ -422,7 +427,7 @@
 
   // ---- A3 · chart: want it now → flat ----
   K.hero(tl, '#A3', 6.2, 9.18, { drift: 12 });
-  K.draw(tl, '#A3up', 6.35, .9, 'power2.out');
+  K.draw(tl, '#A3up', 6.24, 1.0, 'power2.out');
   K.pop(tl, '#A3chip', 6.6);
   tl.to('#A3dot', { opacity: 1, duration: .1 }, 7.25);
   K.draw(tl, '#A3flat', 7.8, 1.0, 'none');
@@ -498,11 +503,11 @@
 
   // ---- C1 · opportunity meets preparation ----
   K.hero(tl, '#C1', 34.25, 36.22, { drift: 6, keep: true });
-  tl.fromTo('#C1opp', { x: -260, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: 'power3.out' }, 34.08);
-  tl.fromTo('#C1prep', { x: 260, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: 'power3.out' }, 35.42);
+  tl.fromTo('#C1opp', { y: -160, scale: .6, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(1.6)' }, 34.08);
+  tl.fromTo('#C1prep', { y: 160, scale: .6, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(1.6)' }, 35.42);
   K.draw(tl, '#C1line', 34.5, 1.2, 'power1.inOut');
-  tl.to('#C1opp', { x: 160, y: 60, duration: .7, ease: 'power3.in' }, 35.55);
-  tl.to('#C1prep', { x: -160, y: -60, duration: .7, ease: 'power3.in' }, 35.55);
+  tl.to('#C1opp', { y: 200, duration: .7, ease: 'power3.in' }, 35.55);
+  tl.to('#C1prep', { y: -200, duration: .7, ease: 'power3.in' }, 35.55);
   tl.to('#C1', { autoAlpha: 0, scale: 1.4, filter: 'blur(12px)', duration: .12 }, 36.24);
   tl.set('#C1', { autoAlpha: 0, scale: 1, filter: 'none' }, 36.38);
 
@@ -547,7 +552,9 @@
 
   // ---- D2 · message ----
   K.hero(tl, '#D2', 49.86, 51.62, { drift: 6, fromScale: .8 });
-  tl.fromTo('#D2n', { y: -260 }, { y: 0, duration: .45, ease: 'bounce.out' }, 49.86);
+  tl.fromTo('#D2n', { y: 200, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .4, ease: 'back.out(1.6)' }, 50.05);
+  tl.fromTo('#D2big', { scale: .3, rotate: -10 }, { scale: 1, rotate: 0, duration: .4, ease: 'back.out(2)' }, 49.86);
+  tl.fromTo('#D2 .d2r', { scale: .6, opacity: .9 }, { scale: 1.9, opacity: 0, duration: 1.0, stagger: .45, ease: 'power2.out', repeat: 1 }, 50.0);
   tl.to('#D2n', { x: 8, duration: .05, yoyo: true, repeat: 5 }, 51.68 - .7);
 
   // ---- D3 · contract → who → words → lawyer ----

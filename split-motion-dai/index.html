@@ -110,7 +110,8 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
 
 /* ---------- seam caption: ONE word, every spoken word ---------------------- */
 .sm-cap {
-  position: absolute; left: 90px; width: 900px; top: var(--cap-y); height: 84px;
+  /* x 120..960: centred, clear of the IG right action rail (x 960-1080, y 1050-1700) */
+  position: absolute; left: 120px; width: 840px; top: var(--cap-y); height: 84px;
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-size: 60px; letter-spacing: -.01em; color: #fff;
   text-shadow: 0 2px 0 rgba(0,0,0,.35), 0 0 18px rgba(0,0,0,.55);
@@ -157,7 +158,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
   background: radial-gradient(circle at 35% 30%, #fff3c4 0%, #ffd25e 30%, #d99a12 70%, #8a5a00 100%);
   border: 4px dashed rgba(90,55,0,.55); box-shadow: 0 0 22px rgba(255,197,61,.55);
 }
-.sm-coin-row .t { font-weight: 500; font-size: 38px; color: #fff; filter: var(--glow-w); }
+.sm-coin-row .t { font-weight: 500; font-size: 44px; color: #fff; filter: var(--glow-w); }
 
 /* chapter device: number + label over the device */
 .sm-chap { position: absolute; left: 40px; top: 0; width: 1000px; height: 1150px; opacity: 0; }
@@ -199,8 +200,8 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
 .typing { position: absolute; display: flex; gap: 12px; padding: 26px 30px; border-radius: 40px; background: #26262e; }
 .typing i { width: 18px; height: 18px; border-radius: 50%; background: #aaa; }
 .tile { position: absolute; border-radius: 18px; }
-.tile.full { background: linear-gradient(135deg, #3b3b48, #15151c); border: 2px solid rgba(255,255,255,.55); box-shadow: 0 0 18px rgba(255,255,255,.2); }
-.tile.empty { border: 3px dashed rgba(255,255,255,.22); }
+.tile.full { background: linear-gradient(135deg, #5a5a6e, #24242e); border: 3px solid rgba(255,255,255,.85); box-shadow: 0 0 26px rgba(255,255,255,.35), inset 0 0 30px rgba(255,255,255,.08); }
+.tile.empty { border: 3px dashed rgba(255,255,255,.42); background: rgba(255,255,255,.035); }
 .tile.g { background: linear-gradient(135deg, rgba(57,255,143,.55), rgba(57,255,143,.12)); border: 2px solid var(--green); box-shadow: 0 0 16px rgba(57,255,143,.45); }
 .tile .play { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0;
   border-left: 30px solid rgba(255,255,255,.9); border-top: 18px solid transparent; border-bottom: 18px solid transparent; }
@@ -212,7 +213,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
 .pcard b { position: absolute; left: 20px; top: 16px; font-size: 34px; color: var(--gold); }
 .pcard .play { position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%); width: 0; height: 0;
   border-left: 44px solid rgba(255,255,255,.9); border-top: 27px solid transparent; border-bottom: 27px solid transparent; }
-.orb { position: absolute; padding: 26px 40px; border-radius: 999px; font-weight: 900; font-size: 46px; letter-spacing: .02em; }
+.orb { position: absolute; padding: 34px 54px; border-radius: 999px; font-weight: 900; font-size: 64px; letter-spacing: .02em; }
 .orb.opp { color: #241600; background: radial-gradient(circle at 40% 30%, #fff1bf, var(--gold) 55%, #b77900); box-shadow: 0 0 40px rgba(255,197,61,.8), 0 0 90px rgba(255,197,61,.35); }
 .orb.prep { color: #002612; background: radial-gradient(circle at 40% 30%, #d9ffe9, var(--green) 55%, #10a958); box-shadow: 0 0 40px rgba(57,255,143,.8), 0 0 90px rgba(57,255,143,.35); }
 .bigq { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 520px; line-height: 1; color: var(--gold); filter: var(--glow-gold); }
@@ -222,7 +223,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
   box-shadow: 0 0 36px rgba(255,255,255,.22); display: flex; gap: 28px; align-items: center; }
 .notif .ic { width: 110px; height: 110px; border-radius: 26px; background: linear-gradient(135deg, var(--gold), #b77900); flex: none; position: relative; }
 .notif .t1 { font-size: 28px; color: var(--ink-dim); }
-.notif .t2 { font-size: 44px; font-weight: 700; margin-top: 6px; }
+.notif .t2 { font-size: 50px; font-weight: 700; margin-top: 6px; }
 .paper { width: 520px; height: 690px; border-radius: 22px; border: 4px solid rgba(255,255,255,.9); background: rgba(12,12,16,.85);
   box-shadow: 0 0 30px rgba(255,255,255,.35); position: relative; }
 .paper .ttl { position: absolute; left: 0; width: 100%; top: 40px; text-align: center; font-weight: 900; font-size: 40px; letter-spacing: .18em; }
@@ -297,7 +298,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       </div></div>
 
       <!-- ===== A4 · STOP sign ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="A4"><div class="stage" style="width:340px;height:340px">
+      <div data-layout-allow-overflow class="sm-hero" id="A4"><div class="stage" style="transform:scale(1.85);width:340px;height:340px">
         <svg class="stop glow-r abs" style="left:20px;top:20px" viewBox="0 0 100 100">
           <polygon points="30,3 70,3 97,30 97,70 70,97 30,97 3,70 3,30" fill="rgba(255,51,70,.18)" stroke="#ff3346" stroke-width="4"/>
           <text x="50" y="61" text-anchor="middle" font-family="Product Sans" font-weight="900" font-size="28" fill="#fff">STOP</text>
@@ -319,7 +320,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       </div></div>
 
       <!-- ===== B1 · megaphone (the shout-out) ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="B1"><div class="stage" style="transform:scale(1.3);width:820px;height:560px">
+      <div data-layout-allow-overflow class="sm-hero" id="B1"><div class="stage" style="transform:scale(1.5);width:820px;height:560px">
         <svg class="abs glow-w" id="B1mega" style="left:120px;top:90px;transform-origin:30% 50%" width="420" height="380" viewBox="0 0 120 108">
           <path d="M10 40 L10 68 L30 68 L80 98 L80 10 L30 40 Z" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
           <path d="M28 68 L36 96 L48 96 L42 72" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
@@ -333,7 +334,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       </div></div>
 
       <!-- ===== B2 · people come to your page ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="B2"><div class="stage" style="transform:scale(1.12);width:900px;height:600px">
+      <div data-layout-allow-overflow class="sm-hero" id="B2"><div class="stage" style="transform:scale(1.2);width:900px;height:600px">
         <svg class="abs" style="left:0;top:0" width="900" height="600" viewBox="0 0 900 600">
           <path class="sm-line" pathLength="1" d="M90 90 C 250 120, 300 250, 450 300"/>
           <path class="sm-line" pathLength="1" d="M60 330 C 200 330, 300 310, 450 300"/>
@@ -351,7 +352,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       </div></div>
 
       <!-- ===== B3 · the grid: two posts ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="B3"><div class="stage" style="transform:scale(1.25);width:600px;height:640px">
+      <div data-layout-allow-overflow class="sm-hero" id="B3"><div class="stage" style="transform:scale(1.3);width:600px;height:640px">
         <div class="tile full" id="B3t1" style="left:0;top:0;width:190px;height:190px"><div class="play"></div></div>
         <div class="tile full" id="B3t2" style="left:205px;top:0;width:190px;height:190px"><div class="play"></div></div>
         <div class="tile empty e" style="left:410px;top:0;width:190px;height:190px"></div>
@@ -365,7 +366,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       </div></div>
 
       <!-- ===== B4 · nothing to binge vs. the catalog ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="B4"><div class="stage" style="transform:scale(1.12);width:900px;height:600px">
+      <div data-layout-allow-overflow class="sm-hero" id="B4"><div class="stage" style="transform:scale(1.18);width:900px;height:600px">
         <div class="abs" style="left:0;top:40px;width:330px;height:430px">
           <div class="tile full" style="left:0;top:0;width:100px;height:100px"></div><div class="tile full" style="left:110px;top:0;width:100px;height:100px"></div>
           <div class="tile empty" style="left:220px;top:0;width:100px;height:100px"></div>
@@ -397,12 +398,12 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       </div></div>
 
       <!-- ===== C1 · opportunity ↔ preparation ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="C1"><div class="stage" style="transform:scale(1.0);width:1000px;height:520px">
-        <svg class="abs" style="left:0;top:0" width="1000" height="520" viewBox="0 0 1000 520">
-          <path id="C1line" class="sm-line" pathLength="1" d="M250 260 L750 260" style="stroke-dasharray:1;stroke:#fff;stroke-width:4"/>
+      <div data-layout-allow-overflow class="sm-hero" id="C1"><div class="stage" style="width:1000px;height:640px">
+        <svg class="abs" style="left:0;top:0" width="1000" height="640" viewBox="0 0 1000 640">
+          <path id="C1line" class="sm-line" pathLength="1" d="M500 170 L500 470" style="stroke-dasharray:1;stroke:#fff;stroke-width:6"/>
         </svg>
-        <div class="orb opp" id="C1opp" style="left:0;top:110px">OPPORTUNITY</div>
-        <div class="orb prep" id="C1prep" style="right:0;top:300px">PREPARATION</div>
+        <div class="abs" style="left:0;top:0;width:1000px;display:flex;justify-content:center"><div class="orb opp" id="C1opp" style="position:relative;font-size:78px;padding:40px 64px">OPPORTUNITY</div></div>
+        <div class="abs" style="left:0;top:452px;width:1000px;display:flex;justify-content:center"><div class="orb prep" id="C1prep" style="position:relative;font-size:78px;padding:40px 64px">PREPARATION</div></div>
       </div></div>
 
       <!-- ===== C2 · fireworks ===== -->
@@ -424,15 +425,15 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       <!-- ===== C3 · the wrong order ===== -->
       <div data-layout-allow-overflow class="sm-hero" id="C3"><div class="stage" style="transform:scale(1.05);width:960px;height:520px">
         <svg class="abs" style="left:0;top:0" width="960" height="520" viewBox="0 0 960 520">
-          <path id="C3track" class="sm-line" pathLength="1" d="M60 330 H900" style="stroke-width:6"/>
-          <circle cx="250" cy="330" r="16" fill="#fff" class="glow-w"/><circle cx="700" cy="330" r="16" fill="#fff" class="glow-w"/>
+          <path id="C3track" class="sm-line" pathLength="1" d="M40 340 H920" style="stroke-width:7"/>
+          <circle cx="250" cy="340" r="20" fill="#fff" class="glow-w"/><circle cx="700" cy="340" r="20" fill="#fff" class="glow-w"/>
         </svg>
-        <div class="abs" style="left:205px;top:370px;font-size:34px;color:var(--ink-dim);font-weight:700">first</div>
-        <div class="abs" style="left:650px;top:370px;font-size:34px;color:var(--ink-dim);font-weight:700">then</div>
-        <div class="orb prep" id="C3prep" style="left:60px;top:190px;font-size:38px;padding:20px 32px">PREPARATION</div>
-        <div class="orb opp" id="C3opp" style="left:520px;top:190px;font-size:38px;padding:20px 32px">OPPORTUNITY</div>
-        <div class="abs" id="C3x" style="left:380px;top:20px;width:200px;height:200px;opacity:0">
-          <svg class="glow-r" width="200" height="200" viewBox="0 0 100 100"><path d="M20 20 L80 80 M80 20 L20 80" stroke="#ff3346" stroke-width="12" stroke-linecap="round"/></svg></div>
+        <div class="abs" style="left:200px;top:372px;font-size:46px;color:var(--ink-dim);font-weight:700">first</div>
+        <div class="abs" style="left:650px;top:372px;font-size:46px;color:var(--ink-dim);font-weight:700">then</div>
+        <div class="orb prep" id="C3prep" style="left:20px;top:170px;font-size:50px;padding:28px 40px">PREPARATION</div>
+        <div class="orb opp" id="C3opp" style="left:480px;top:170px;font-size:50px;padding:28px 40px">OPPORTUNITY</div>
+        <div class="abs" id="C3x" style="left:340px;top:-60px;width:280px;height:280px;opacity:0">
+          <svg class="glow-r" width="280" height="280" viewBox="0 0 100 100"><path d="M20 20 L80 80 M80 20 L20 80" stroke="#ff3346" stroke-width="12" stroke-linecap="round"/></svg></div>
       </div></div>
 
       <!-- ===== C4 · what are you gonna do with it? ===== -->
@@ -448,8 +449,13 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       </div></div>
 
       <!-- ===== D2 · the message ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="D2"><div class="stage" style="transform:scale(1.15);width:820px;height:400px">
-        <div class="notif abs" id="D2n" style="left:0;top:100px">
+      <div data-layout-allow-overflow class="sm-hero" id="D2"><div class="stage" style="transform:scale(1.12);width:820px;height:700px">
+        <div class="abs" id="D2big" style="left:260px;top:0;width:300px;height:300px">
+          <div class="abs d2r" style="left:0;top:0;width:300px;height:300px;border-radius:50%;border:4px solid rgba(255,197,61,.7);box-shadow:0 0 30px rgba(255,197,61,.5)"></div>
+          <div class="abs d2r" style="left:0;top:0;width:300px;height:300px;border-radius:50%;border:4px solid rgba(255,197,61,.7);box-shadow:0 0 30px rgba(255,197,61,.5)"></div>
+          <svg class="abs glow-gold" style="left:60px;top:40px" width="180" height="220" viewBox="0 0 90 110"><rect x="8" y="6" width="74" height="98" rx="8" fill="rgba(255,197,61,.16)" stroke="#ffc53d" stroke-width="5"/><path d="M22 30 H68 M22 46 H68 M22 62 H56" stroke="#ffc53d" stroke-width="5" stroke-linecap="round"/><path d="M22 86 C 30 76, 36 94, 46 82 S 60 84, 68 80" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="notif abs" id="D2n" style="left:0;top:380px">
           <div class="ic"><svg width="110" height="110" viewBox="0 0 110 110"><rect x="32" y="22" width="46" height="62" rx="5" fill="none" stroke="#241600" stroke-width="5"/><path d="M41 40 H69 M41 52 H69 M41 64 H60" stroke="#241600" stroke-width="5" stroke-linecap="round"/></svg></div>
           <div><div class="t1">new message · now</div><div class="t2">"hey, I got a contract<br>for you right now"</div></div>
         </div>
@@ -489,7 +495,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
       </div></div>
 
       <!-- ===== D5 · you don't know none of this ===== -->
-      <div data-layout-allow-overflow class="sm-hero" id="D5"><div class="stage" style="transform:scale(1.45);width:640px;height:420px">
+      <div data-layout-allow-overflow class="sm-hero" id="D5"><div class="stage" style="transform:scale(1.7);width:560px;height:420px">
         <div class="coinlist">
           <div class="sm-coin-row" id="D5c1"><div class="sm-coin">1</div><div class="t">the terms <span class="xmark">✕</span></div></div>
           <div class="sm-coin-row" id="D5c2"><div class="sm-coin">2</div><div class="t">who to call <span class="xmark">✕</span></div></div>
@@ -543,226 +549,226 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
   <div id="flash" class="clip sm-flash" data-start="0" data-duration="67.333" data-track-index="4" style="width:1080px;height:1920px"></div>
 
   <!-- 3 · seam captions: ONE word, every spoken word -->
-  <div class="clip sm-cap " id="w0" data-start="0.320" data-duration="0.596" data-track-index="3">instant</div>
-  <div class="clip sm-cap hl" id="w1" data-start="0.920" data-duration="0.196" data-track-index="3">gratification</div>
-  <div class="clip sm-cap " id="w2" data-start="1.120" data-duration="0.275" data-track-index="3">that</div>
-  <div class="clip sm-cap " id="w3" data-start="1.400" data-duration="0.656" data-track-index="3">everyone's</div>
-  <div class="clip sm-cap " id="w4" data-start="2.060" data-duration="0.625" data-track-index="3">chasing</div>
-  <div class="clip sm-cap " id="w5" data-start="2.690" data-duration="0.286" data-track-index="3">as</div>
-  <div class="clip sm-cap " id="w6" data-start="2.980" data-duration="0.256" data-track-index="3">well</div>
-  <div class="clip sm-cap " id="w7" data-start="3.240" data-duration="0.175" data-track-index="3">whether</div>
-  <div class="clip sm-cap " id="w8" data-start="3.420" data-duration="0.196" data-track-index="3">it's</div>
-  <div class="clip sm-cap " id="w9" data-start="3.620" data-duration="0.496" data-track-index="3">money</div>
-  <div class="clip sm-cap " id="w10" data-start="4.120" data-duration="0.465" data-track-index="3">or</div>
-  <div class="clip sm-cap " id="w11" data-start="4.590" data-duration="0.900" data-track-index="3">attention</div>
-  <div class="clip sm-cap " id="w12" data-start="5.540" data-duration="0.826" data-track-index="3">followers</div>
-  <div class="clip sm-cap " id="w13" data-start="6.370" data-duration="0.246" data-track-index="3">people</div>
-  <div class="clip sm-cap " id="w14" data-start="6.620" data-duration="0.165" data-track-index="3">just</div>
-  <div class="clip sm-cap " id="w15" data-start="6.790" data-duration="0.095" data-track-index="3">want</div>
-  <div class="clip sm-cap " id="w16" data-start="6.890" data-duration="0.446" data-track-index="3">it</div>
-  <div class="clip sm-cap hl" id="w17" data-start="7.340" data-duration="0.455" data-track-index="3">now</div>
-  <div class="clip sm-cap " id="w18" data-start="7.800" data-duration="0.096" data-track-index="3">and</div>
-  <div class="clip sm-cap " id="w19" data-start="7.900" data-duration="0.215" data-track-index="3">when</div>
-  <div class="clip sm-cap " id="w20" data-start="8.120" data-duration="0.156" data-track-index="3">they</div>
-  <div class="clip sm-cap " id="w21" data-start="8.280" data-duration="0.196" data-track-index="3">don't</div>
-  <div class="clip sm-cap " id="w22" data-start="8.480" data-duration="0.095" data-track-index="3">get</div>
-  <div class="clip sm-cap " id="w23" data-start="8.580" data-duration="0.216" data-track-index="3">it</div>
-  <div class="clip sm-cap hl" id="w24" data-start="8.800" data-duration="0.295" data-track-index="3">now</div>
-  <div class="clip sm-cap " id="w25" data-start="9.100" data-duration="0.146" data-track-index="3">they</div>
-  <div class="clip sm-cap hl-r" id="w26" data-start="9.250" data-duration="0.335" data-track-index="3">stop</div>
-  <div class="clip sm-cap " id="w27" data-start="9.590" data-duration="0.345" data-track-index="3">people</div>
-  <div class="clip sm-cap " id="w28" data-start="9.940" data-duration="0.196" data-track-index="3">ask</div>
-  <div class="clip sm-cap " id="w29" data-start="10.140" data-duration="0.406" data-track-index="3">me</div>
-  <div class="clip sm-cap " id="w30" data-start="10.550" data-duration="0.445" data-track-index="3">hey</div>
-  <div class="clip sm-cap " id="w31" data-start="11.000" data-duration="0.095" data-track-index="3">can</div>
-  <div class="clip sm-cap " id="w32" data-start="11.100" data-duration="0.216" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w33" data-start="11.320" data-duration="0.165" data-track-index="3">shout</div>
-  <div class="clip sm-cap " id="w34" data-start="11.490" data-duration="0.365" data-track-index="3">me</div>
-  <div class="clip sm-cap " id="w35" data-start="11.860" data-duration="0.116" data-track-index="3">out</div>
-  <div class="clip sm-cap " id="w36" data-start="11.980" data-duration="0.165" data-track-index="3">I</div>
-  <div class="clip sm-cap " id="w37" data-start="12.150" data-duration="0.095" data-track-index="3">say</div>
-  <div class="clip sm-cap hl-r" id="w38" data-start="12.250" data-duration="0.505" data-track-index="3">no</div>
-  <div class="clip sm-cap " id="w39" data-start="12.760" data-duration="0.546" data-track-index="3">why</div>
-  <div class="clip sm-cap " id="w40" data-start="13.310" data-duration="0.095" data-track-index="3">because</div>
-  <div class="clip sm-cap " id="w41" data-start="13.410" data-duration="0.275" data-track-index="3">it's</div>
-  <div class="clip sm-cap " id="w42" data-start="13.690" data-duration="0.206" data-track-index="3">just</div>
-  <div class="clip sm-cap " id="w43" data-start="13.900" data-duration="0.326" data-track-index="3">like</div>
-  <div class="clip sm-cap " id="w44" data-start="14.230" data-duration="0.095" data-track-index="3">you're</div>
-  <div class="clip sm-cap " id="w45" data-start="14.330" data-duration="0.285" data-track-index="3">not</div>
-  <div class="clip sm-cap hl-r" id="w46" data-start="14.620" data-duration="0.266" data-track-index="3">ready</div>
-  <div class="clip sm-cap " id="w47" data-start="14.890" data-duration="0.215" data-track-index="3">for</div>
-  <div class="clip sm-cap " id="w48" data-start="15.110" data-duration="0.096" data-track-index="3">a</div>
-  <div class="clip sm-cap " id="w49" data-start="15.210" data-duration="0.095" data-track-index="3">shout</div>
-  <div class="clip sm-cap " id="w50" data-start="15.310" data-duration="0.605" data-track-index="3">out</div>
-  <div class="clip sm-cap " id="w51" data-start="15.920" data-duration="0.115" data-track-index="3">when</div>
-  <div class="clip sm-cap " id="w52" data-start="16.040" data-duration="0.146" data-track-index="3">we</div>
-  <div class="clip sm-cap " id="w53" data-start="16.190" data-duration="0.285" data-track-index="3">talk</div>
-  <div class="clip sm-cap " id="w54" data-start="16.480" data-duration="0.616" data-track-index="3">about</div>
-  <div class="clip sm-cap hl-g" id="w55" data-start="17.100" data-duration="0.325" data-track-index="3">preparation</div>
-  <div class="clip sm-cap " id="w56" data-start="17.430" data-duration="0.535" data-track-index="3">it's</div>
-  <div class="clip sm-cap " id="w57" data-start="17.970" data-duration="0.166" data-track-index="3">just</div>
-  <div class="clip sm-cap " id="w58" data-start="18.140" data-duration="0.566" data-track-index="3">like</div>
-  <div class="clip sm-cap " id="w59" data-start="18.710" data-duration="0.375" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w60" data-start="19.090" data-duration="0.285" data-track-index="3">get</div>
-  <div class="clip sm-cap " id="w61" data-start="19.380" data-duration="0.136" data-track-index="3">a</div>
-  <div class="clip sm-cap " id="w62" data-start="19.520" data-duration="0.236" data-track-index="3">shout</div>
-  <div class="clip sm-cap " id="w63" data-start="19.760" data-duration="0.305" data-track-index="3">out</div>
-  <div class="clip sm-cap " id="w64" data-start="20.070" data-duration="0.116" data-track-index="3">and</div>
-  <div class="clip sm-cap " id="w65" data-start="20.190" data-duration="0.235" data-track-index="3">people</div>
-  <div class="clip sm-cap " id="w66" data-start="20.430" data-duration="0.096" data-track-index="3">come</div>
-  <div class="clip sm-cap " id="w67" data-start="20.530" data-duration="0.095" data-track-index="3">to</div>
-  <div class="clip sm-cap " id="w68" data-start="20.630" data-duration="0.186" data-track-index="3">your</div>
-  <div class="clip sm-cap " id="w69" data-start="20.820" data-duration="0.246" data-track-index="3">page</div>
-  <div class="clip sm-cap " id="w70" data-start="21.070" data-duration="0.096" data-track-index="3">then</div>
-  <div class="clip sm-cap " id="w71" data-start="21.170" data-duration="0.900" data-track-index="3">what</div>
-  <div class="clip sm-cap " id="w72" data-start="22.210" data-duration="0.095" data-track-index="3">they</div>
-  <div class="clip sm-cap " id="w73" data-start="22.310" data-duration="0.126" data-track-index="3">don't</div>
-  <div class="clip sm-cap " id="w74" data-start="22.440" data-duration="0.135" data-track-index="3">have</div>
-  <div class="clip sm-cap " id="w75" data-start="22.580" data-duration="0.136" data-track-index="3">nothing</div>
-  <div class="clip sm-cap " id="w76" data-start="22.720" data-duration="0.196" data-track-index="3">to</div>
-  <div class="clip sm-cap " id="w77" data-start="22.920" data-duration="0.246" data-track-index="3">watch</div>
-  <div class="clip sm-cap " id="w78" data-start="23.170" data-duration="0.225" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w79" data-start="23.400" data-duration="0.196" data-track-index="3">drop</div>
-  <div class="clip sm-cap " id="w80" data-start="23.600" data-duration="0.215" data-track-index="3">like</div>
-  <div class="clip sm-cap " id="w81" data-start="23.820" data-duration="0.165" data-track-index="3">two</div>
-  <div class="clip sm-cap " id="w82" data-start="23.990" data-duration="0.900" data-track-index="3">things</div>
-  <div class="clip sm-cap " id="w83" data-start="24.900" data-duration="0.096" data-track-index="3">so</div>
-  <div class="clip sm-cap " id="w84" data-start="25.000" data-duration="0.235" data-track-index="3">it's</div>
-  <div class="clip sm-cap " id="w85" data-start="25.240" data-duration="0.126" data-track-index="3">just</div>
-  <div class="clip sm-cap " id="w86" data-start="25.370" data-duration="0.465" data-track-index="3">like</div>
-  <div class="clip sm-cap " id="w87" data-start="25.840" data-duration="0.175" data-track-index="3">why</div>
-  <div class="clip sm-cap " id="w88" data-start="26.020" data-duration="0.156" data-track-index="3">do</div>
-  <div class="clip sm-cap " id="w89" data-start="26.180" data-duration="0.276" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w90" data-start="26.460" data-duration="0.175" data-track-index="3">want</div>
-  <div class="clip sm-cap " id="w91" data-start="26.640" data-duration="0.185" data-track-index="3">a</div>
-  <div class="clip sm-cap " id="w92" data-start="26.830" data-duration="0.096" data-track-index="3">shout</div>
-  <div class="clip sm-cap " id="w93" data-start="26.930" data-duration="0.096" data-track-index="3">out</div>
-  <div class="clip sm-cap " id="w94" data-start="27.030" data-duration="0.265" data-track-index="3">you're</div>
-  <div class="clip sm-cap " id="w95" data-start="27.300" data-duration="0.366" data-track-index="3">not</div>
-  <div class="clip sm-cap " id="w96" data-start="27.670" data-duration="0.095" data-track-index="3">prepared</div>
-  <div class="clip sm-cap " id="w97" data-start="27.770" data-duration="0.186" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w98" data-start="27.960" data-duration="0.195" data-track-index="3">don't</div>
-  <div class="clip sm-cap " id="w99" data-start="28.160" data-duration="0.186" data-track-index="3">have</div>
-  <div class="clip sm-cap " id="w100" data-start="28.350" data-duration="0.445" data-track-index="3">the</div>
-  <div class="clip sm-cap hl" id="w101" data-start="28.800" data-duration="0.895" data-track-index="3">catalog</div>
-  <div class="clip sm-cap " id="w102" data-start="29.700" data-duration="0.526" data-track-index="3">keep</div>
-  <div class="clip sm-cap hl-g" id="w103" data-start="30.230" data-duration="0.265" data-track-index="3">dropping</div>
-  <div class="clip sm-cap " id="w104" data-start="30.500" data-duration="0.375" data-track-index="3">be</div>
-  <div class="clip sm-cap hl-g" id="w105" data-start="30.880" data-duration="0.566" data-track-index="3">consistent</div>
-  <div class="clip sm-cap " id="w106" data-start="31.450" data-duration="0.096" data-track-index="3">do</div>
-  <div class="clip sm-cap " id="w107" data-start="31.550" data-duration="0.215" data-track-index="3">what</div>
-  <div class="clip sm-cap " id="w108" data-start="31.770" data-duration="0.096" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w109" data-start="31.870" data-duration="0.186" data-track-index="3">need</div>
-  <div class="clip sm-cap " id="w110" data-start="32.060" data-duration="0.095" data-track-index="3">to</div>
-  <div class="clip sm-cap " id="w111" data-start="32.160" data-duration="0.156" data-track-index="3">do</div>
-  <div class="clip sm-cap " id="w112" data-start="32.320" data-duration="0.175" data-track-index="3">on</div>
-  <div class="clip sm-cap " id="w113" data-start="32.500" data-duration="0.295" data-track-index="3">your</div>
-  <div class="clip sm-cap " id="w114" data-start="32.800" data-duration="0.266" data-track-index="3">end</div>
-  <div class="clip sm-cap " id="w115" data-start="33.070" data-duration="0.225" data-track-index="3">and</div>
-  <div class="clip sm-cap " id="w116" data-start="33.300" data-duration="0.156" data-track-index="3">then</div>
-  <div class="clip sm-cap " id="w117" data-start="33.460" data-duration="0.155" data-track-index="3">when</div>
-  <div class="clip sm-cap " id="w118" data-start="33.620" data-duration="0.456" data-track-index="3">the</div>
-  <div class="clip sm-cap hl" id="w119" data-start="34.080" data-duration="0.456" data-track-index="3">opportunity</div>
-  <div class="clip sm-cap " id="w120" data-start="34.540" data-duration="0.246" data-track-index="3">meets</div>
-  <div class="clip sm-cap " id="w121" data-start="34.790" data-duration="0.645" data-track-index="3">the</div>
-  <div class="clip sm-cap hl-g" id="w122" data-start="35.440" data-duration="0.855" data-track-index="3">preparation</div>
-  <div class="clip sm-cap hl" id="w123" data-start="36.300" data-duration="0.526" data-track-index="3">fireworks</div>
-  <div class="clip sm-cap " id="w124" data-start="36.830" data-duration="0.675" data-track-index="3">happen</div>
-  <div class="clip sm-cap " id="w125" data-start="37.510" data-duration="0.096" data-track-index="3">because</div>
-  <div class="clip sm-cap " id="w126" data-start="37.610" data-duration="0.425" data-track-index="3">the</div>
-  <div class="clip sm-cap hl" id="w127" data-start="38.040" data-duration="0.416" data-track-index="3">opportunity</div>
-  <div class="clip sm-cap " id="w128" data-start="38.460" data-duration="0.285" data-track-index="3">will</div>
-  <div class="clip sm-cap " id="w129" data-start="38.750" data-duration="0.846" data-track-index="3">come</div>
-  <div class="clip sm-cap " id="w130" data-start="39.600" data-duration="0.096" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w131" data-start="39.700" data-duration="0.095" data-track-index="3">just</div>
-  <div class="clip sm-cap " id="w132" data-start="39.800" data-duration="0.276" data-track-index="3">gotta</div>
-  <div class="clip sm-cap hl" id="w133" data-start="40.080" data-duration="0.416" data-track-index="3">wait</div>
-  <div class="clip sm-cap " id="w134" data-start="40.500" data-duration="0.096" data-track-index="3">but</div>
-  <div class="clip sm-cap " id="w135" data-start="40.600" data-duration="0.215" data-track-index="3">it's</div>
-  <div class="clip sm-cap " id="w136" data-start="40.820" data-duration="0.126" data-track-index="3">just</div>
-  <div class="clip sm-cap " id="w137" data-start="40.950" data-duration="0.095" data-track-index="3">like</div>
-  <div class="clip sm-cap " id="w138" data-start="41.050" data-duration="0.146" data-track-index="3">if</div>
-  <div class="clip sm-cap " id="w139" data-start="41.200" data-duration="0.136" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w140" data-start="41.340" data-duration="0.155" data-track-index="3">want</div>
-  <div class="clip sm-cap " id="w141" data-start="41.500" data-duration="0.416" data-track-index="3">the</div>
-  <div class="clip sm-cap hl" id="w142" data-start="41.920" data-duration="0.615" data-track-index="3">opportunity</div>
-  <div class="clip sm-cap " id="w143" data-start="42.540" data-duration="0.900" data-track-index="3">before</div>
-  <div class="clip sm-cap " id="w144" data-start="43.580" data-duration="0.776" data-track-index="3">the</div>
-  <div class="clip sm-cap hl-g" id="w145" data-start="44.360" data-duration="0.416" data-track-index="3">preparation</div>
-  <div class="clip sm-cap " id="w146" data-start="44.780" data-duration="0.096" data-track-index="3">comes</div>
-  <div class="clip sm-cap " id="w147" data-start="44.880" data-duration="0.445" data-track-index="3">in</div>
-  <div class="clip sm-cap " id="w148" data-start="45.330" data-duration="0.096" data-track-index="3">what</div>
-  <div class="clip sm-cap " id="w149" data-start="45.430" data-duration="0.126" data-track-index="3">are</div>
-  <div class="clip sm-cap " id="w150" data-start="45.560" data-duration="0.136" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w151" data-start="45.700" data-duration="0.195" data-track-index="3">gonna</div>
-  <div class="clip sm-cap " id="w152" data-start="45.900" data-duration="0.116" data-track-index="3">do</div>
-  <div class="clip sm-cap " id="w153" data-start="46.020" data-duration="0.095" data-track-index="3">with</div>
-  <div class="clip sm-cap " id="w154" data-start="46.120" data-duration="0.136" data-track-index="3">it</div>
-  <div class="clip sm-cap " id="w155" data-start="46.260" data-duration="0.096" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w156" data-start="46.360" data-duration="0.215" data-track-index="3">don't</div>
-  <div class="clip sm-cap " id="w157" data-start="46.580" data-duration="0.256" data-track-index="3">even</div>
-  <div class="clip sm-cap " id="w158" data-start="46.840" data-duration="0.195" data-track-index="3">know</div>
-  <div class="clip sm-cap " id="w159" data-start="47.040" data-duration="0.175" data-track-index="3">how</div>
-  <div class="clip sm-cap " id="w160" data-start="47.220" data-duration="0.276" data-track-index="3">to</div>
-  <div class="clip sm-cap " id="w161" data-start="47.500" data-duration="0.215" data-track-index="3">handle</div>
-  <div class="clip sm-cap " id="w162" data-start="47.720" data-duration="0.355" data-track-index="3">that</div>
-  <div class="clip sm-cap hl" id="w163" data-start="48.080" data-duration="0.736" data-track-index="3">level</div>
-  <div class="clip sm-cap " id="w164" data-start="48.820" data-duration="0.575" data-track-index="3">of</div>
-  <div class="clip sm-cap hl" id="w165" data-start="49.400" data-duration="0.465" data-track-index="3">opportunity</div>
-  <div class="clip sm-cap " id="w166" data-start="49.870" data-duration="0.156" data-track-index="3">if</div>
-  <div class="clip sm-cap " id="w167" data-start="50.030" data-duration="0.265" data-track-index="3">somebody</div>
-  <div class="clip sm-cap " id="w168" data-start="50.300" data-duration="0.096" data-track-index="3">say</div>
-  <div class="clip sm-cap " id="w169" data-start="50.400" data-duration="0.096" data-track-index="3">hey</div>
-  <div class="clip sm-cap " id="w170" data-start="50.500" data-duration="0.096" data-track-index="3">I</div>
-  <div class="clip sm-cap " id="w171" data-start="50.600" data-duration="0.096" data-track-index="3">got</div>
-  <div class="clip sm-cap " id="w172" data-start="50.700" data-duration="0.900" data-track-index="3">a</div>
-  <div class="clip sm-cap hl" id="w173" data-start="51.700" data-duration="0.386" data-track-index="3">contract</div>
-  <div class="clip sm-cap " id="w174" data-start="52.090" data-duration="0.095" data-track-index="3">for</div>
-  <div class="clip sm-cap " id="w175" data-start="52.190" data-duration="0.146" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w176" data-start="52.340" data-duration="0.395" data-track-index="3">right</div>
-  <div class="clip sm-cap hl" id="w177" data-start="52.740" data-duration="0.505" data-track-index="3">now</div>
-  <div class="clip sm-cap " id="w178" data-start="53.250" data-duration="0.096" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w179" data-start="53.350" data-duration="0.185" data-track-index="3">don't</div>
-  <div class="clip sm-cap " id="w180" data-start="53.540" data-duration="0.255" data-track-index="3">even</div>
-  <div class="clip sm-cap " id="w181" data-start="53.800" data-duration="0.436" data-track-index="3">know</div>
-  <div class="clip sm-cap " id="w182" data-start="54.240" data-duration="0.096" data-track-index="3">who</div>
-  <div class="clip sm-cap " id="w183" data-start="54.340" data-duration="0.295" data-track-index="3">to</div>
-  <div class="clip sm-cap " id="w184" data-start="54.640" data-duration="0.126" data-track-index="3">look</div>
-  <div class="clip sm-cap " id="w185" data-start="54.770" data-duration="0.095" data-track-index="3">at</div>
-  <div class="clip sm-cap " id="w186" data-start="54.870" data-duration="0.256" data-track-index="3">with</div>
-  <div class="clip sm-cap " id="w187" data-start="55.130" data-duration="0.215" data-track-index="3">this</div>
-  <div class="clip sm-cap hl" id="w188" data-start="55.350" data-duration="0.175" data-track-index="3">paper</div>
-  <div class="clip sm-cap " id="w189" data-start="55.530" data-duration="0.285" data-track-index="3">what</div>
-  <div class="clip sm-cap " id="w190" data-start="55.820" data-duration="0.316" data-track-index="3">these</div>
-  <div class="clip sm-cap " id="w191" data-start="56.140" data-duration="0.456" data-track-index="3">words</div>
-  <div class="clip sm-cap " id="w192" data-start="56.600" data-duration="0.475" data-track-index="3">mean</div>
-  <div class="clip sm-cap " id="w193" data-start="57.080" data-duration="0.096" data-track-index="3">do</div>
-  <div class="clip sm-cap " id="w194" data-start="57.180" data-duration="0.156" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w195" data-start="57.340" data-duration="0.115" data-track-index="3">need</div>
-  <div class="clip sm-cap " id="w196" data-start="57.460" data-duration="0.405" data-track-index="3">an</div>
-  <div class="clip sm-cap " id="w197" data-start="57.870" data-duration="0.266" data-track-index="3">entertainment</div>
-  <div class="clip sm-cap hl-g" id="w198" data-start="58.140" data-duration="0.795" data-track-index="3">lawyer</div>
-  <div class="clip sm-cap " id="w199" data-start="58.940" data-duration="0.116" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w200" data-start="59.060" data-duration="0.136" data-track-index="3">don't</div>
-  <div class="clip sm-cap " id="w201" data-start="59.200" data-duration="0.136" data-track-index="3">know</div>
-  <div class="clip sm-cap " id="w202" data-start="59.340" data-duration="0.135" data-track-index="3">none</div>
-  <div class="clip sm-cap " id="w203" data-start="59.480" data-duration="0.196" data-track-index="3">of</div>
-  <div class="clip sm-cap " id="w204" data-start="59.680" data-duration="0.736" data-track-index="3">this</div>
-  <div class="clip sm-cap " id="w205" data-start="60.420" data-duration="0.096" data-track-index="3">so</div>
-  <div class="clip sm-cap " id="w206" data-start="60.520" data-duration="0.325" data-track-index="3">it's</div>
-  <div class="clip sm-cap " id="w207" data-start="60.850" data-duration="0.096" data-track-index="3">just</div>
-  <div class="clip sm-cap " id="w208" data-start="60.950" data-duration="0.145" data-track-index="3">like</div>
-  <div class="clip sm-cap " id="w209" data-start="61.100" data-duration="0.805" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w210" data-start="61.910" data-duration="0.306" data-track-index="3">on</div>
-  <div class="clip sm-cap " id="w211" data-start="62.220" data-duration="0.516" data-track-index="3">step</div>
-  <div class="clip sm-cap hl-r" id="w212" data-start="62.740" data-duration="0.900" data-track-index="3">zero</div>
-  <div class="clip sm-cap " id="w213" data-start="63.780" data-duration="0.096" data-track-index="3">and</div>
-  <div class="clip sm-cap " id="w214" data-start="63.880" data-duration="0.456" data-track-index="3">you</div>
-  <div class="clip sm-cap " id="w215" data-start="64.340" data-duration="0.136" data-track-index="3">should</div>
-  <div class="clip sm-cap " id="w216" data-start="64.480" data-duration="0.136" data-track-index="3">be</div>
-  <div class="clip sm-cap " id="w217" data-start="64.620" data-duration="0.215" data-track-index="3">on</div>
-  <div class="clip sm-cap " id="w218" data-start="64.840" data-duration="0.205" data-track-index="3">step</div>
-  <div class="clip sm-cap hl-g" id="w219" data-start="65.050" data-duration="0.279" data-track-index="3">A</div>
+  <div class="clip sm-cap " id="w0" data-start="0.253" data-duration="0.596" data-track-index="3">instant</div>
+  <div class="clip sm-cap hl" id="w1" data-start="0.853" data-duration="0.196" data-track-index="3">gratification</div>
+  <div class="clip sm-cap " id="w2" data-start="1.053" data-duration="0.275" data-track-index="3">that</div>
+  <div class="clip sm-cap " id="w3" data-start="1.333" data-duration="0.656" data-track-index="3">everyone's</div>
+  <div class="clip sm-cap " id="w4" data-start="1.993" data-duration="0.625" data-track-index="3">chasing</div>
+  <div class="clip sm-cap " id="w5" data-start="2.623" data-duration="0.286" data-track-index="3">as</div>
+  <div class="clip sm-cap " id="w6" data-start="2.913" data-duration="0.256" data-track-index="3">well</div>
+  <div class="clip sm-cap " id="w7" data-start="3.173" data-duration="0.175" data-track-index="3">whether</div>
+  <div class="clip sm-cap " id="w8" data-start="3.353" data-duration="0.196" data-track-index="3">it's</div>
+  <div class="clip sm-cap " id="w9" data-start="3.553" data-duration="0.496" data-track-index="3">money</div>
+  <div class="clip sm-cap " id="w10" data-start="4.053" data-duration="0.465" data-track-index="3">or</div>
+  <div class="clip sm-cap " id="w11" data-start="4.523" data-duration="0.900" data-track-index="3">attention</div>
+  <div class="clip sm-cap " id="w12" data-start="5.473" data-duration="0.826" data-track-index="3">followers</div>
+  <div class="clip sm-cap " id="w13" data-start="6.303" data-duration="0.246" data-track-index="3">people</div>
+  <div class="clip sm-cap " id="w14" data-start="6.553" data-duration="0.165" data-track-index="3">just</div>
+  <div class="clip sm-cap " id="w15" data-start="6.723" data-duration="0.095" data-track-index="3">want</div>
+  <div class="clip sm-cap " id="w16" data-start="6.823" data-duration="0.446" data-track-index="3">it</div>
+  <div class="clip sm-cap hl" id="w17" data-start="7.273" data-duration="0.455" data-track-index="3">now</div>
+  <div class="clip sm-cap " id="w18" data-start="7.733" data-duration="0.096" data-track-index="3">and</div>
+  <div class="clip sm-cap " id="w19" data-start="7.833" data-duration="0.215" data-track-index="3">when</div>
+  <div class="clip sm-cap " id="w20" data-start="8.053" data-duration="0.156" data-track-index="3">they</div>
+  <div class="clip sm-cap " id="w21" data-start="8.213" data-duration="0.196" data-track-index="3">don't</div>
+  <div class="clip sm-cap " id="w22" data-start="8.413" data-duration="0.095" data-track-index="3">get</div>
+  <div class="clip sm-cap " id="w23" data-start="8.513" data-duration="0.216" data-track-index="3">it</div>
+  <div class="clip sm-cap hl" id="w24" data-start="8.733" data-duration="0.295" data-track-index="3">now</div>
+  <div class="clip sm-cap " id="w25" data-start="9.033" data-duration="0.146" data-track-index="3">they</div>
+  <div class="clip sm-cap hl-r" id="w26" data-start="9.183" data-duration="0.335" data-track-index="3">stop</div>
+  <div class="clip sm-cap " id="w27" data-start="9.523" data-duration="0.345" data-track-index="3">people</div>
+  <div class="clip sm-cap " id="w28" data-start="9.873" data-duration="0.196" data-track-index="3">ask</div>
+  <div class="clip sm-cap " id="w29" data-start="10.073" data-duration="0.406" data-track-index="3">me</div>
+  <div class="clip sm-cap " id="w30" data-start="10.483" data-duration="0.445" data-track-index="3">hey</div>
+  <div class="clip sm-cap " id="w31" data-start="10.933" data-duration="0.095" data-track-index="3">can</div>
+  <div class="clip sm-cap " id="w32" data-start="11.033" data-duration="0.216" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w33" data-start="11.253" data-duration="0.165" data-track-index="3">shout</div>
+  <div class="clip sm-cap " id="w34" data-start="11.423" data-duration="0.365" data-track-index="3">me</div>
+  <div class="clip sm-cap " id="w35" data-start="11.793" data-duration="0.116" data-track-index="3">out</div>
+  <div class="clip sm-cap " id="w36" data-start="11.913" data-duration="0.165" data-track-index="3">I</div>
+  <div class="clip sm-cap " id="w37" data-start="12.083" data-duration="0.095" data-track-index="3">say</div>
+  <div class="clip sm-cap hl-r" id="w38" data-start="12.183" data-duration="0.505" data-track-index="3">no</div>
+  <div class="clip sm-cap " id="w39" data-start="12.693" data-duration="0.546" data-track-index="3">why</div>
+  <div class="clip sm-cap " id="w40" data-start="13.243" data-duration="0.095" data-track-index="3">because</div>
+  <div class="clip sm-cap " id="w41" data-start="13.343" data-duration="0.275" data-track-index="3">it's</div>
+  <div class="clip sm-cap " id="w42" data-start="13.623" data-duration="0.206" data-track-index="3">just</div>
+  <div class="clip sm-cap " id="w43" data-start="13.833" data-duration="0.326" data-track-index="3">like</div>
+  <div class="clip sm-cap " id="w44" data-start="14.163" data-duration="0.095" data-track-index="3">you're</div>
+  <div class="clip sm-cap " id="w45" data-start="14.263" data-duration="0.285" data-track-index="3">not</div>
+  <div class="clip sm-cap hl-r" id="w46" data-start="14.553" data-duration="0.266" data-track-index="3">ready</div>
+  <div class="clip sm-cap " id="w47" data-start="14.823" data-duration="0.215" data-track-index="3">for</div>
+  <div class="clip sm-cap " id="w48" data-start="15.043" data-duration="0.096" data-track-index="3">a</div>
+  <div class="clip sm-cap " id="w49" data-start="15.143" data-duration="0.095" data-track-index="3">shout</div>
+  <div class="clip sm-cap " id="w50" data-start="15.243" data-duration="0.605" data-track-index="3">out</div>
+  <div class="clip sm-cap " id="w51" data-start="15.853" data-duration="0.115" data-track-index="3">when</div>
+  <div class="clip sm-cap " id="w52" data-start="15.973" data-duration="0.146" data-track-index="3">we</div>
+  <div class="clip sm-cap " id="w53" data-start="16.123" data-duration="0.285" data-track-index="3">talk</div>
+  <div class="clip sm-cap " id="w54" data-start="16.413" data-duration="0.616" data-track-index="3">about</div>
+  <div class="clip sm-cap hl-g" id="w55" data-start="17.033" data-duration="0.325" data-track-index="3">preparation</div>
+  <div class="clip sm-cap " id="w56" data-start="17.363" data-duration="0.535" data-track-index="3">it's</div>
+  <div class="clip sm-cap " id="w57" data-start="17.903" data-duration="0.166" data-track-index="3">just</div>
+  <div class="clip sm-cap " id="w58" data-start="18.073" data-duration="0.566" data-track-index="3">like</div>
+  <div class="clip sm-cap " id="w59" data-start="18.643" data-duration="0.375" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w60" data-start="19.023" data-duration="0.285" data-track-index="3">get</div>
+  <div class="clip sm-cap " id="w61" data-start="19.313" data-duration="0.136" data-track-index="3">a</div>
+  <div class="clip sm-cap " id="w62" data-start="19.453" data-duration="0.236" data-track-index="3">shout</div>
+  <div class="clip sm-cap " id="w63" data-start="19.693" data-duration="0.305" data-track-index="3">out</div>
+  <div class="clip sm-cap " id="w64" data-start="20.003" data-duration="0.116" data-track-index="3">and</div>
+  <div class="clip sm-cap " id="w65" data-start="20.123" data-duration="0.235" data-track-index="3">people</div>
+  <div class="clip sm-cap " id="w66" data-start="20.363" data-duration="0.096" data-track-index="3">come</div>
+  <div class="clip sm-cap " id="w67" data-start="20.463" data-duration="0.095" data-track-index="3">to</div>
+  <div class="clip sm-cap " id="w68" data-start="20.563" data-duration="0.186" data-track-index="3">your</div>
+  <div class="clip sm-cap " id="w69" data-start="20.753" data-duration="0.246" data-track-index="3">page</div>
+  <div class="clip sm-cap " id="w70" data-start="21.003" data-duration="0.096" data-track-index="3">then</div>
+  <div class="clip sm-cap " id="w71" data-start="21.103" data-duration="0.900" data-track-index="3">what</div>
+  <div class="clip sm-cap " id="w72" data-start="22.143" data-duration="0.095" data-track-index="3">they</div>
+  <div class="clip sm-cap " id="w73" data-start="22.243" data-duration="0.126" data-track-index="3">don't</div>
+  <div class="clip sm-cap " id="w74" data-start="22.373" data-duration="0.135" data-track-index="3">have</div>
+  <div class="clip sm-cap " id="w75" data-start="22.513" data-duration="0.136" data-track-index="3">nothing</div>
+  <div class="clip sm-cap " id="w76" data-start="22.653" data-duration="0.196" data-track-index="3">to</div>
+  <div class="clip sm-cap " id="w77" data-start="22.853" data-duration="0.246" data-track-index="3">watch</div>
+  <div class="clip sm-cap " id="w78" data-start="23.103" data-duration="0.225" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w79" data-start="23.333" data-duration="0.196" data-track-index="3">drop</div>
+  <div class="clip sm-cap " id="w80" data-start="23.533" data-duration="0.215" data-track-index="3">like</div>
+  <div class="clip sm-cap " id="w81" data-start="23.753" data-duration="0.165" data-track-index="3">two</div>
+  <div class="clip sm-cap " id="w82" data-start="23.923" data-duration="0.900" data-track-index="3">things</div>
+  <div class="clip sm-cap " id="w83" data-start="24.833" data-duration="0.096" data-track-index="3">so</div>
+  <div class="clip sm-cap " id="w84" data-start="24.933" data-duration="0.235" data-track-index="3">it's</div>
+  <div class="clip sm-cap " id="w85" data-start="25.173" data-duration="0.126" data-track-index="3">just</div>
+  <div class="clip sm-cap " id="w86" data-start="25.303" data-duration="0.465" data-track-index="3">like</div>
+  <div class="clip sm-cap " id="w87" data-start="25.773" data-duration="0.175" data-track-index="3">why</div>
+  <div class="clip sm-cap " id="w88" data-start="25.953" data-duration="0.156" data-track-index="3">do</div>
+  <div class="clip sm-cap " id="w89" data-start="26.113" data-duration="0.276" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w90" data-start="26.393" data-duration="0.175" data-track-index="3">want</div>
+  <div class="clip sm-cap " id="w91" data-start="26.573" data-duration="0.185" data-track-index="3">a</div>
+  <div class="clip sm-cap " id="w92" data-start="26.763" data-duration="0.096" data-track-index="3">shout</div>
+  <div class="clip sm-cap " id="w93" data-start="26.863" data-duration="0.096" data-track-index="3">out</div>
+  <div class="clip sm-cap " id="w94" data-start="26.963" data-duration="0.265" data-track-index="3">you're</div>
+  <div class="clip sm-cap " id="w95" data-start="27.233" data-duration="0.366" data-track-index="3">not</div>
+  <div class="clip sm-cap " id="w96" data-start="27.603" data-duration="0.095" data-track-index="3">prepared</div>
+  <div class="clip sm-cap " id="w97" data-start="27.703" data-duration="0.186" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w98" data-start="27.893" data-duration="0.195" data-track-index="3">don't</div>
+  <div class="clip sm-cap " id="w99" data-start="28.093" data-duration="0.186" data-track-index="3">have</div>
+  <div class="clip sm-cap " id="w100" data-start="28.283" data-duration="0.445" data-track-index="3">the</div>
+  <div class="clip sm-cap hl" id="w101" data-start="28.733" data-duration="0.895" data-track-index="3">catalog</div>
+  <div class="clip sm-cap " id="w102" data-start="29.633" data-duration="0.526" data-track-index="3">keep</div>
+  <div class="clip sm-cap hl-g" id="w103" data-start="30.163" data-duration="0.265" data-track-index="3">dropping</div>
+  <div class="clip sm-cap " id="w104" data-start="30.433" data-duration="0.375" data-track-index="3">be</div>
+  <div class="clip sm-cap hl-g" id="w105" data-start="30.813" data-duration="0.566" data-track-index="3">consistent</div>
+  <div class="clip sm-cap " id="w106" data-start="31.383" data-duration="0.096" data-track-index="3">do</div>
+  <div class="clip sm-cap " id="w107" data-start="31.483" data-duration="0.215" data-track-index="3">what</div>
+  <div class="clip sm-cap " id="w108" data-start="31.703" data-duration="0.096" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w109" data-start="31.803" data-duration="0.186" data-track-index="3">need</div>
+  <div class="clip sm-cap " id="w110" data-start="31.993" data-duration="0.095" data-track-index="3">to</div>
+  <div class="clip sm-cap " id="w111" data-start="32.093" data-duration="0.156" data-track-index="3">do</div>
+  <div class="clip sm-cap " id="w112" data-start="32.253" data-duration="0.175" data-track-index="3">on</div>
+  <div class="clip sm-cap " id="w113" data-start="32.433" data-duration="0.295" data-track-index="3">your</div>
+  <div class="clip sm-cap " id="w114" data-start="32.733" data-duration="0.266" data-track-index="3">end</div>
+  <div class="clip sm-cap " id="w115" data-start="33.003" data-duration="0.225" data-track-index="3">and</div>
+  <div class="clip sm-cap " id="w116" data-start="33.233" data-duration="0.156" data-track-index="3">then</div>
+  <div class="clip sm-cap " id="w117" data-start="33.393" data-duration="0.155" data-track-index="3">when</div>
+  <div class="clip sm-cap " id="w118" data-start="33.553" data-duration="0.456" data-track-index="3">the</div>
+  <div class="clip sm-cap hl" id="w119" data-start="34.013" data-duration="0.456" data-track-index="3">opportunity</div>
+  <div class="clip sm-cap " id="w120" data-start="34.473" data-duration="0.246" data-track-index="3">meets</div>
+  <div class="clip sm-cap " id="w121" data-start="34.723" data-duration="0.645" data-track-index="3">the</div>
+  <div class="clip sm-cap hl-g" id="w122" data-start="35.373" data-duration="0.855" data-track-index="3">preparation</div>
+  <div class="clip sm-cap hl" id="w123" data-start="36.233" data-duration="0.526" data-track-index="3">fireworks</div>
+  <div class="clip sm-cap " id="w124" data-start="36.763" data-duration="0.675" data-track-index="3">happen</div>
+  <div class="clip sm-cap " id="w125" data-start="37.443" data-duration="0.096" data-track-index="3">because</div>
+  <div class="clip sm-cap " id="w126" data-start="37.543" data-duration="0.425" data-track-index="3">the</div>
+  <div class="clip sm-cap hl" id="w127" data-start="37.973" data-duration="0.416" data-track-index="3">opportunity</div>
+  <div class="clip sm-cap " id="w128" data-start="38.393" data-duration="0.285" data-track-index="3">will</div>
+  <div class="clip sm-cap " id="w129" data-start="38.683" data-duration="0.846" data-track-index="3">come</div>
+  <div class="clip sm-cap " id="w130" data-start="39.533" data-duration="0.096" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w131" data-start="39.633" data-duration="0.095" data-track-index="3">just</div>
+  <div class="clip sm-cap " id="w132" data-start="39.733" data-duration="0.276" data-track-index="3">gotta</div>
+  <div class="clip sm-cap hl" id="w133" data-start="40.013" data-duration="0.416" data-track-index="3">wait</div>
+  <div class="clip sm-cap " id="w134" data-start="40.433" data-duration="0.096" data-track-index="3">but</div>
+  <div class="clip sm-cap " id="w135" data-start="40.533" data-duration="0.215" data-track-index="3">it's</div>
+  <div class="clip sm-cap " id="w136" data-start="40.753" data-duration="0.126" data-track-index="3">just</div>
+  <div class="clip sm-cap " id="w137" data-start="40.883" data-duration="0.095" data-track-index="3">like</div>
+  <div class="clip sm-cap " id="w138" data-start="40.983" data-duration="0.146" data-track-index="3">if</div>
+  <div class="clip sm-cap " id="w139" data-start="41.133" data-duration="0.136" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w140" data-start="41.273" data-duration="0.155" data-track-index="3">want</div>
+  <div class="clip sm-cap " id="w141" data-start="41.433" data-duration="0.416" data-track-index="3">the</div>
+  <div class="clip sm-cap hl" id="w142" data-start="41.853" data-duration="0.615" data-track-index="3">opportunity</div>
+  <div class="clip sm-cap " id="w143" data-start="42.473" data-duration="0.900" data-track-index="3">before</div>
+  <div class="clip sm-cap " id="w144" data-start="43.513" data-duration="0.776" data-track-index="3">the</div>
+  <div class="clip sm-cap hl-g" id="w145" data-start="44.293" data-duration="0.416" data-track-index="3">preparation</div>
+  <div class="clip sm-cap " id="w146" data-start="44.713" data-duration="0.096" data-track-index="3">comes</div>
+  <div class="clip sm-cap " id="w147" data-start="44.813" data-duration="0.445" data-track-index="3">in</div>
+  <div class="clip sm-cap " id="w148" data-start="45.263" data-duration="0.096" data-track-index="3">what</div>
+  <div class="clip sm-cap " id="w149" data-start="45.363" data-duration="0.126" data-track-index="3">are</div>
+  <div class="clip sm-cap " id="w150" data-start="45.493" data-duration="0.136" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w151" data-start="45.633" data-duration="0.195" data-track-index="3">gonna</div>
+  <div class="clip sm-cap " id="w152" data-start="45.833" data-duration="0.116" data-track-index="3">do</div>
+  <div class="clip sm-cap " id="w153" data-start="45.953" data-duration="0.095" data-track-index="3">with</div>
+  <div class="clip sm-cap " id="w154" data-start="46.053" data-duration="0.136" data-track-index="3">it</div>
+  <div class="clip sm-cap " id="w155" data-start="46.193" data-duration="0.096" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w156" data-start="46.293" data-duration="0.215" data-track-index="3">don't</div>
+  <div class="clip sm-cap " id="w157" data-start="46.513" data-duration="0.256" data-track-index="3">even</div>
+  <div class="clip sm-cap " id="w158" data-start="46.773" data-duration="0.195" data-track-index="3">know</div>
+  <div class="clip sm-cap " id="w159" data-start="46.973" data-duration="0.175" data-track-index="3">how</div>
+  <div class="clip sm-cap " id="w160" data-start="47.153" data-duration="0.276" data-track-index="3">to</div>
+  <div class="clip sm-cap " id="w161" data-start="47.433" data-duration="0.215" data-track-index="3">handle</div>
+  <div class="clip sm-cap " id="w162" data-start="47.653" data-duration="0.355" data-track-index="3">that</div>
+  <div class="clip sm-cap hl" id="w163" data-start="48.013" data-duration="0.736" data-track-index="3">level</div>
+  <div class="clip sm-cap " id="w164" data-start="48.753" data-duration="0.575" data-track-index="3">of</div>
+  <div class="clip sm-cap hl" id="w165" data-start="49.333" data-duration="0.465" data-track-index="3">opportunity</div>
+  <div class="clip sm-cap " id="w166" data-start="49.803" data-duration="0.156" data-track-index="3">if</div>
+  <div class="clip sm-cap " id="w167" data-start="49.963" data-duration="0.265" data-track-index="3">somebody</div>
+  <div class="clip sm-cap " id="w168" data-start="50.233" data-duration="0.096" data-track-index="3">say</div>
+  <div class="clip sm-cap " id="w169" data-start="50.333" data-duration="0.096" data-track-index="3">hey</div>
+  <div class="clip sm-cap " id="w170" data-start="50.433" data-duration="0.096" data-track-index="3">I</div>
+  <div class="clip sm-cap " id="w171" data-start="50.533" data-duration="0.096" data-track-index="3">got</div>
+  <div class="clip sm-cap " id="w172" data-start="50.633" data-duration="0.900" data-track-index="3">a</div>
+  <div class="clip sm-cap hl" id="w173" data-start="51.633" data-duration="0.386" data-track-index="3">contract</div>
+  <div class="clip sm-cap " id="w174" data-start="52.023" data-duration="0.095" data-track-index="3">for</div>
+  <div class="clip sm-cap " id="w175" data-start="52.123" data-duration="0.146" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w176" data-start="52.273" data-duration="0.395" data-track-index="3">right</div>
+  <div class="clip sm-cap hl" id="w177" data-start="52.673" data-duration="0.505" data-track-index="3">now</div>
+  <div class="clip sm-cap " id="w178" data-start="53.183" data-duration="0.096" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w179" data-start="53.283" data-duration="0.185" data-track-index="3">don't</div>
+  <div class="clip sm-cap " id="w180" data-start="53.473" data-duration="0.255" data-track-index="3">even</div>
+  <div class="clip sm-cap " id="w181" data-start="53.733" data-duration="0.436" data-track-index="3">know</div>
+  <div class="clip sm-cap " id="w182" data-start="54.173" data-duration="0.096" data-track-index="3">who</div>
+  <div class="clip sm-cap " id="w183" data-start="54.273" data-duration="0.295" data-track-index="3">to</div>
+  <div class="clip sm-cap " id="w184" data-start="54.573" data-duration="0.126" data-track-index="3">look</div>
+  <div class="clip sm-cap " id="w185" data-start="54.703" data-duration="0.095" data-track-index="3">at</div>
+  <div class="clip sm-cap " id="w186" data-start="54.803" data-duration="0.256" data-track-index="3">with</div>
+  <div class="clip sm-cap " id="w187" data-start="55.063" data-duration="0.215" data-track-index="3">this</div>
+  <div class="clip sm-cap hl" id="w188" data-start="55.283" data-duration="0.175" data-track-index="3">paper</div>
+  <div class="clip sm-cap " id="w189" data-start="55.463" data-duration="0.285" data-track-index="3">what</div>
+  <div class="clip sm-cap " id="w190" data-start="55.753" data-duration="0.316" data-track-index="3">these</div>
+  <div class="clip sm-cap " id="w191" data-start="56.073" data-duration="0.456" data-track-index="3">words</div>
+  <div class="clip sm-cap " id="w192" data-start="56.533" data-duration="0.475" data-track-index="3">mean</div>
+  <div class="clip sm-cap " id="w193" data-start="57.013" data-duration="0.096" data-track-index="3">do</div>
+  <div class="clip sm-cap " id="w194" data-start="57.113" data-duration="0.156" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w195" data-start="57.273" data-duration="0.115" data-track-index="3">need</div>
+  <div class="clip sm-cap " id="w196" data-start="57.393" data-duration="0.405" data-track-index="3">an</div>
+  <div class="clip sm-cap " id="w197" data-start="57.803" data-duration="0.266" data-track-index="3">entertainment</div>
+  <div class="clip sm-cap hl-g" id="w198" data-start="58.073" data-duration="0.795" data-track-index="3">lawyer</div>
+  <div class="clip sm-cap " id="w199" data-start="58.873" data-duration="0.116" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w200" data-start="58.993" data-duration="0.136" data-track-index="3">don't</div>
+  <div class="clip sm-cap " id="w201" data-start="59.133" data-duration="0.136" data-track-index="3">know</div>
+  <div class="clip sm-cap " id="w202" data-start="59.273" data-duration="0.135" data-track-index="3">none</div>
+  <div class="clip sm-cap " id="w203" data-start="59.413" data-duration="0.196" data-track-index="3">of</div>
+  <div class="clip sm-cap " id="w204" data-start="59.613" data-duration="0.736" data-track-index="3">this</div>
+  <div class="clip sm-cap " id="w205" data-start="60.353" data-duration="0.096" data-track-index="3">so</div>
+  <div class="clip sm-cap " id="w206" data-start="60.453" data-duration="0.325" data-track-index="3">it's</div>
+  <div class="clip sm-cap " id="w207" data-start="60.783" data-duration="0.096" data-track-index="3">just</div>
+  <div class="clip sm-cap " id="w208" data-start="60.883" data-duration="0.145" data-track-index="3">like</div>
+  <div class="clip sm-cap " id="w209" data-start="61.033" data-duration="0.805" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w210" data-start="61.843" data-duration="0.306" data-track-index="3">on</div>
+  <div class="clip sm-cap " id="w211" data-start="62.153" data-duration="0.516" data-track-index="3">step</div>
+  <div class="clip sm-cap hl-r" id="w212" data-start="62.673" data-duration="0.900" data-track-index="3">zero</div>
+  <div class="clip sm-cap " id="w213" data-start="63.713" data-duration="0.096" data-track-index="3">and</div>
+  <div class="clip sm-cap " id="w214" data-start="63.813" data-duration="0.456" data-track-index="3">you</div>
+  <div class="clip sm-cap " id="w215" data-start="64.273" data-duration="0.136" data-track-index="3">should</div>
+  <div class="clip sm-cap " id="w216" data-start="64.413" data-duration="0.136" data-track-index="3">be</div>
+  <div class="clip sm-cap " id="w217" data-start="64.553" data-duration="0.215" data-track-index="3">on</div>
+  <div class="clip sm-cap " id="w218" data-start="64.773" data-duration="0.205" data-track-index="3">step</div>
+  <div class="clip sm-cap hl-g" id="w219" data-start="64.983" data-duration="0.279" data-track-index="3">A</div>
 
   <!-- 8 · audio (speech + pre-mixed SFX) -->
   <audio id="aud" class="clip" src="assets/mix.wav" data-start="0" data-duration="67.333" data-track-index="8"></audio>
@@ -913,7 +919,7 @@ window.SMKit = window.SMKit || {
 
   // ---- A3 · chart: want it now → flat ----
   K.hero(tl, '#A3', 6.2, 9.18, { drift: 12 });
-  K.draw(tl, '#A3up', 6.35, .9, 'power2.out');
+  K.draw(tl, '#A3up', 6.24, 1.0, 'power2.out');
   K.pop(tl, '#A3chip', 6.6);
   tl.to('#A3dot', { opacity: 1, duration: .1 }, 7.25);
   K.draw(tl, '#A3flat', 7.8, 1.0, 'none');
@@ -989,11 +995,11 @@ window.SMKit = window.SMKit || {
 
   // ---- C1 · opportunity meets preparation ----
   K.hero(tl, '#C1', 34.25, 36.22, { drift: 6, keep: true });
-  tl.fromTo('#C1opp', { x: -260, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: 'power3.out' }, 34.08);
-  tl.fromTo('#C1prep', { x: 260, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: 'power3.out' }, 35.42);
+  tl.fromTo('#C1opp', { y: -160, scale: .6, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(1.6)' }, 34.08);
+  tl.fromTo('#C1prep', { y: 160, scale: .6, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(1.6)' }, 35.42);
   K.draw(tl, '#C1line', 34.5, 1.2, 'power1.inOut');
-  tl.to('#C1opp', { x: 160, y: 60, duration: .7, ease: 'power3.in' }, 35.55);
-  tl.to('#C1prep', { x: -160, y: -60, duration: .7, ease: 'power3.in' }, 35.55);
+  tl.to('#C1opp', { y: 200, duration: .7, ease: 'power3.in' }, 35.55);
+  tl.to('#C1prep', { y: -200, duration: .7, ease: 'power3.in' }, 35.55);
   tl.to('#C1', { autoAlpha: 0, scale: 1.4, filter: 'blur(12px)', duration: .12 }, 36.24);
   tl.set('#C1', { autoAlpha: 0, scale: 1, filter: 'none' }, 36.38);
 
@@ -1038,7 +1044,9 @@ window.SMKit = window.SMKit || {
 
   // ---- D2 · message ----
   K.hero(tl, '#D2', 49.86, 51.62, { drift: 6, fromScale: .8 });
-  tl.fromTo('#D2n', { y: -260 }, { y: 0, duration: .45, ease: 'bounce.out' }, 49.86);
+  tl.fromTo('#D2n', { y: 200, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .4, ease: 'back.out(1.6)' }, 50.05);
+  tl.fromTo('#D2big', { scale: .3, rotate: -10 }, { scale: 1, rotate: 0, duration: .4, ease: 'back.out(2)' }, 49.86);
+  tl.fromTo('#D2 .d2r', { scale: .6, opacity: .9 }, { scale: 1.9, opacity: 0, duration: 1.0, stagger: .45, ease: 'power2.out', repeat: 1 }, 50.0);
   tl.to('#D2n', { x: 8, duration: .05, yoyo: true, repeat: 5 }, 51.68 - .7);
 
   // ---- D3 · contract → who → words → lawyer ----

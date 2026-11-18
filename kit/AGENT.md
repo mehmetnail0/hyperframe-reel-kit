@@ -88,9 +88,10 @@ selfie) · `.cap-mid` 856 (split/empty mid) · `.cap-lower` 1330 (chin clear onl
      assets/source.mp4
    ```
 
-3. **Light "pıt" pops on overlay/caption pop-ins.** Use `kit/assets/sfx/pop.wav`
-   (soft ~920 Hz) for normal caption/overlay reveals and `kit/assets/sfx/pop_hi.wav`
-   (sharper ~1320 Hz) for accents (e.g. an X-strike). Place pops on a **dedicated
+3. **Light "pıt" pops on a FEW overlay/caption pop-ins** — only from the user's OWN
+   SFX library (the kit ships no sound; never synthesize one). Pick soft, low-passed
+   UI pops/ticks 14–20 dB under the voice; record picks in `sfx-map.json`
+   (see `kit/split-motion/SKILL.md` and `kit/split-motion/sfx_mix.py`). Place pops on a **dedicated
    audio track-index SEPARATE from whoosh/transition SFX** — pops on **track 6**,
    whooshes on **track 7**, main audio on **track 8**. ⚠ hyperframes ERRORS on
    overlapping clips on the SAME track, so never mix pops and whooshes on one track.

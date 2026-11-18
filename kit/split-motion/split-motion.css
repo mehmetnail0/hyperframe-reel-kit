@@ -102,7 +102,8 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
 
 /* ---------- seam caption: ONE word, every spoken word ---------------------- */
 .sm-cap {
-  position: absolute; left: 90px; width: 900px; top: var(--cap-y); height: 84px;
+  /* x 120..960: centred, clear of the IG right action rail (x 960-1080, y 1050-1700) */
+  position: absolute; left: 120px; width: 840px; top: var(--cap-y); height: 84px;
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-size: 60px; letter-spacing: -.01em; color: #fff;
   text-shadow: 0 2px 0 rgba(0,0,0,.35), 0 0 18px rgba(0,0,0,.55);
@@ -149,7 +150,7 @@ body { font-family: "Product Sans", "Google Sans", Inter, system-ui, sans-serif;
   background: radial-gradient(circle at 35% 30%, #fff3c4 0%, #ffd25e 30%, #d99a12 70%, #8a5a00 100%);
   border: 4px dashed rgba(90,55,0,.55); box-shadow: 0 0 22px rgba(255,197,61,.55);
 }
-.sm-coin-row .t { font-weight: 500; font-size: 38px; color: #fff; filter: var(--glow-w); }
+.sm-coin-row .t { font-weight: 500; font-size: 44px; color: #fff; filter: var(--glow-w); }
 
 /* chapter device: number + label over the device */
 .sm-chap { position: absolute; left: 40px; top: 0; width: 1000px; height: 1150px; opacity: 0; }
