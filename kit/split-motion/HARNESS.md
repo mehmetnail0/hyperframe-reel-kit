@@ -14,6 +14,20 @@ Outputs: `FINAL.mp4` (1080×1920/30, −14 LUFS, TP ≤ −1 dBTP), `FINAL-sheet
 `REEL_DIR/data/{plan,edl,words,beats,sfx-map}.json`, `REEL_DIR/index.html` (preview in
 `npm run dev`), `REEL_DIR/build/timings.json` (every step's wall time + the QC block).
 
+## RESUME — round 3 (scene-layer redesign) — keep this block current
+
+- Branch `claude/split-motion-r3-1119` from 1f2811a. Kept: ingest, cut, chunk render, SFX mix, QC, jumps.py.
+- Replaced: the fixed scene-type vocabulary. New: `harness/r3/` = component helper lib (`lib.js` window.R3 + `r3.css`),
+  `director.py` (ONE claude call, Opus 5.5 high -> storyboard.json: sections 8-25 s, one evolving hero structure each,
+  light model, transitions, word anchors, risers), `coder.py` (one claude call PER SECTION in parallel, writes bespoke
+  GSAP JS on R3; validate in headless Chrome -> errors/density fed back, max 2 loops), `compose.py` (sections -> HTML,
+  chunk variants), `density.py` (density QC). Entry: `run.py --engine r3 --coder sonnet|opus [--storyboard FILE]`.
+- Inputs (scratchpad, not in git): raw dai `dl/raw/raw.mp4`, margot `dl/cc2/margot-290-410.mp4`, SFX lib `dl/sfx/sound effects /`.
+- Deliverables: split-motion-dai/renders/r3/{dai-sonnet,dai-opus}.mp4 + compare sheet (+ Kallaway DfzlY0XMeeN, Dfx2dzvuI2V
+  sheets at matching relative times); split-motion-margot/renders/r3/ with the better coder.
+- Status: lib/compose/validate/claude_stage/density/run_r3 written + smoke-tested (r3test). Next: dai sonnet run (fresh,
+  director -> data/storyboard.json in split-motion-dai/r3-sonnet), then dai opus run with --storyboard from it, then margot.
+
 ## Pipeline
 
 ```
