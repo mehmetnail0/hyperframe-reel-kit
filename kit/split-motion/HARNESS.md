@@ -25,8 +25,63 @@ Outputs: `FINAL.mp4` (1080×1920/30, −14 LUFS, TP ≤ −1 dBTP), `FINAL-sheet
 - Inputs (scratchpad, not in git): raw dai `dl/raw/raw.mp4`, margot `dl/cc2/margot-290-410.mp4`, SFX lib `dl/sfx/sound effects /`.
 - Deliverables: split-motion-dai/renders/r3/{dai-sonnet,dai-opus}.mp4 + compare sheet (+ Kallaway DfzlY0XMeeN, Dfx2dzvuI2V
   sheets at matching relative times); split-motion-margot/renders/r3/ with the better coder.
-- Status: lib/compose/validate/claude_stage/density/run_r3 written + smoke-tested (r3test). Next: dai sonnet run (fresh,
-  director -> data/storyboard.json in split-motion-dai/r3-sonnet), then dai opus run with --storyboard from it, then margot.
+- Status: DONE for round 3 — dai sonnet + opus, compare sheet, margot (opus coder) delivered and pushed.
+  Open: ambient-drift gate (25–40 %), events/min on margot (33), 16–18 min per fresh reel (coder time).
+
+## Round 3 (2026-11-19) — scene-layer redesign: Claude writes the motion
+
+Why: round 2 handed the planner a fixed menu of ~13 scene types, so every plan became a row of small standalone objects
+(icon+label, counter, orb) swapped every ~2 s with patchy local glow. Round 3 replaces that layer:
+
+| stage | what | model |
+| --- | --- | --- |
+| DIRECTOR (`r3/claude_stage.director`) | ONE call → storyboard: story cut, 8–25 s sections, ONE evolving hero structure per section built from the transcript's claims (real-looking content), light model (key x/y + temperature), camera beats, transition-by-transformation, word-anchored events (major/item/minor → risers/ticks), speaker runs, headers | Opus 5.5, effort high |
+| SCENE CODER (`claude_stage.code_sections`) | ONE call PER SECTION, all in parallel → bespoke GSAP on the R3 helper library (`r3/lib.js`: one light model with rim light + sheen on every card, camera rig, group entrances with overshoot, connectors, doc/phone/profile/grid/calendar/tree/orbit/chart/rows/network/pages/offer building blocks — helpers, never a menu) | Sonnet 5.5 or Opus 5.5, effort high |
+| COMPOSE (`r3/compose.py`) | sections overlap 0.45 s: outgoing pushes through (scale + motion blur) while the next arrives — no blank panel; global background = grid + very slow light field; header per section; captions; speaker runs | code |
+| VALIDATE + REPAIR (`r3/validate.js`, `run_r3.lint`) | headless: JS errors, overflow outside the stage, device clipping, ≥3 visible elements share, lonely-object share; static motion lint (no yoyo/repeat, no tween > 1.2 s except one camera move) → problems fed back to the same coder, max 2 loops | coder model |
+| DENSITY QC (`r3/density.py`, fails the render) | panel events/min 40–60 · ≥3 elements ≥95 % · lonely ≤5 % · ambient drift ≤20 % · jumps 0 | code |
+
+Entry: `python3 -I kit/split-motion/harness/r3/run_r3.py RAW REEL --sfx-lib LIB --coder sonnet|opus [--storyboard FILE]`.
+Kept from rounds 1–2: ingest, cut, base video, SFX engine + mixer (−14 LUFS), chunked render, jumps detector + re-render loop.
+
+### Coder comparison on dai (same director storyboard: 5 sections — DM inbox, creator profile, upload calendar/vault, porch cam with delivery, contract → A–Z pages)
+
+Director (once): Opus 5.5 high, **199 s**, 19.9k output tokens, $0.44 (ran in parallel with the 78 s vision decode).
+
+| step | Sonnet 5.5 coder | Opus 5.5 coder |
+| --- | --- | --- |
+| 4 scene coders, 5 sections in parallel (longest) | 599 s (269–599 s per section) | 499 s (327–499 s) |
+| 4b validate + repair (1 loop, all problems fixed) | 118 s | 90 s |
+| base video ∥ speech (inside step 4) | 81 s ∥ 4 s | 81 s ∥ 3 s |
+| 5 render (3 chunks; both reels rendering at once) | 255 s | 326 s |
+| 5b jump QC (+1 deterministic re-render) | 6 s | 178 s |
+| total wall (storyboard reused; add 199 s director for a fresh reel) | **999 s** | **1110 s** |
+| Claude tokens (coders + repairs) | 287.6k out, 199k cache-write, 10 calls, $3.67 | 207.1k out, 128k cache-write, 7 calls, $5.17 |
+| events/min (40–60) | 54.4 ✓ | 49.6 ✓ |
+| ≥3 elements visible | 100 % ✓ | 100 % ✓ |
+| lonely-object time | 0 % ✓ | 0 % ✓ |
+| ambient drift (≤ 20 %) | 40 % ✗ | 31 % ✗ |
+| jump frames | 2 ✗ | 3 ✗ (same ~5.8 s spot in both = composition-level) |
+| loudness | −14.1 LUFS / −1.5 dBTP | −14.1 LUFS / −1.5 dBTP |
+
+Pass 1 with Sonnet (before the motion lint): ambient 44 %, 1 jump, 766 s. Renders: `split-motion-dai/renders/r3/dai-sonnet.mp4`,
+`dai-opus.mp4`; sheet `compare-sonnet-opus-kallaway.jpg` (sonnet | opus | Kallaway DfzlY0XMeeN | Dfx2dzvuI2V, every 3 s,
+Kallaway columns at the same relative position of their own length).
+
+### Margot with the better coder (Opus), fresh director — `split-motion-margot/renders/r3/margot-opus.mp4`
+
+Director 183 s (18.3k out tok, overlapping the 15 s vision decode) · coders 417 s in parallel (152–417 s per section) ·
+validate+repair 172 s (1 loop) · render 175 s (4 chunks, alone) · QC 18 s · **total 970 s** · 163.7k output tokens, 7 calls,
+$4.14. Density: events/min **32.9 ✗** (40–60), ≥3 elements 100 % ✓, lonely 0 % ✓, ambient **25 % ✗** (≤ 20), jumps **0 ✓**,
+−14.2 LUFS / −1.4 dBTP. Heroes: stacked product bulletin → 12-month shelf of slots → printed bulletin with highlighter rows →
+publishing agreement with a 3-way equity split → editorial charter of rules.
+
+Self-review vs Kallaway: the grammar now matches (one persistent hero per section evolving on the words, dense layered panel,
+single light model, no orbs). Still short: heroes are smaller/lower-contrast than his white-and-red UI (our panel is shorter
+and darker); holds still carry 31–40 % ambient motion (coder-written micro-motion survives the lint; the gate fails); the
+Sonnet and Opus renders look alike because the director decides most of the design; scene coding takes 8–10 min, so a fresh
+reel is ~17–20 min, far over the 5–8 min target (bottleneck = coder reasoning time at effort high; next: effort medium for
+coders, one coder call for all sections with a shared style, or cached per-structure templates).
 
 ## Pipeline
 

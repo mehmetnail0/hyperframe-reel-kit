@@ -7,7 +7,7 @@ Steps (timed into REEL_DIR/build/timings.json, tokens per Claude call included):
   1 ingest || 2 director   3 cut   4 coders (parallel per section) || base video || speech
   4b compose + validate + repair (max 2 loops)   4c SFX   5 chunked render   5b jumps QC   5c density QC   6 loudness/sheet
 """
-import json, os, shutil, subprocess, sys, time
+import json, os, re, shutil, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -69,6 +69,21 @@ def validate(reel, html, st, work, spk=()):
     if r.returncode != 0:
         return {"errors": ["validator crashed: " + r.stderr[-300:]], "sections": [], "r3err": []}
     return json.load(open(oj))
+
+
+def lint(codes):
+    """static motion lint: continuous/idle motion is what made QC fail (ambient drift)."""
+    out = {}
+    for sid, c in codes.items():
+        p = []
+        if re.search(r"\byoyo\s*:", c) or re.search(r"\brepeat\s*:\s*-?\d", c):
+            p.append("uses yoyo/repeat (continuous motion is forbidden between events) - remove every yoyo/repeat")
+        longs = [float(x) for x in re.findall(r"duration\s*:\s*([0-9.]+)", c) if float(x) > 1.2]
+        if len(longs) > 1 or any(x > 2.5 for x in longs):
+            p.append(f"tween durations {sorted(longs)[-4:]} s: only ONE camera move may exceed 1.2 s (max 2.5 s); shorten the rest")
+        if p:
+            out[sid] = p
+    return out
 
 
 def problems_by_section(rep):
@@ -158,7 +173,7 @@ def main(a):
     lays = [(x, y, "speaker") for x, y in spk]
     full = []
     cur = 0.0
-    for x, y in sorted(lays):
+    for x, y, _ in sorted(lays):
         if x > cur:
             full.append((cur, x, "split"))
         full.append((x, y, "speaker"))
@@ -207,6 +222,8 @@ def main(a):
             html, cues, beats, caps, st, spk = compose.compose(story, codes, cw, total, ctx)
             rep = validate(reel, html, st, work, spk)
             probs = problems_by_section(rep)
+            for k, v in lint(codes).items():
+                probs.setdefault(k, []).extend(v)
             loops.append(dict(loop=loop, problems={k: len(v) for k, v in probs.items()},
                               share_ge3=[round(s["share_ge3"], 2) for s in rep.get("sections", [])]))
             fix = {k: v for k, v in probs.items() if k.startswith("sec")}

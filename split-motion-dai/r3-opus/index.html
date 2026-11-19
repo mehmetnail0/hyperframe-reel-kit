@@ -1,0 +1,1640 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=2040">
+<title>Fireworks Need a Catalog</title>
+<script src="assets/vendor/gsap.min.js"></script>
+<style>/* ============================================================================
+   kw.css — the "Kallaway look" for split-motion (measured from 20 reference reels)
+   canvas 1080x2040 (render tall + crop to 1920). Geometry:
+     panel      y 0-1370   near-black, faint square grid, vignette
+     header     y 150-330  bold sans 2 lines + serif-italic accent, red box / underline
+     stage      y 340-1200 the scene (one hero per beat)
+     seam cap   y 1225-1310 1-3 words, white bold, centered x 90-990
+     card       y 1372-1900 speaker card, inset 24 px, radius 38 (baked into the video)
+   ============================================================================ */
+@font-face { font-family: "PS"; font-weight: 400; src: url("assets/fonts/ProductSans-Regular.woff") format("woff"); }
+@font-face { font-family: "PS"; font-weight: 700; src: url("assets/fonts/ProductSans-Bold.woff") format("woff"); }
+@font-face { font-family: "PS"; font-weight: 900; src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+@font-face { font-family: "IS"; font-style: italic; font-weight: 400; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); }
+:root {
+  --bg: #0a0a0c; --bg2: #121216; --line: rgba(255,255,255,.055); --ink: #fff; --dim: rgba(255,255,255,.62);
+  --card: #16161b; --stroke: rgba(255,255,255,.22);
+  --red: #e8283c; --red2: #ff4d5e; --acc2: #ffd23f;
+  --hl1: #ffd23f; --hl2: #b05cff; --hl3: #2ee6d6; --hl4: #3dff8b; --hl5: #ff5c8a;
+}
+.kw-light { --bg: #e9e9ec; --bg2: #f4f4f6; --line: rgba(0,0,0,.07); --ink: #111; --dim: rgba(0,0,0,.55); --card: #fff; --stroke: rgba(0,0,0,.18); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 2040px; overflow: hidden; background: #000; }
+body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.abs { position: absolute; }
+
+/* ---- panel ---- */
+#panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+#panelbg { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; background: var(--bg); }
+#panelbg .grid { position: absolute; inset: -80px; background-image:
+  linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px);
+  background-size: 90px 90px; }
+#panelbg .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 40%, rgba(0,0,0,.55) 100%); }
+.kw-light #panelbg .vig { background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 50%, rgba(0,0,0,.08) 100%); }
+#gfx { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: var(--bg); opacity: 0; }
+#gfx .grid { position: absolute; inset: 0; background-image:
+  linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px); background-size: 90px 90px; }
+
+/* ---- header ---- */
+.hd { position: absolute; left: 70px; width: 940px; top: 150px; text-align: center; font-weight: 700; font-size: 66px;
+  line-height: 1.04; letter-spacing: -.025em; opacity: 0; }
+.hd .w { display: inline-block; }
+.hd i { font-family: "IS", serif; font-style: italic; font-weight: 400; font-size: 1.1em; letter-spacing: -.01em; }
+.hd .box { background: var(--red); color: #fff; padding: 0 .16em .04em; border-radius: 4px; box-decoration-break: clone; }
+.hd .ul { position: relative; }
+.hd .ul::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.06em; height: .09em; background: var(--red);
+  transform-origin: left; transform: scaleX(var(--u, 1)); }
+.hd.sm { font-size: 54px; }
+.hd.lg { font-size: 80px; }
+
+/* ---- captions ---- */
+.cap { position: absolute; left: 90px; width: 900px; text-align: center; font-weight: 700; font-size: 58px; line-height: 1.02;
+  letter-spacing: -.02em; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.55); }
+.cap.seam { top: var(--cap-top, 854px); }
+.kw-light .cap.seam { color: #111; text-shadow: none; }
+.cap.full { font-size: 72px; text-shadow: 0 3px 18px rgba(0,0,0,.7); }
+.cap i { font-family: "IS", serif; font-style: italic; font-weight: 400; font-size: 1.12em; }
+.cap .a { color: var(--red2); }
+.cap .y { color: var(--acc2); }
+
+/* ---- scene stage ---- */
+.sc { position: absolute; left: 0; top: var(--stage-top, 300px); width: 1080px; height: var(--stage-h, 538px); opacity: 0; perspective: 1400px; }
+.sc.gfx { top: 330px; height: 1300px; }
+.sc .base { position: absolute; left: 0; top: 0; width: 1080px; height: 880px; transform-origin: 50% 0; }
+/* substance layers: light, particles, one shine — they settle into stillness */
+.fx-glow { position: absolute; left: -60px; top: -60px; width: 1200px; height: 1000px; opacity: 0; pointer-events: none; }
+.fx-pts { position: absolute; inset: 0; pointer-events: none; }
+.fx-pts .pt { position: absolute; border-radius: 50%; opacity: 0; }
+.fx-shine { position: absolute; inset: 0; opacity: 0; visibility: visible; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.16) 48%, rgba(255,255,255,.05) 53%, transparent 62%);
+  background-size: 300% 100%; background-repeat: no-repeat; }
+.cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.card { position: absolute; background: var(--card); border: 2px solid var(--stroke); border-radius: 26px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 18px 60px rgba(0,0,0,.55), 0 0 40px rgba(255,255,255,.06); }
+.kw-light .card { box-shadow: 0 12px 40px rgba(0,0,0,.12); }
+.pill { position: absolute; padding: 14px 28px; border-radius: 14px; font-weight: 700; font-size: 38px; white-space: nowrap;
+  background: var(--card); border: 2px solid var(--stroke); }
+.pill.red { background: var(--red); border-color: var(--red2); color: #fff; box-shadow: 0 0 34px rgba(232,40,60,.45); }
+.pill i, .row i, .big i { font-family: "IS", serif; font-style: italic; font-weight: 400; }
+.thumb { position: absolute; border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,.75);
+  box-shadow: 0 10px 34px rgba(0,0,0,.6); }
+.thumb .sky { position: absolute; inset: 0; }
+.thumb .play { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-35%, -50%);
+  border-left: 26px solid rgba(255,255,255,.92); border-top: 16px solid transparent; border-bottom: 16px solid transparent; }
+.thumb .ln { position: absolute; left: 10%; height: 9px; border-radius: 5px; background: rgba(255,255,255,.85); }
+.thumb .who { position: absolute; left: 50%; bottom: -8%; width: 54%; height: 54%; transform: translateX(-50%); border-radius: 50% 50% 0 0;
+  background: rgba(0,0,0,.35); }
+.thumb .who::before { content: ""; position: absolute; left: 30%; top: -38%; width: 40%; height: 60%; border-radius: 50%; background: rgba(0,0,0,.35); }
+.row { position: absolute; display: flex; align-items: center; gap: 22px; height: 92px; padding: 0 26px 0 14px; border-radius: 16px;
+  background: linear-gradient(90deg, #1d1d23, #141418); border: 2px solid rgba(255,255,255,.14); font-weight: 700; font-size: 40px; }
+.kw-light .row { background: #fff; border-color: rgba(0,0,0,.14); }
+.row .n { flex: none; width: 64px; height: 64px; border-radius: 12px; background: var(--red); color: #fff; display: flex;
+  align-items: center; justify-content: center; font-weight: 900; font-size: 32px; }
+.row.ghost .t { color: transparent; text-shadow: 0 0 14px rgba(255,255,255,.55); }
+.kw-light .row.ghost .t { text-shadow: 0 0 14px rgba(0,0,0,.45); }
+.row.on { border-color: var(--red2); box-shadow: 0 0 30px rgba(232,40,60,.35); }
+.big { position: absolute; left: 0; width: 1080px; text-align: center; font-weight: 900; letter-spacing: -.04em; line-height: .95; }
+.serif { font-family: "IS", serif; font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+.hlbar { position: absolute; height: 22px; border-radius: 4px; transform-origin: left center; }
+.dash { fill: none; stroke: var(--stroke); stroke-width: 3; stroke-dasharray: 10 12; }
+.ln-draw { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.glowR { filter: drop-shadow(0 0 14px rgba(232,40,60,.75)); }
+.glowW { filter: drop-shadow(0 0 12px rgba(255,255,255,.55)); }
+.ico { position: absolute; }
+.ico svg { width: 100%; height: 100%; overflow: visible; }
+.chip { position: absolute; padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 34px; background: #fff; color: #111;
+  box-shadow: 0 8px 26px rgba(0,0,0,.45); white-space: nowrap; }
+.chip.red { background: var(--red); color: #fff; }
+.bubble { position: absolute; max-width: 700px; padding: 22px 30px; border-radius: 34px; font-size: 40px; font-weight: 700; line-height: 1.15; }
+.bubble.in { background: #26262e; color: #fff; border-bottom-left-radius: 8px; }
+.bubble.out { background: var(--red); color: #fff; border-bottom-right-radius: 8px; }
+#flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff; opacity: 0; pointer-events: none; }
+#gl3d { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); opacity: 0; }
+.big, .chip, .pill, .row { font-variant-numeric: tabular-nums; }
+/* r3.css — scene layer for split-motion round 3 (component helpers; one light model per section) */
+.r3-bg { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; background: #08080a; }
+.r3-bg .grid { position: absolute; inset: -90px; background-image: linear-gradient(rgba(255,255,255,.045) 2px, transparent 2px),
+  linear-gradient(90deg, rgba(255,255,255,.045) 2px, transparent 2px); background-size: 90px 90px; }
+.r3-bg .field { position: absolute; width: 900px; height: 900px; border-radius: 50%; filter: blur(40px); opacity: .55; }
+.r3-sec { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; opacity: 0; }
+.r3-sec .r3-light { position: absolute; inset: 0; pointer-events: none; }
+.r3-sec .r3-vign { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%); }
+.r3-cam { position: absolute; inset: 0; transform-origin: 50% 55%; transform-style: preserve-3d; }
+.r3-layer { position: absolute; inset: 0; }
+.r3-el { position: absolute; }
+.r3-card { position: absolute; border-radius: 22px; background: linear-gradient(160deg, #1b1b22, #101015); border: 1.5px solid rgba(255,255,255,.14);
+  box-shadow: 0 24px 60px rgba(0,0,0,.55), var(--rimshadow, 0 0 0 transparent); overflow: hidden; }
+.r3-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: var(--sheen, none); }
+.r3-light-ui .r3-card { background: linear-gradient(160deg, #ffffff, #f1f1f4); border-color: rgba(0,0,0,.1); }
+.r3-t { font-family: "PS", sans-serif; color: #fff; white-space: nowrap; }
+.r3-serif { font-family: "IS", serif; font-style: italic; font-weight: 400; }
+.r3-muted { color: rgba(255,255,255,.55); }
+.r3-bar { position: absolute; border-radius: 6px; transform-origin: 0 50%; }
+.r3-line { position: absolute; height: 9px; border-radius: 5px; background: rgba(255,255,255,.16); }
+.r3-chip { position: absolute; padding: 8px 18px; border-radius: 999px; font: 700 26px "PS", sans-serif; white-space: nowrap; color: #fff;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); }
+.r3-chip.red { background: #e8283c; border-color: #ff5a6a; }
+.r3-thumb { position: absolute; border-radius: 12px; overflow: hidden; border: 1.5px solid rgba(255,255,255,.35); }
+.r3-thumb .p { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-35%, -50%);
+  border-left: 18px solid rgba(255,255,255,.9); border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+.r3-thumb .v { position: absolute; left: 8%; bottom: 7%; font: 700 17px "PS", sans-serif; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+.r3-ava { position: absolute; border-radius: 50%; border: 3px solid rgba(255,255,255,.85); overflow: hidden; }
+.r3-svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.r3-num { position: absolute; font: 900 120px "PS", sans-serif; color: #fff; letter-spacing: -.04em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.r3-row { position: absolute; display: flex; align-items: center; gap: 18px; height: 78px; padding: 0 22px 0 12px; border-radius: 14px;
+  background: linear-gradient(90deg, #1d1d24, #131318); border: 1.5px solid rgba(255,255,255,.13); font: 700 34px "PS", sans-serif; color: #fff; }
+.r3-row .n { flex: none; width: 54px; height: 54px; border-radius: 11px; background: #e8283c; display: flex; align-items: center; justify-content: center; font: 900 27px "PS", sans-serif; }
+.r3-screen { position: absolute; overflow: hidden; border-radius: 40px; background: #0b0b10; }
+.r3-dot { position: absolute; border-radius: 50%; }
+
+:root { --panel-h: 958px; --cap-top: 854px; --stage-top: 300px; --stage-h: 538px; }
+</style></head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="61.467" data-width="1080" data-height="2040">
+<video id="vid0" class="clip" src="assets/video.mp4" data-start="7.440" data-duration="2.433" data-media-start="7.440" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video><video id="vid1" class="clip" src="assets/video.mp4" data-start="18.967" data-duration="3.160" data-media-start="18.967" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video><video id="vid2" class="clip" src="assets/video.mp4" data-start="30.007" data-duration="2.626" data-media-start="30.007" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video><video id="vid3" class="clip" src="assets/video.mp4" data-start="38.493" data-duration="1.640" data-media-start="38.493" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video><video id="vid4" class="clip" src="assets/video.mp4" data-start="48.080" data-duration="2.080" data-media-start="48.080" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video>
+<div id="panel" class="clip" data-start="0" data-duration="61.467" data-track-index="2" data-layout-allow-overflow>
+ <div class="r3-bg"><div class="grid"></div><div class="field" style="left:-200px;top:-260px;background:radial-gradient(circle,rgba(255,170,110,.20),transparent 65%)"></div>
+ <div class="field" style="left:420px;top:180px;background:radial-gradient(circle,rgba(120,150,255,.14),transparent 65%)"></div></div>
+ <div class="hd" id="h0"><span class="w">Why</span> <span class="w">most</span> <span class="w">creators</span> <span class="w"><i>quit</i></span></div><div class="r3-sec" id="sec0"><div class="r3-light"></div><div class="r3-cam" id="sec0c"><div class="r3-layer" id="sec0m"></div><div class="r3-layer" id="sec0f"></div></div><div class="r3-vign"></div></div><div class="hd" id="h1"><span class="w">The</span> <span class="w">empty</span> <span class="w"><i>shelf</i></span> <span class="w">problem</span></div><div class="r3-sec" id="sec1"><div class="r3-light"></div><div class="r3-cam" id="sec1c"><div class="r3-layer" id="sec1m"></div><div class="r3-layer" id="sec1f"></div></div><div class="r3-vign"></div></div><div class="hd" id="h2"><span class="w">Stack</span> <span class="w">the</span> <span class="w"><i>vault</i></span> <span class="w">first</span></div><div class="r3-sec" id="sec2"><div class="r3-light"></div><div class="r3-cam" id="sec2c"><div class="r3-layer" id="sec2m"></div><div class="r3-layer" id="sec2f"></div></div><div class="r3-vign"></div></div><div class="hd" id="h3"><span class="w">Too</span> <span class="w">big,</span> <span class="w">too</span> <span class="w"><i>early</i></span></div><div class="r3-sec" id="sec3"><div class="r3-light"></div><div class="r3-cam" id="sec3c"><div class="r3-layer" id="sec3m"></div><div class="r3-layer" id="sec3f"></div></div><div class="r3-vign"></div></div><div class="hd" id="h4"><span class="w">Out</span> <span class="w">of</span> <span class="w"><i>order</i></span></div><div class="r3-sec" id="sec4"><div class="r3-light"></div><div class="r3-cam" id="sec4c"><div class="r3-layer" id="sec4m"></div><div class="r3-layer" id="sec4f"></div></div><div class="r3-vign"></div></div>
+</div>
+<div class="clip cap seam" id="c0" style="" data-start="0.126" data-duration="0.540" data-track-index="3">just want it</div><div class="clip cap seam" id="c1" style="" data-start="0.666" data-duration="0.680" data-track-index="3"><i>now</i></div><div class="clip cap seam" id="c2" style="" data-start="1.346" data-duration="0.480" data-track-index="3">And when they</div><div class="clip cap seam" id="c3" style="" data-start="1.826" data-duration="0.460" data-track-index="3">don&#x27;t get it</div><div class="clip cap seam" id="c4" style="" data-start="2.286" data-duration="0.300" data-track-index="3">now</div><div class="clip cap seam" id="c5" style="" data-start="2.586" data-duration="0.700" data-track-index="3">they <i>stop</i></div><div class="clip cap seam" id="c6" style="" data-start="3.286" data-duration="0.620" data-track-index="3">By the way</div><div class="clip cap seam" id="c7" style="" data-start="3.906" data-duration="0.920" data-track-index="3">people ask me</div><div class="clip cap seam" id="c8" style="" data-start="4.826" data-duration="0.420" data-track-index="3">hey</div><div class="clip cap seam" id="c9" style="" data-start="5.246" data-duration="0.440" data-track-index="3">can you shout</div><div class="clip cap seam" id="c10" style="" data-start="5.686" data-duration="0.540" data-track-index="3">me out</div><div class="clip cap seam" id="c11" style="" data-start="6.226" data-duration="0.807" data-track-index="3">I say <i>no</i></div><div class="clip cap seam" id="c12" style="" data-start="7.033" data-duration="0.440" data-track-index="3">Why</div><div class="clip cap full" id="c13" style="top:1080px" data-start="7.473" data-duration="0.720" data-track-index="3">Because it&#x27;s just</div><div class="clip cap full" id="c14" style="top:1080px" data-start="8.193" data-duration="0.320" data-track-index="3">like</div><div class="clip cap full" id="c15" style="top:1080px" data-start="8.513" data-duration="0.500" data-track-index="3">you&#x27;re not <i>ready</i></div><div class="clip cap full" id="c16" style="top:1080px" data-start="9.013" data-duration="0.500" data-track-index="3">for a shout</div><div class="clip cap full" id="c17" style="top:1080px" data-start="9.513" data-duration="0.393" data-track-index="3">out</div><div class="clip cap seam" id="c18" style="" data-start="9.906" data-duration="0.320" data-track-index="3">When we talk</div><div class="clip cap seam" id="c19" style="" data-start="10.226" data-duration="0.987" data-track-index="3">about <i>preparation</i></div><div class="clip cap seam" id="c20" style="" data-start="11.213" data-duration="0.920" data-track-index="3">it&#x27;s just like</div><div class="clip cap seam" id="c21" style="" data-start="12.133" data-duration="1.000" data-track-index="3">you get a</div><div class="clip cap seam" id="c22" style="" data-start="13.133" data-duration="0.380" data-track-index="3">shout out</div><div class="clip cap seam" id="c23" style="" data-start="13.513" data-duration="0.860" data-track-index="3">and people come</div><div class="clip cap seam" id="c24" style="" data-start="14.373" data-duration="0.620" data-track-index="3">to your page</div><div class="clip cap seam" id="c25" style="" data-start="14.993" data-duration="0.487" data-track-index="3">then what</div><div class="clip cap seam" id="c26" style="" data-start="15.480" data-duration="0.600" data-track-index="3">They don&#x27;t have</div><div class="clip cap seam" id="c27" style="" data-start="16.080" data-duration="0.640" data-track-index="3"><i>nothing</i> to watch</div><div class="clip cap seam" id="c28" style="" data-start="16.720" data-duration="0.520" data-track-index="3">You drop like</div><div class="clip cap seam" id="c29" style="" data-start="17.240" data-duration="0.880" data-track-index="3"><i>two</i> things</div><div class="clip cap seam" id="c30" style="" data-start="18.120" data-duration="0.360" data-track-index="3">So it&#x27;s just</div><div class="clip cap seam" id="c31" style="" data-start="18.480" data-duration="0.340" data-track-index="3">like</div><div class="clip cap seam" id="c32" style="" data-start="18.820" data-duration="0.180" data-track-index="3">well</div><div class="clip cap full" id="c33" style="top:1080px" data-start="19.000" data-duration="0.400" data-track-index="3">why do you</div><div class="clip cap full" id="c34" style="top:1080px" data-start="19.400" data-duration="0.660" data-track-index="3">want a shout</div><div class="clip cap full" id="c35" style="top:1080px" data-start="20.060" data-duration="0.100" data-track-index="3">out</div><div class="clip cap full" id="c36" style="top:1080px" data-start="20.160" data-duration="0.840" data-track-index="3">You&#x27;re not <i>prepared</i></div><div class="clip cap full" id="c37" style="top:1080px" data-start="21.000" data-duration="0.400" data-track-index="3">you don&#x27;t have</div><div class="clip cap full" id="c38" style="top:1080px" data-start="21.400" data-duration="0.760" data-track-index="3">the <i>catalog</i></div><div class="clip cap seam" id="c39" style="" data-start="22.160" data-duration="0.560" data-track-index="3">So it&#x27;s just</div><div class="clip cap seam" id="c40" style="" data-start="22.720" data-duration="0.200" data-track-index="3">like</div><div class="clip cap seam" id="c41" style="" data-start="22.920" data-duration="0.980" data-track-index="3">keep <i>dropping</i></div><div class="clip cap seam" id="c42" style="" data-start="23.900" data-duration="0.780" data-track-index="3">be <i>consistent</i></div><div class="clip cap seam" id="c43" style="" data-start="24.680" data-duration="0.580" data-track-index="3">do what you</div><div class="clip cap seam" id="c44" style="" data-start="25.260" data-duration="0.380" data-track-index="3">need to do</div><div class="clip cap seam" id="c45" style="" data-start="25.640" data-duration="0.740" data-track-index="3">on your end</div><div class="clip cap seam" id="c46" style="" data-start="26.380" data-duration="0.560" data-track-index="3">and then when</div><div class="clip cap seam" id="c47" style="" data-start="26.940" data-duration="1.060" data-track-index="3">the <i>opportunity</i> meets</div><div class="clip cap seam" id="c48" style="" data-start="28.000" data-duration="1.173" data-track-index="3">the <i>preparation</i></div><div class="clip cap seam" id="c49" style="" data-start="29.173" data-duration="0.867" data-track-index="3"><i>fireworks</i> happen</div><div class="clip cap full" id="c50" style="top:1080px" data-start="30.040" data-duration="0.780" data-track-index="3">Because the opportunity</div><div class="clip cap full" id="c51" style="top:1080px" data-start="30.820" data-duration="0.926" data-track-index="3">will come</div><div class="clip cap full" id="c52" style="top:1080px" data-start="31.746" data-duration="0.380" data-track-index="3">You just gotta</div><div class="clip cap full" id="c53" style="top:1080px" data-start="32.126" data-duration="0.540" data-track-index="3"><i>wait</i></div><div class="clip cap seam" id="c54" style="" data-start="32.666" data-duration="0.380" data-track-index="3">But it&#x27;s just</div><div class="clip cap seam" id="c55" style="" data-start="33.046" data-duration="0.180" data-track-index="3">like</div><div class="clip cap seam" id="c56" style="" data-start="33.226" data-duration="0.360" data-track-index="3">if you want</div><div class="clip cap seam" id="c57" style="" data-start="33.586" data-duration="1.200" data-track-index="3">the opportunity before</div><div class="clip cap seam" id="c58" style="" data-start="34.786" data-duration="2.260" data-track-index="3">the <i>preparation</i> comes</div><div class="clip cap seam" id="c59" style="" data-start="37.046" data-duration="0.480" data-track-index="3">in</div><div class="clip cap seam" id="c60" style="" data-start="37.526" data-duration="0.460" data-track-index="3">what are you</div><div class="clip cap seam" id="c61" style="" data-start="37.986" data-duration="0.460" data-track-index="3">gonna do with</div><div class="clip cap seam" id="c62" style="" data-start="38.446" data-duration="0.100" data-track-index="3">it</div><div class="clip cap full" id="c63" style="top:1080px" data-start="38.526" data-duration="0.500" data-track-index="3">You don&#x27;t even</div><div class="clip cap full" id="c64" style="top:1080px" data-start="39.026" data-duration="0.620" data-track-index="3">know how to</div><div class="clip cap full" id="c65" style="top:1080px" data-start="39.646" data-duration="0.880" data-track-index="3">handle that level</div><div class="clip cap seam" id="c66" style="" data-start="40.526" data-duration="2.100" data-track-index="3">of <i>opportunity</i> at</div><div class="clip cap seam" id="c67" style="" data-start="42.626" data-duration="0.660" data-track-index="3">your front <i>door</i></div><div class="clip cap seam" id="c68" style="" data-start="43.286" data-duration="0.360" data-track-index="3">You don&#x27;t even</div><div class="clip cap seam" id="c69" style="" data-start="43.646" data-duration="0.420" data-track-index="3">know what to</div><div class="clip cap seam" id="c70" style="" data-start="44.066" data-duration="0.500" data-track-index="3">do when you</div><div class="clip cap seam" id="c71" style="" data-start="44.566" data-duration="0.747" data-track-index="3">gotta</div><div class="clip cap seam" id="c72" style="" data-start="45.313" data-duration="0.680" data-track-index="3">if somebody say</div><div class="clip cap seam" id="c73" style="" data-start="45.993" data-duration="0.253" data-track-index="3">hey</div><div class="clip cap seam" id="c74" style="" data-start="46.246" data-duration="0.360" data-track-index="3">you want it</div><div class="clip cap seam" id="c75" style="" data-start="46.606" data-duration="0.240" data-track-index="3">I got a</div><div class="clip cap seam" id="c76" style="" data-start="46.846" data-duration="0.580" data-track-index="3"><i>contract</i> for you</div><div class="clip cap seam" id="c77" style="" data-start="47.426" data-duration="0.687" data-track-index="3">right now</div><div class="clip cap full" id="c78" style="top:1080px" data-start="48.113" data-duration="0.460" data-track-index="3">You don&#x27;t even</div><div class="clip cap full" id="c79" style="top:1080px" data-start="48.573" data-duration="0.860" data-track-index="3">know who to</div><div class="clip cap full" id="c80" style="top:1080px" data-start="49.433" data-duration="0.560" data-track-index="3">look at with</div><div class="clip cap seam" id="c81" style="" data-start="49.993" data-duration="0.540" data-track-index="3">this <i>paper</i></div><div class="clip cap seam" id="c82" style="" data-start="50.533" data-duration="0.640" data-track-index="3">what these words</div><div class="clip cap seam" id="c83" style="" data-start="51.173" data-duration="0.760" data-track-index="3">mean</div><div class="clip cap seam" id="c84" style="" data-start="51.933" data-duration="0.440" data-track-index="3">Do you need</div><div class="clip cap seam" id="c85" style="" data-start="52.373" data-duration="0.560" data-track-index="3">an entertainment</div><div class="clip cap seam" id="c86" style="" data-start="52.933" data-duration="0.600" data-track-index="3"><i>lawyer</i></div><div class="clip cap seam" id="c87" style="" data-start="53.533" data-duration="0.360" data-track-index="3">Do you need</div><div class="clip cap seam" id="c88" style="" data-start="53.893" data-duration="0.340" data-track-index="3">you don&#x27;t know</div><div class="clip cap seam" id="c89" style="" data-start="54.233" data-duration="0.580" data-track-index="3">none of this</div><div class="clip cap seam" id="c90" style="" data-start="54.813" data-duration="0.480" data-track-index="3">So it&#x27;s just</div><div class="clip cap seam" id="c91" style="" data-start="55.293" data-duration="1.180" data-track-index="3">like you on</div><div class="clip cap seam" id="c92" style="" data-start="56.473" data-duration="2.660" data-track-index="3">step <i>Z</i> and</div><div class="clip cap seam" id="c93" style="" data-start="59.133" data-duration="0.700" data-track-index="3">you should be</div><div class="clip cap seam" id="c94" style="" data-start="59.833" data-duration="1.347" data-track-index="3">on step <i>A</i></div>
+<div id="flash" class="clip" data-start="0" data-duration="61.467" data-track-index="4"></div>
+<audio id="aud" class="clip" src="assets/mix.wav" data-start="0" data-duration="61.467" data-track-index="8"></audio>
+</div>
+<script>/* ============================================================================
+   kw.js — motion language for the split-motion harness (window.KW)  · v2
+   STILLNESS IS THE DEFAULT. Things arrive with a soft eased settle (tiny overshoot),
+   then HOLD. Continuous movement (slow push / parallax) only on hero beats.
+   Fluidity comes from easing + timing quality, not from constant motion.
+
+   Every helper: (tl, target, t, ...) with ABSOLUTE reel time t; deterministic.
+   KW.scene(t0) marks the start of the current scene: every tween that starts later
+   gets its FROM state applied at t0 (otherwise the element would show its FINAL state
+   until its tween starts and then snap back = the "jump" bug of round 1).
+   ============================================================================ */
+(function () {
+  const IR = { immediateRender: false };
+  let T0 = 0;
+  const q = (s) => (typeof s === 'string' ? document.querySelectorAll(s) : s);
+  // fromTo with the FROM state guarded at scene start
+  function ft(tl, el, from, to, t) {
+    if (t > T0 + 1e-3) tl.set(el, from, T0);
+    return tl.fromTo(el, from, Object.assign({}, to, IR), t);
+  }
+  // easing vocabulary: settles with a tiny overshoot, never bouncy
+  const E = { settle: 'back.out(1.15)', soft: 'expo.out', glide: 'power3.out', calm: 'sine.inOut', out: 'power2.in' };
+  const ENTER = {
+    settle:  (tl, el, t, d = .62) => ft(tl, el, { autoAlpha: 0, y: 26, scale: .975 }, { autoAlpha: 1, y: 0, scale: 1, duration: d, ease: E.settle }, t),
+    rise:    (tl, el, t, d = .6) => ft(tl, el, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: d, ease: E.glide }, t),
+    pop:     (tl, el, t, d = .52) => ft(tl, el, { autoAlpha: 0, scale: .82 }, { autoAlpha: 1, scale: 1, duration: d, ease: 'back.out(1.35)' }, t),
+    focus:   (tl, el, t, d = .7) => ft(tl, el, { autoAlpha: 0, filter: 'blur(12px)', scale: 1.025 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: d, ease: E.soft }, t),
+    bloom:   (tl, el, t, d = .8) => ft(tl, el, { autoAlpha: 0, scale: .94, filter: 'brightness(2.2) blur(6px)' }, { autoAlpha: 1, scale: 1, filter: 'brightness(1) blur(0px)', duration: d, ease: E.soft }, t),
+    iris:    (tl, el, t, d = .7) => ft(tl, el, { autoAlpha: 1, clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(75% at 50% 50%)', duration: d, ease: 'power2.inOut' }, t),
+    wipe:    (tl, el, t, d = .6) => ft(tl, el, { autoAlpha: 1, clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: d, ease: 'power3.inOut' }, t),
+    unfold:  (tl, el, t, d = .6) => ft(tl, el, { autoAlpha: 0, scaleY: .2, transformOrigin: '50% 0%' }, { autoAlpha: 1, scaleY: 1, duration: d, ease: E.soft }, t),
+    tilt3d:  (tl, el, t, d = .8) => ft(tl, el, { autoAlpha: 0, rotationX: 24, y: 30, transformPerspective: 1400 }, { autoAlpha: 1, rotationX: 0, y: 0, duration: d, ease: E.settle }, t),
+    flipY:   (tl, el, t, d = .75) => ft(tl, el, { autoAlpha: 0, rotationY: -40, transformPerspective: 1300 }, { autoAlpha: 1, rotationY: 0, duration: d, ease: E.settle }, t),
+    zoomIn:  (tl, el, t, d = .75) => ft(tl, el, { autoAlpha: 0, scale: 1.18, filter: 'blur(8px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: d, ease: E.soft }, t),
+    fall:    (tl, el, t, d = .7) => ft(tl, el, { autoAlpha: 0, y: -40 }, { autoAlpha: 1, y: 0, duration: d, ease: E.settle }, t),
+  };
+  // round-1 verbs kept as soft aliases (old plans still compile, but nothing slides across the frame)
+  Object.assign(ENTER, { slideL: ENTER.settle, slideR: ENTER.settle, drop: ENTER.fall, swing: ENTER.tilt3d });
+  const EXIT = {
+    fade:     (tl, el, t, d = .32) => tl.to(el, { autoAlpha: 0, duration: d, ease: E.calm }, t),
+    dissolve: (tl, el, t, d = .34) => tl.to(el, { autoAlpha: 0, filter: 'blur(8px)', duration: d, ease: E.out }, t),
+    recede:   (tl, el, t, d = .32) => tl.to(el, { autoAlpha: 0, scale: .955, duration: d, ease: E.out }, t),
+    lift:     (tl, el, t, d = .32) => tl.to(el, { autoAlpha: 0, y: -22, duration: d, ease: E.out }, t),
+    irisOut:  (tl, el, t, d = .34) => tl.to(el, { clipPath: 'circle(0% at 50% 50%)', duration: d, ease: 'power2.in' }, t),
+    collapse: (tl, el, t, d = .3) => tl.to(el, { autoAlpha: 0, scaleY: .3, duration: d, ease: E.out }, t),
+  };
+  Object.assign(EXIT, { blur: EXIT.dissolve, whipL: EXIT.recede, whipR: EXIT.recede, shrink: EXIT.recede,
+                        pushUp: EXIT.lift, zoomPast: EXIT.dissolve, dropOut: EXIT.fade });
+  // camera: none by default; slow continuous moves are for HERO beats only
+  const CAMERA = {
+    none:     (tl) => tl,
+    push:     (tl, el, t0, t1) => ft(tl, el, { scale: 1 }, { scale: 1.045, duration: Math.max(.3, t1 - t0), ease: E.calm }, t0),
+    pull:     (tl, el, t0, t1) => ft(tl, el, { scale: 1.045 }, { scale: 1, duration: Math.max(.3, t1 - t0), ease: E.calm }, t0),
+    parallax: (tl, el, t0, t1) => {  // layers .px-far / .px-near move at different depths
+      const d = Math.max(.3, t1 - t0);
+      ft(tl, el, { scale: 1 }, { scale: 1.03, duration: d, ease: E.calm }, t0);
+      ft(tl, el.replace(/c$/, '') + ' .px-far', { y: 10 }, { y: -10, duration: d, ease: E.calm }, t0);
+      ft(tl, el.replace(/c$/, '') + ' .px-near', { y: -14 }, { y: 18, duration: d, ease: E.calm }, t0);
+      return tl;
+    },
+    tilt:     (tl, el, t0, t1) => ft(tl, el, { rotationX: 5, rotationY: -4, transformPerspective: 1800 }, { rotationX: -2, rotationY: 4, duration: Math.max(.3, t1 - t0), ease: E.calm }, t0),
+  };
+  Object.assign(CAMERA, { driftL: CAMERA.none, driftR: CAMERA.none, rise: CAMERA.none, orbit: CAMERA.tilt });
+  window.KW = {
+    ENTER, EXIT, CAMERA, E, ft,
+    scene(t0) { T0 = t0; },
+    enter(tl, el, verb, t, d) { (ENTER[verb] || ENTER.settle)(tl, el, t, d); return tl; },
+    exit(tl, el, verb, t, d) { (EXIT[verb] || EXIT.fade)(tl, el, t, d); tl.set(el, { autoAlpha: 0 }, t + (d || .36) + .02); return tl; },
+    camera(tl, el, kind, t0, t1) { (CAMERA[kind] || CAMERA.none)(tl, el, t0, t1); return tl; },
+    show(tl, el, t) { tl.set(el, { autoAlpha: 1 }, t); return tl; },
+    hide(tl, el, t) { tl.set(el, { autoAlpha: 0 }, t); return tl; },
+    // stroke draw via the SVG ATTRIBUTE: the CSS property gets auto-rounded to whole px by GSAP, and with
+    // pathLength=1 that made every line jump 1px -> 0px in one frame (round-1 'zıplama')
+    draw(tl, el, t, d = .7) { ft(tl, el, { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: d, ease: 'power2.inOut' }, t); return tl; },
+    grow(tl, el, t, d = .6, axis = 'scaleX') { ft(tl, el, { [axis]: 0 }, { [axis]: 1, duration: d, ease: E.settle }, t); return tl; },
+    // highlight = a smooth state change (no class snapping)
+    light(tl, el, t, on = true) {
+      tl.to(el, on ? { borderColor: 'rgba(255,77,94,.95)', boxShadow: '0 0 34px rgba(232,40,60,.38)', duration: .35, ease: E.glide }
+                   : { borderColor: 'rgba(255,255,255,.14)', boxShadow: '0 0 0 rgba(0,0,0,0)', duration: .35, ease: E.calm }, t);
+      return tl;
+    },
+    unghost(tl, el, t) { ft(tl, el, { color: 'rgba(255,255,255,0)', textShadow: '0 0 14px rgba(255,255,255,.55)' },
+                                 { color: 'rgba(255,255,255,1)', textShadow: '0 0 0px rgba(255,255,255,0)', duration: .45, ease: E.glide }, t); return tl; },
+    // counters: tabular digits (no re-centering jitter); small integers do not count, they settle
+    count(tl, sel, t, d, from, to, dec = 0, pre = '', suf = '') {
+      const node = document.querySelector(sel); const p = { v: from };
+      const fmt = (v) => pre + (dec ? v.toFixed(dec) : Math.round(v).toLocaleString('en-US')) + suf;
+      if (!dec && Math.abs(to - from) <= 12) {
+        tl.set(node, { textContent: fmt(to) }, T0);
+        ft(tl, node, { autoAlpha: 0, scale: .9 }, { autoAlpha: 1, scale: 1, duration: .55, ease: 'back.out(1.3)' }, t);
+        return tl;
+      }
+      tl.set(node, { textContent: fmt(from) }, T0);
+      ft(tl, p, { v: from }, { v: to, duration: d, ease: 'power3.out', onUpdate: () => { node.textContent = fmt(p.v); } }, t);
+      return tl;
+    },
+    typeWords(tl, sel, t, step = .09) {
+      const ws = q(sel + ' .w');
+      tl.set(sel, { autoAlpha: 1 }, t);
+      ws.forEach((w, i) => tl.fromTo(w, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .42, ease: E.settle, ...IR }, t + i * step));
+      tl.set(ws, { autoAlpha: 0 }, Math.max(0, t - .001));
+      const u = document.querySelector(sel + ' .ul');
+      if (u) { tl.set(u, { '--u': 0 }, Math.max(0, t - .001)); tl.fromTo(u, { '--u': 0 }, { '--u': 1, duration: .5, ease: 'power2.out', ...IR }, t + ws.length * step); }
+      return tl;
+    },
+    cap(tl, el, t) { tl.fromTo(el, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .14, ease: 'power2.out', ...IR }, t); return tl; },
+    flash(tl, el, t, a = .45) { tl.fromTo(el, { opacity: a }, { opacity: 0, duration: .32, ease: 'power2.out', ...IR }, t); return tl; },
+    // cinematic shine: one light sweep across the hero after it settles
+    // the band travels from fully off-screen to fully off-screen and its opacity has an envelope:
+    // switching it on/off with a band in view made the whole panel flash for a frame (round-2 detector find)
+    shine(tl, el, t) {
+      // band = 38-62 % of a 300 %-wide gradient: off-screen left at 95 %, off-screen right at 5 % -> travels
+      // 1.8 panel widths (~46 px/frame). The first version crossed ~5 widths (~140 px/frame) = flicker.
+      ft(tl, el, { backgroundPosition: '95% 0%' }, { backgroundPosition: '5% 0%', duration: 1.2, ease: 'sine.inOut' }, t);
+      ft(tl, el, { opacity: 0 }, { opacity: 1, duration: .3, ease: 'sine.out' }, t);
+      tl.to(el, { opacity: 0, duration: .3, ease: 'sine.in' }, t + .9);
+      return tl;
+    },
+    // organic particles: one soft burst outward that decelerates into stillness
+    burst(tl, sel, t) {
+      q(sel).forEach((p) => {
+        const dx = +p.dataset.dx, dy = +p.dataset.dy, dl = +p.dataset.dl;
+        ft(tl, p, { x: 0, y: 0, autoAlpha: 0, scale: .4 }, { x: dx, y: dy, autoAlpha: +p.dataset.a, scale: 1, duration: 1.6, ease: 'expo.out' }, t + dl);
+      });
+      return tl;
+    },
+    glowIn(tl, el, t) { ft(tl, el, { autoAlpha: 0, scale: .7 }, { autoAlpha: 1, scale: 1, duration: 1.1, ease: E.soft }, t); return tl; },
+  };
+})();
+</script>
+<script>/* ============================================================================
+   R3 — component helper library for the round-3 scene layer (window.R3)
+   The scene CODER (Claude) writes bespoke GSAP per section and uses these helpers.
+   Helpers are building blocks, not a menu: compose, nest, restyle, add your own DOM.
+
+   Contract for a section:  function (ctx) { ... }   with
+     ctx = { sec, mid, fg, tl, S, E, W, G, light, cam, R3 }
+       W[i]  = start time (s) of cut word i (absolute reel time)    S/E = section start/end
+       G     = { W: 1080, H: panel height, top: 300 (below header), bottom: caption top - 16 }
+   Rules baked in: deterministic (no random/Date), every tween's FROM state is applied at S
+   (no final-state flashes), stroke draws use the SVG attribute, one light model per section
+   (key light + bloom; cards get rim light + sheen from the SAME key direction).
+   ============================================================================ */
+(function () {
+  const IR = { immediateRender: false };
+  const TEMP = { warm: '255,176,112', cool: '127,184,255', neutral: '255,255,255', red: '255,77,94', gold: '255,205,90', green: '80,255,160', violet: '176,120,255' };
+  let C = null; // current section ctx
+
+  function mk(tag, cls, css, parent, html) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (css) Object.assign(e.style, css);
+    if (html != null) e.innerHTML = html;
+    (parent || C.mid).appendChild(e);
+    return e;
+  }
+  const px = (v) => (typeof v === 'number' ? v + 'px' : v);
+  const box = (x, y, w, h) => ({ left: px(x), top: px(y), width: px(w), height: px(h) });
+  // fromTo with the FROM state guarded at section start
+  function ft(target, from, to, t) {
+    const tl = C.tl;
+    if (t > C.S + 1e-3) tl.set(target, from, C.S);
+    return tl.fromTo(target, from, Object.assign({}, to, IR), t);
+  }
+  function svgEl(tag, attrs, parent) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    parent.appendChild(e);
+    return e;
+  }
+  function svgLayer(parent) {
+    const s = svgEl('svg', { width: 1080, height: C.G.H, class: 'r3-svg' }, parent || C.mid);
+    return s;
+  }
+
+  // ---------------- light model: ONE key light per section ----------------
+  function light(o) {
+    o = Object.assign({ x: 760, y: 120, temp: 'warm', bloom: .26, ambient: .07 }, o || {});
+    const rgb = TEMP[o.temp] || o.temp;
+    C.lightModel = { x: o.x, y: o.y, rgb };
+    const L = C.sec.querySelector('.r3-light');
+    L.style.background = `radial-gradient(ellipse 62% 54% at ${o.x}px ${o.y}px, rgba(${rgb},${o.bloom}) 0%, rgba(${rgb},${o.bloom * .35}) 38%, transparent 72%),` +
+      `radial-gradient(ellipse 120% 90% at ${o.x}px ${o.y}px, rgba(${rgb},${o.ambient}) 0%, transparent 80%)`;
+    return C.lightModel;
+  }
+  // rim light + sheen on a card, from the section key light
+  function lit(el, x, y, w, h, k = 1) {
+    const L = C.lightModel || { x: 760, y: 120, rgb: TEMP.warm };
+    let dx = L.x - (x + w / 2), dy = L.y - (y + h / 2);
+    const n = Math.hypot(dx, dy) || 1; dx /= n; dy /= n;
+    const ang = Math.round(Math.atan2(dy, dx) * 180 / Math.PI + 90);
+    el.style.setProperty('--rimshadow', `inset ${(-dx * 12).toFixed(1)}px ${(-dy * 12).toFixed(1)}px 22px -12px rgba(${L.rgb},${.55 * k}), ${(dx * -18).toFixed(0)}px ${(dy * -18 + 20).toFixed(0)}px 50px rgba(0,0,0,.5)`);
+    el.style.setProperty('--sheen', `linear-gradient(${ang + 180}deg, rgba(${L.rgb},${.13 * k}) 0%, transparent 42%)`);
+    return el;
+  }
+  function card(x, y, w, h, parent, extra) {
+    const e = mk('div', 'r3-card r3-el', Object.assign(box(x, y, w, h), extra || {}), parent);
+    return lit(e, x, y, w, h);
+  }
+
+  // ---------------- motion verbs ----------------
+  // group entrance: stagger + soft overshoot (+ a touch of motion blur on bigger moves)
+  function appear(els, t, o) {
+    o = Object.assign({ d: .55, stagger: .07, y: 24, x: 0, scale: .96, blur: 0, ease: 'back.out(1.2)' }, o || {});
+    const from = { autoAlpha: 0, y: o.y, x: o.x, scale: o.scale }, to = { autoAlpha: 1, y: 0, x: 0, scale: 1, duration: o.d, ease: o.ease, stagger: o.stagger };
+    if (o.blur) { from.filter = `blur(${o.blur}px)`; to.filter = 'blur(0px)'; }
+    ft(els, from, to, t);
+    return t + o.d + (Array.isArray(els) || els.length ? (els.length - 1) * o.stagger : 0);
+  }
+  function leave(els, t, o) { o = Object.assign({ d: .35 }, o || {}); C.tl.to(els, { autoAlpha: 0, y: -10, duration: o.d, ease: 'power2.in', stagger: o.stagger || 0 }, t); }
+  function dim(els, t, a = .32) { C.tl.to(els, { opacity: a, duration: .4, ease: 'sine.inOut' }, t); }
+  function pulse(el, t) { C.tl.fromTo(el, { scale: 1 }, { scale: 1.05, duration: .16, yoyo: true, repeat: 1, ease: 'sine.inOut', ...IR }, t); }
+  function draw(path, t, d = .6) { ft(path, { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: d, ease: 'power2.inOut' }, t); }
+  function count(el, t, d, from, to, o) {
+    o = Object.assign({ dec: 0, pre: '', suf: '' }, o || {});
+    const p = { v: from }, f = (v) => o.pre + (o.dec ? v.toFixed(o.dec) : Math.round(v).toLocaleString('en-US')) + o.suf;
+    C.tl.set(el, { textContent: f(from) }, C.S);
+    ft(p, { v: from }, { v: to, duration: d, ease: 'power3.out', onUpdate: () => { el.textContent = f(p.v); } }, t);
+  }
+  // connector between two points (or elements' centres), drawn at t
+  function connect(a, b, t, o) {
+    o = Object.assign({ color: 'rgba(255,255,255,.55)', w: 3, curve: .35, d: .5 }, o || {});
+    const P = (q) => (q.nodeType ? (() => { const x = parseFloat(q.style.left) + parseFloat(q.style.width) / 2, y = parseFloat(q.style.top) + parseFloat(q.style.height) / 2; return [x, y]; })() : q);
+    const [x1, y1] = P(a), [x2, y2] = P(b), mx = (x1 + x2) / 2, my = (y1 + y2) / 2 - Math.abs(x2 - x1) * o.curve * .4;
+    const s = o.svg || C._svg || (C._svg = svgLayer(C.mid));
+    const p = svgEl('path', { d: `M${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`, fill: 'none', stroke: o.color, 'stroke-width': o.w, 'stroke-linecap': 'round',
+      pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, s);
+    draw(p, t, o.d);
+    return p;
+  }
+  function chip(x, y, text, t, o) {
+    o = o || {};
+    const e = mk('div', 'r3-chip r3-el' + (o.red ? ' red' : ''), { left: px(x), top: px(y) }, o.parent, text);
+    if (t != null) appear(e, t, { y: 10, scale: .9 });
+    return e;
+  }
+  function text(x, y, html, o) {
+    o = Object.assign({ size: 44, weight: 700, color: '#fff', align: 'left' }, o || {});
+    const e = mk('div', 'r3-t r3-el', { left: px(x), top: px(y), fontSize: px(o.size), fontWeight: o.weight, color: o.color, textAlign: o.align,
+      width: o.w ? px(o.w) : 'auto' }, o.parent, html);
+    return e;
+  }
+  function number(x, y, value, o) {
+    o = Object.assign({ size: 150 }, o || {});
+    const e = mk('div', 'r3-num r3-el', { left: px(x), top: px(y), fontSize: px(o.size) }, o.parent, (o.pre || '') + value + (o.suf || ''));
+    return e;
+  }
+  const SKY = [['#ff6b6b', '#5f27cd'], ['#feca57', '#ff6b6b'], ['#48dbfb', '#0abde3'], ['#1dd1a1', '#10ac84'], ['#a29bfe', '#6c5ce7'],
+    ['#fd79a8', '#e84393'], ['#fab1a0', '#e17055'], ['#81ecec', '#00cec9'], ['#ffeaa7', '#fdcb6e'], ['#74b9ff', '#0984e3']];
+  function thumb(x, y, w, h, k, o) {
+    o = o || {};
+    const [a, b] = SKY[k % SKY.length];
+    const e = mk('div', 'r3-thumb r3-el', Object.assign(box(x, y, w, h), { background: `linear-gradient(${130 + (k * 37) % 90}deg, ${a}, ${b})` }), o.parent,
+      (o.play === false ? '' : '<i class="p"></i>') + (o.views ? `<span class="v">${o.views}</span>` : ''));
+    return e;
+  }
+  function avatar(x, y, d, k, parent) {
+    const [a, b] = SKY[(k + 3) % SKY.length];
+    return mk('div', 'r3-ava r3-el', Object.assign(box(x, y, d, d), { background: `radial-gradient(circle at 40% 35%, ${a}, ${b})` }), parent);
+  }
+
+  // ---------------- hero structures (each returns handles + evolution methods) ----------------
+  // script / plan document whose highlighter rows build
+  function doc(o) {
+    o = Object.assign({ x: 250, y: 300, w: 580, h: 520, title: 'Video Script', rows: [] }, o);
+    const c = card(o.x, o.y, o.w, o.h);
+    const ttl = text(0, 24, o.title, { size: 34, parent: c, w: o.w, align: 'center' }); ttl.classList.add('r3-serif');
+    const rows = o.rows.map((r, i) => {
+      const y = 92 + i * ((o.h - 120) / Math.max(4, o.rows.length));
+      const col = r.color || ['#ffd23f', '#b05cff', '#2ee6d6', '#3dff8b', '#ff5c8a', '#e8283c'][i % 6];
+      const lab = text(32, y, `<span style="display:inline-block;width:16px;height:16px;border-radius:4px;background:${col};margin-right:12px"></span>${r.label || ''}`, { size: 24, parent: c });
+      const bars = [0, 1].map((j) => mk('div', 'r3-bar r3-el', { left: '32px', top: px(y + 36 + j * 20), width: px((o.w - 64) * (j ? .62 : .9)), height: '12px', background: col, opacity: .9 }, c));
+      return { lab, bars };
+    });
+    for (let j = 0; j < 7; j++) mk('div', 'r3-line r3-el', { left: '32px', top: px(o.h - 28 - j * 18), width: px((o.w - 64) * (.5 + .5 * ((j * 7) % 5) / 4)) }, c);
+    return { el: c, rows,
+      row(i, t) { const r = rows[i]; if (!r) return; appear(r.lab, t, { y: 8, d: .4 }); ft(r.bars, { scaleX: 0 }, { scaleX: 1, duration: .55, ease: 'power3.out', stagger: .08 }, t + .05); },
+      highlight(i, t) { rows.forEach((r, j) => C.tl.to([r.lab, ...r.bars], { opacity: j === i ? 1 : .3, duration: .35 }, t)); } };
+  }
+  // phone with a feed of real-looking cards
+  function phone(o) {
+    o = Object.assign({ x: 330, y: 280, w: 420, h: 560, handle: '@you', cards: [] }, o);
+    const c = card(o.x, o.y, o.w, o.h, null, { borderRadius: '54px', border: '4px solid rgba(255,255,255,.8)' });
+    const scr = mk('div', 'r3-screen', box(12, 12, o.w - 24, o.h - 24), c); scr.dataset.device = '1';
+    mk('div', '', Object.assign(box((o.w - 24) / 2 - 55, 8, 110, 28), { position: 'absolute', borderRadius: '16px', background: '#000' }), scr);
+    text(24, 52, o.handle, { size: 22, parent: scr, color: 'rgba(255,255,255,.7)' });
+    const feed = mk('div', '', { position: 'absolute', left: '0', top: '92px', width: '100%' }, scr);
+    const cw = o.w - 48;
+    const cards = o.cards.map((k, i) => {
+      const e = mk('div', 'r3-el', Object.assign(box(12, i * 150, cw, 136), { position: 'absolute', borderRadius: '16px', background: 'rgba(255,255,255,.07)',
+        border: '1px solid rgba(255,255,255,.12)', overflow: 'hidden' }), feed);
+      thumb(10, 10, 116, 116, i + 2, { parent: e, views: k.views });
+      text(140, 18, k.title || '', { size: 22, parent: e, w: cw - 150 }).style.whiteSpace = 'normal';
+      text(140, 88, k.meta || '', { size: 18, parent: e, color: 'rgba(255,255,255,.55)' });
+      return e;
+    });
+    return { el: c, screen: scr, feed, cards,
+      card(i, t) { appear(cards[i], t, { y: 30 }); },
+      scroll(t, n, d = .7) { C.tl.to(feed, { y: -150 * n, duration: d, ease: 'power3.inOut' }, t); } };
+  }
+  // creator profile: avatar, stats, post grid that fills
+  function profile(o) {
+    o = Object.assign({ x: 240, y: 290, w: 600, h: 540, name: 'Creator', handle: '@creator', posts: 0, followers: 0, cols: 3, rows: 3 }, o);
+    const c = card(o.x, o.y, o.w, o.h);
+    avatar(28, 24, 96, 1, c);
+    text(140, 34, o.name, { size: 32, parent: c }); text(140, 76, o.handle, { size: 22, parent: c, color: 'rgba(255,255,255,.55)' });
+    const stats = {};
+    ['posts', 'followers'].forEach((k, i) => {
+      stats[k] = text(o.w - 300 + i * 150, 30, String(o[k]), { size: 34, parent: c }); text(o.w - 300 + i * 150, 74, k, { size: 18, parent: c, color: 'rgba(255,255,255,.5)' });
+    });
+    const gw = (o.w - 56 - (o.cols - 1) * 8) / o.cols, gh = (o.h - 150 - (o.rows - 1) * 8) / o.rows;
+    const cells = [];
+    for (let r = 0; r < o.rows; r++) for (let q = 0; q < o.cols; q++) {
+      const x = 28 + q * (gw + 8), y = 140 + r * (gh + 8);
+      mk('div', '', Object.assign(box(x, y, gw, gh), { position: 'absolute', borderRadius: '8px', border: '1.5px dashed rgba(255,255,255,.18)' }), c);
+      cells.push(thumb(x, y, gw, gh, r * o.cols + q, { parent: c, views: o.views ? o.views[r * o.cols + q] : null }));
+    }
+    return { el: c, cells, stats,
+      post(i, t) { if (cells[i]) appear(cells[i], t, { y: 0, scale: .82, d: .45 }); },
+      fill(a, b, t0, t1) { const n = b - a + 1; for (let i = 0; i < n; i++) this.post(a + i, t0 + (t1 - t0) * i / Math.max(1, n - 1)); },
+      count(k, t, d, from, to, opt) { count(stats[k], t, d, from, to, opt); } };
+  }
+  // thumbnail grid / catalog with one highlighted
+  function grid(o) {
+    o = Object.assign({ x: 150, y: 300, cols: 4, rows: 3, cw: 180, ch: 160, gap: 16 }, o);
+    const cells = [];
+    for (let r = 0; r < o.rows; r++) for (let q = 0; q < o.cols; q++)
+      cells.push(thumb(o.x + q * (o.cw + o.gap), o.y + r * (o.ch + o.gap), o.cw, o.ch, r * o.cols + q, { views: o.views ? o.views[r * o.cols + q] : null }));
+    return { cells,
+      fill(t, d = .9, from = 'start') { ft(cells, { autoAlpha: 0, scale: .85 }, { autoAlpha: 1, scale: 1, duration: .45, ease: 'back.out(1.3)', stagger: { amount: d, from } }, t); },
+      highlight(i, t) { C.tl.to(cells.filter((_, j) => j !== i), { opacity: .28, duration: .35 }, t);
+        C.tl.to(cells[i], { scale: 1.12, zIndex: 5, boxShadow: '0 0 0 5px #e8283c, 0 20px 60px rgba(232,40,60,.45)', duration: .4, ease: 'back.out(1.4)' }, t); } };
+  }
+  // streak calendar
+  function calendar(o) {
+    o = Object.assign({ x: 210, y: 320, cols: 7, rows: 4, cell: 82, gap: 12, title: 'Posting streak' }, o);
+    const W = o.cols * (o.cell + o.gap) + 40, H = o.rows * (o.cell + o.gap) + 100;
+    const c = card(o.x, o.y, W, H);
+    text(24, 20, o.title, { size: 28, parent: c });
+    const cells = [];
+    for (let i = 0; i < o.cols * o.rows; i++) {
+      const q = i % o.cols, r = Math.floor(i / o.cols);
+      const b = mk('div', '', Object.assign(box(20 + q * (o.cell + o.gap), 76 + r * (o.cell + o.gap), o.cell, o.cell), { position: 'absolute', borderRadius: '14px', border: '1.5px solid rgba(255,255,255,.15)' }), c);
+      cells.push(mk('div', 'r3-el', Object.assign(box(0, 0, o.cell, o.cell), { borderRadius: '13px', background: 'linear-gradient(135deg,#3dff8b,#10ac84)', boxShadow: '0 0 18px rgba(61,255,139,.45)' }), b));
+    }
+    return { el: c, cells,
+      check(i, t) { if (cells[i]) appear(cells[i], t, { y: 0, scale: .6, d: .35 }); },
+      streak(a, b, t0, t1) { for (let i = a; i <= b; i++) this.check(i, t0 + (t1 - t0) * (i - a) / Math.max(1, b - a)); } };
+  }
+  // branch tree / pipeline: root -> children (nodes + connectors grow)
+  function tree(o) {
+    o = Object.assign({ x: 120, y: 520, root: 'Start', nodes: [] }, o);  // nodes: [{label, x, y, from}] from = index of parent (-1 = root)
+    const rw = 240, rootEl = card(o.x, o.y - 40, rw, 80); text(0, 20, o.root, { size: 30, parent: rootEl, w: rw, align: 'center' });
+    const els = [rootEl];
+    o.nodes.forEach((n) => { const e = card(n.x, n.y - 36, n.w || 260, 72); text(0, 18, n.label, { size: 26, parent: e, w: n.w || 260, align: 'center' }); els.push(e); });
+    return { root: rootEl, nodes: els.slice(1),
+      grow(i, t) { const n = o.nodes[i], par = els[(n.from ?? -1) + 1]; connect(par, els[i + 1], t, { curve: .15 }); appear(els[i + 1], t + .3, { x: -20, y: 0 }); },
+      focus(i, t) { C.tl.to(els[i + 1], { borderColor: 'rgba(232,40,60,.95)', duration: .3 }, t); pulse(els[i + 1], t); } };
+  }
+  // orbit of cards around a centre pill
+  function orbit(o) {
+    o = Object.assign({ cx: 540, cy: 560, r: 250, center: 'Topic', items: [], tw: 140, th: 180 }, o);
+    const s = svgLayer(); svgEl('circle', { cx: o.cx, cy: o.cy, r: o.r, fill: 'none', stroke: 'rgba(255,255,255,.22)', 'stroke-width': 2.5, 'stroke-dasharray': '8 10' }, s);
+    const pill = mk('div', 'r3-chip red r3-el', { left: px(o.cx), top: px(o.cy), transform: 'translate(-50%,-50%)', fontSize: '34px', padding: '14px 28px' }, null, o.center);
+    const items = o.items.map((it, i) => {
+      const a = -Math.PI / 2 + 2 * Math.PI * i / o.items.length, x = o.cx + o.r * Math.cos(a) - o.tw / 2, y = o.cy + o.r * Math.sin(a) * .9 - o.th / 2;
+      const e = thumb(x, y, o.tw, o.th, i, { views: it.views }); if (it.label) chip(4, o.th - 40, it.label, null, { parent: e }).style.fontSize = '18px';
+      return e;
+    });
+    return { pill, items, ring: s,
+      add(i, t) { appear(items[i], t, { y: 0, scale: .7, d: .5 }); },
+      focus(i, t) { C.tl.to(items.filter((_, j) => j !== i), { opacity: .3, duration: .35 }, t); C.tl.to(items[i], { scale: 1.18, duration: .45, ease: 'back.out(1.4)' }, t); } };
+  }
+  // chart: bars or line, building
+  function chart(o) {
+    o = Object.assign({ x: 150, y: 320, w: 780, h: 460, kind: 'bars', values: [20, 40, 70, 100], labels: [], title: '' }, o);
+    const c = card(o.x, o.y, o.w, o.h);
+    if (o.title) text(28, 22, o.title, { size: 28, parent: c });
+    const n = o.values.length, bw = (o.w - 80) / n * .62, base = o.h - 60, top = 80;
+    mk('div', '', Object.assign(box(30, base, o.w - 60, 3), { position: 'absolute', background: 'rgba(255,255,255,.3)' }), c);
+    const bars = o.values.map((v, i) => {
+      const x = 40 + i * (o.w - 80) / n + ((o.w - 80) / n - bw) / 2, h = (base - top) * v / Math.max(...o.values);
+      const b = mk('div', 'r3-el', Object.assign(box(x, base - h, bw, h), { position: 'absolute', borderRadius: '10px 10px 0 0', transformOrigin: '50% 100%',
+        background: i === n - 1 ? 'linear-gradient(180deg,#ff5a6a,#e8283c)' : 'linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.35))' }), c);
+      if (o.labels[i]) text(x - 20, base + 12, o.labels[i], { size: 20, parent: c, w: bw + 40, align: 'center', color: 'rgba(255,255,255,.7)' });
+      return b;
+    });
+    return { el: c, bars, bar(i, t) { ft(bars[i], { scaleY: 0 }, { scaleY: 1, duration: .6, ease: 'back.out(1.2)' }, t); } };
+  }
+  // numbered rows, unrevealed rows blurred
+  function rows(o) {
+    o = Object.assign({ x: 160, y: 320, w: 760, gap: 96, items: [] }, o);
+    const els = o.items.map((it, i) => {
+      const e = mk('div', 'r3-row r3-el', { left: px(o.x), top: px(o.y + i * o.gap), width: px(o.w) }, null, `<span class="n">${String(i + 1).padStart(2, '0')}</span><span class="t">${it}</span>`);
+      lit(e, o.x, o.y + i * o.gap, o.w, 78, .7);
+      return e;
+    });
+    const ts = els.map((e) => e.querySelector('.t'));
+    return { els,
+      show(t) { appear(els, t, { stagger: .06 }); ft(ts, { color: 'rgba(255,255,255,0)', textShadow: '0 0 14px rgba(255,255,255,.6)' }, { color: 'rgba(255,255,255,0)', duration: .01 }, t); },
+      reveal(i, t) { ft(ts[i], { color: 'rgba(255,255,255,0)', textShadow: '0 0 14px rgba(255,255,255,.6)' }, { color: 'rgba(255,255,255,1)', textShadow: '0 0 0px rgba(255,255,255,0)', duration: .45 }, t);
+        C.tl.to(els[i], { borderColor: 'rgba(255,90,106,.9)', duration: .3 }, t); if (i) C.tl.to(els[i - 1], { borderColor: 'rgba(255,255,255,.13)', duration: .3 }, t); } };
+  }
+  // network of avatars around a centre with a counter chip
+  function network(o) {
+    o = Object.assign({ cx: 540, cy: 560, r: 260, n: 8, center: '', value: 0 }, o);
+    const hub = card(o.cx - 70, o.cy - 70, 140, 140, null, { borderRadius: '50%' });
+    const nodes = [];
+    for (let i = 0; i < o.n; i++) { const a = 2 * Math.PI * i / o.n - Math.PI / 2, rr = o.r * (.85 + .15 * ((i * 7) % 3) / 2);
+      nodes.push(avatar(o.cx + rr * Math.cos(a) - 38, o.cy + rr * Math.sin(a) * .85 - 38, 76, i)); }
+    const chipEl = chip(o.cx - 60, o.cy + 84, o.center || '0', null, { red: true });
+    return { hub, nodes, chip: chipEl,
+      link(i, t) { connect(hub, nodes[i], t, { curve: 0, color: 'rgba(255,255,255,.35)', w: 2 }); appear(nodes[i], t + .2, { y: 0, scale: .6, d: .4 }); },
+      count(t, d, from, to, opt) { count(chipEl, t, d, from, to, opt); } };
+  }
+  // stacked pages that deal / fan
+  function pages(o) {
+    o = Object.assign({ x: 380, y: 320, w: 300, h: 400, n: 5 }, o);
+    const els = [];
+    for (let i = 0; i < o.n; i++) {
+      const e = mk('div', 'r3-el', Object.assign(box(o.x, o.y, o.w, o.h), { position: 'absolute', background: '#f4f4f6', borderRadius: '8px', boxShadow: '0 18px 50px rgba(0,0,0,.6)' }));
+      for (let j = 0; j < 10; j++) mk('div', '', Object.assign(box(24, 30 + j * 32, (o.w - 48) * (j ? .55 + .45 * ((j * 5) % 4) / 3 : .7), j ? 9 : 14), { position: 'absolute', borderRadius: '4px', background: j ? 'rgba(0,0,0,.2)' : '#e8283c' }), e);
+      els.push(e);
+    }
+    return { els,
+      deal(i, t) { ft(els[i], { autoAlpha: 0, y: 180, rotation: -12 }, { autoAlpha: 1, y: 0, rotation: (i - (o.n - 1) / 2) * 5, x: (i - (o.n - 1) / 2) * 70, duration: .6, ease: 'back.out(1.2)' }, t); } };
+  }
+  // offer / contract card with lines and a stamp
+  function offer(o) {
+    o = Object.assign({ x: 230, y: 300, w: 620, h: 520, title: 'Offer', lines: [], stamp: '' }, o);
+    const c = card(o.x, o.y, o.w, o.h);
+    text(32, 28, o.title, { size: 36, parent: c });
+    const ls = o.lines.map((l, i) => text(32, 104 + i * 64, l, { size: 26, parent: c, color: 'rgba(255,255,255,.85)' }));
+    const sig = svgEl('svg', { width: o.w, height: 120, style: `position:absolute;left:0;top:${o.h - 130}px;overflow:visible` }, c);
+    const sp = svgEl('path', { d: `M40 80 C 120 20, 160 110, 230 60 S 330 30, 380 70`, fill: 'none', stroke: '#fff', 'stroke-width': 4, pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, sig);
+    const st = o.stamp ? chip(o.w - 230, o.h - 110, o.stamp, null, { red: true, parent: c }) : null;
+    return { el: c, lines: ls,
+      line(i, t) { appear(ls[i], t, { x: -16, y: 0, d: .4 }); },
+      sign(t) { draw(sp, t, .9); },
+      stampIt(t) { if (st) ft(st, { autoAlpha: 0, scale: 1.8, rotation: -14 }, { autoAlpha: 1, scale: 1, rotation: -8, duration: .45, ease: 'back.out(1.6)' }, t); } };
+  }
+
+  // ---------------- camera rig ----------------
+  function cam() {
+    const el = C.camEl;
+    return { el,
+      push(t, d, s = 1.08, x = 0, y = 0) { C.tl.to(el, { scale: s, x, y, duration: d, ease: 'power2.inOut' }, t); },
+      tilt(t, d, rx = 6, ry = -8) { C.tl.to(el, { rotationX: rx, rotationY: ry, transformPerspective: 1600, duration: d, ease: 'power2.inOut' }, t); },
+      reset(t, d = .6) { C.tl.to(el, { scale: 1, x: 0, y: 0, rotationX: 0, rotationY: 0, duration: d, ease: 'power2.inOut' }, t); },
+      // fly through a point (exit transition): origin at (px,py), scale up with motion blur
+      through(t, d, x = 540, y = 560) { C.tl.set(el, { transformOrigin: `${x}px ${y}px` }, t); C.tl.to(el, { scale: 3.2, filter: 'blur(10px)', autoAlpha: 0, duration: d, ease: 'power3.in' }, t); } };
+  }
+
+  window.R3 = { TEMP, mk, box, ft, appear, leave, dim, pulse, draw, count, connect, chip, text, number, thumb, avatar, card, lit, light,
+    doc, phone, profile, grid, calendar, tree, orbit, chart, rows, network, pages, offer, cam, svgLayer,
+    begin(ctx) { C = ctx; C._svg = null; ctx.cam = cam(); return ctx; } };
+})();
+</script>
+<script>
+const tl = gsap.timeline({paused:true});
+const W = [0.193, 0.393, 0.613, 0.733, 1.413, 1.633, 1.773, 1.893, 2.073, 2.213, 2.353, 2.653, 2.753, 3.353, 3.453, 3.593, 3.973, 4.133, 4.453, 4.893, 5.313, 5.393, 5.573, 5.753, 5.953, 6.293, 6.413, 6.573, 7.1, 7.54, 7.78, 8.04, 8.26, 8.58, 8.78, 8.88, 9.08, 9.36, 9.48, 9.58, 9.973, 9.993, 10.133, 10.293, 10.573, 11.28, 11.54, 11.7, 12.2, 12.42, 13.06, 13.2, 13.38, 13.58, 14.04, 14.22, 14.44, 14.54, 14.68, 15.06, 15.08, 15.547, 15.887, 15.987, 16.147, 16.287, 16.427, 16.787, 16.867, 17.107, 17.307, 17.507, 18.187, 18.187, 18.387, 18.547, 18.887, 19.067, 19.167, 19.327, 19.467, 19.767, 20.007, 20.127, 20.227, 20.387, 20.587, 21.067, 21.147, 21.287, 21.467, 21.647, 22.227, 22.427, 22.607, 22.787, 22.987, 23.307, 23.967, 24.127, 24.747, 25.067, 25.187, 25.327, 25.467, 25.567, 25.707, 25.847, 26.047, 26.447, 26.627, 26.827, 27.007, 27.147, 27.607, 28.067, 28.327, 29.24, 29.6, 30.107, 30.327, 30.467, 30.887, 31.287, 31.813, 31.953, 32.053, 32.193, 32.733, 32.853, 33.013, 33.113, 33.293, 33.393, 33.493, 33.653, 33.793, 34.313, 34.853, 35.653, 36.713, 37.113, 37.593, 37.853, 37.953, 38.053, 38.213, 38.393, 38.513, 38.593, 38.753, 38.873, 39.093, 39.333, 39.553, 39.713, 39.993, 40.233, 40.593, 41.613, 42.313, 42.693, 42.873, 43.053, 43.353, 43.393, 43.533, 43.713, 43.893, 43.993, 44.133, 44.293, 44.453, 44.633, 45.38, 45.56, 45.74, 46.06, 46.313, 46.373, 46.513, 46.673, 46.693, 46.793, 46.913, 47.173, 47.393, 47.493, 47.673, 48.18, 48.3, 48.44, 48.64, 48.88, 49.36, 49.5, 49.74, 49.9, 50.06, 50.26, 50.6, 50.74, 51.0, 51.24, 52.0, 52.0, 52.28, 52.44, 52.56, 53.0, 53.6, 53.66, 53.76, 53.96, 54.04, 54.16, 54.3, 54.44, 54.56, 54.88, 55.06, 55.24, 55.36, 55.54, 55.72, 56.54, 56.88, 58.38, 59.2, 59.32, 59.76, 59.9, 60.04, 60.28];
+const G = {"W": 1080, "H": 958, "top": 300, "bottom": 838}; window.G = G;
+gsap.set('#panel',{autoAlpha:1});
+const B=document.querySelectorAll('.r3-bg .field');tl.fromTo(B[0],{x:-80,y:-40},{x:80,y:40,duration:61.467,ease:'sine.inOut',immediateRender:false},0);tl.fromTo(B[1],{x:60,y:30},{x:-60,y:-30,duration:61.467,ease:'sine.inOut',immediateRender:false},0);
+
+(function(){ const sec=document.getElementById('sec0'); const S=0.000, E=9.823;
+ const ctx=R3.begin({sec, mid:document.getElementById('sec0m'), fg:document.getElementById('sec0f'), camEl:document.getElementById('sec0c'), tl, S, E, W, G});
+ R3.light({"x": 180, "y": 60, "temp": "cool"});
+ try { (function(ctx,R3,tl,W,S,E,G){
+if (!ctx.cam) R3.begin(ctx);
+const mid = ctx.mid;
+const T = (i) => Math.max(S, W[i] - 0.05);
+const tx = (x, y, html, o, lh) => { const e = R3.text(x, y, html, o); e.style.lineHeight = lh + 'px'; e.style.whiteSpace = 'nowrap'; return e; };
+const swap = (el, t, txt) => {
+  tl.to(el, { autoAlpha: 0, duration: .12, ease: 'power1.in' }, t);
+  tl.set(el, { textContent: txt }, t + .12);
+  tl.to(el, { autoAlpha: 1, duration: .18, ease: 'power1.out' }, t + .12);
+};
+
+/* ---------- static near-black grid (no motion) ---------- */
+const gridMask = 'radial-gradient(ellipse 72% 72% at 62% 50%, #000 30%, transparent 86%)';
+R3.mk('div', '', { position: 'absolute', left: '30px', top: '300px', width: '1020px', height: '534px', pointerEvents: 'none',
+  backgroundImage: 'linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px)',
+  backgroundSize: '48px 48px', WebkitMaskImage: gridMask, maskImage: gridMask }, mid);
+
+/* connectors live under the phone so they tuck behind the bezel */
+const svg = R3.svgLayer(mid);
+
+/* ---------- geometry ---------- */
+const PX = 500, PY = 312, PW = 520, PH = 510;
+const SW = 496, SH = 486;
+const ROW0 = 84, PITCH = 66, RH = 58, RX = 12, RW = SW - 24;
+const slotY = (k) => ROW0 + k * PITCH;
+const rowCY = (k) => PY + 12 + slotY(k) + 29;
+
+/* ---------- HERO: phone with Requests inbox ---------- */
+const phone = R3.card(PX, PY, PW, PH, null, { borderRadius: '52px', border: '3px solid rgba(255,255,255,.78)' });
+const scr = R3.mk('div', 'r3-screen', Object.assign(R3.box(9, 9, SW, SH), { position: 'absolute', borderRadius: '42px', overflow: 'hidden', background: '#0a0b0f' }), phone);
+scr.dataset.device = '1';
+R3.mk('div', '', Object.assign(R3.box((SW - 104) / 2, 8, 104, 26), { position: 'absolute', borderRadius: '14px', background: '#000' }), scr);
+tx(36, 12, '9:41', { size: 15, weight: 600, parent: scr }, 18);
+tx(SW - 98, 12, '5G<span style="display:inline-block;width:24px;height:11px;border:1.5px solid rgba(255,255,255,.8);border-radius:3px;margin-left:7px;vertical-align:-1px;background:linear-gradient(90deg,rgba(255,255,255,.85) 68%,transparent 68%)"></span>', { size: 14, weight: 600, parent: scr }, 18);
+tx(20, 34, '‹', { size: 30, weight: 500, parent: scr }, 34);
+const appTitle = tx(48, 40, 'Requests (<span>38</span>)', { size: 22, weight: 700, parent: scr }, 28);
+const appCount = appTitle.querySelector('span');
+tx(SW - 130, 45, 'Delete all', { size: 15, weight: 500, parent: scr, color: 'rgba(255,255,255,.45)', w: 104, align: 'right' }, 20);
+R3.mk('div', '', Object.assign(R3.box(0, 76, SW, 1), { position: 'absolute', background: 'rgba(255,255,255,.1)' }), scr);
+
+function makeRow(slot, d, unread) {
+  const r = R3.mk('div', 'r3-el', Object.assign(R3.box(RX, slotY(slot), RW, RH), { position: 'absolute', boxSizing: 'border-box', borderRadius: '14px',
+    background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.08)', filter: 'grayscale(0)' }), scr);
+  const av = R3.avatar(8, 6, 44, d.k, r);
+  Object.assign(av.style, { position: 'absolute', borderRadius: '50%' });
+  const h = tx(64, 4, d.handle, { size: 18, weight: 700, parent: r }, 22);
+  const tm = tx(RW - 68, 6, d.time, { size: 14, weight: 500, parent: r, color: 'rgba(255,255,255,.45)', w: 50, align: 'right' }, 18);
+  const pv = tx(64, 34, d.preview, { size: 16, weight: 500, parent: r, color: 'rgba(255,255,255,.72)', w: RW - 64 - 44 }, 20);
+  Object.assign(pv.style, { overflow: 'hidden', textOverflow: 'ellipsis' });
+  let dot = null;
+  if (unread) dot = R3.mk('div', '', Object.assign(R3.box(RW - 26, 39, 9, 9), { position: 'absolute', borderRadius: '50%', background: '#5aa9ff' }), r);
+  return { r, av, h, tm, pv, dot };
+}
+const mira = makeRow(0, { handle: '@mira.cuts', preview: 'how do i blow up in a week??', time: '2m', k: 0 });
+const jay  = makeRow(1, { handle: '@jayden.wav', preview: 'day 3… 14 views 😩', time: '9m', k: 2 });
+const lexi = makeRow(2, { handle: '@lexi.mp4', preview: 'is there a faster way', time: '21m', k: 5 });
+const kai  = makeRow(0, { handle: '@kai.makes', preview: 'repost my page fam? 🙏', time: 'now', k: 4 }, true);
+const nova = makeRow(1, { handle: '@nova.lux', preview: '1 story share pls', time: 'now', k: 7 }, true);
+const tre  = makeRow(2, { handle: '@tre.visuals', preview: "tag me, it'd change everything", time: 'now', k: 1 }, true);
+const older = [mira.r, jay.r, lexi.r];
+
+/* decline stamp (inside kai row, inside screen) */
+const stamp = R3.mk('div', 'r3-el', { position: 'absolute', left: (RW - 178) + 'px', top: '10px', padding: '5px 12px', border: '2.5px solid #ff4d5e',
+  borderRadius: '8px', color: '#ff4d5e', fontSize: '19px', fontWeight: '800', lineHeight: '24px', letterSpacing: '.04em',
+  background: 'rgba(255,77,94,.12)', whiteSpace: 'nowrap' }, kai.r, '✕ Declined');
+
+/* match-cut avatar clone (inside screen) */
+const bigAva = R3.avatar((SW - 150) / 2, 150, 150, 4, scr);
+Object.assign(bigAva.style, { position: 'absolute', borderRadius: '50%', boxSizing: 'border-box', border: '4px solid #0a0b0f',
+  boxShadow: '0 0 0 2px rgba(255,255,255,.5)', transformOrigin: '0 0' });
+const bigName = tx(0, 318, '@kai.makes', { size: 24, weight: 700, parent: scr, w: SW, align: 'center' }, 28);
+const bigSub = tx(0, 356, '3 posts · 212 followers', { size: 16, weight: 500, parent: scr, w: SW, align: 'center', color: 'rgba(255,255,255,.55)' }, 20);
+
+/* ---------- SUPPORT: quit chip ---------- */
+const quitChip = R3.chip(60, 318, 'avg time to quit: 11 days', null);
+Object.assign(quitChip.style, { background: 'transparent', border: '1.5px solid rgba(255,255,255,.8)', color: '#fff', fontSize: '20px',
+  lineHeight: '24px', padding: '7px 16px', borderRadius: '999px', boxShadow: 'none', whiteSpace: 'nowrap' });
+
+/* ---------- SUPPORT: mini posting calendar ---------- */
+const CX = 60, CY = 376, CWd = 320, CH = 180;
+const cal = R3.card(CX, CY, CWd, CH);
+tx(24, 16, 'Posting log', { size: 20, weight: 700, parent: cal }, 24);
+const calS = tx(CWd - 140, 19, 'on track', { size: 15, weight: 600, parent: cal, color: '#3dff8b', w: 116, align: 'right' }, 20);
+const sqs = [], ice = [];
+['▶ 120', '▶ 41', '▶ 14'].forEach((v, i) => {
+  const x = 36 + i * 88;
+  const sq = R3.mk('div', 'r3-el', Object.assign(R3.box(x, 54, 72, 72), { position: 'absolute', boxSizing: 'border-box', borderRadius: '12px', overflow: 'hidden',
+    background: 'linear-gradient(135deg, rgba(61,255,139,.55), rgba(16,172,132,.42))', border: '1px solid rgba(61,255,139,.35)',
+    filter: 'grayscale(0) brightness(1)' }), cal);
+  tx(8, 48, v, { size: 13, weight: 700, parent: sq, color: 'rgba(0,0,0,.62)' }, 16);
+  ice.push(R3.mk('div', '', Object.assign(R3.box(0, 0, 72, 72), { position: 'absolute',
+    background: i < 2 ? 'linear-gradient(160deg, rgba(205,228,255,.38), rgba(120,150,190,.14))'
+                      : 'repeating-linear-gradient(45deg, rgba(170,172,182,.62) 0 6px, rgba(48,50,58,.92) 6px 12px)' }), sq));
+  tx(x, 140, 'Day ' + (i + 1), { size: 14, weight: 600, parent: cal, color: 'rgba(255,255,255,.5)', w: 72, align: 'center' }, 18);
+  sqs.push(sq);
+});
+
+/* ---------- SUPPORT: request counter card ---------- */
+const KX = 60, KY = 576, KW = 320, KH = 246;
+const cnt = R3.card(KX, KY, KW, KH);
+tx(24, 18, 'Message requests', { size: 18, weight: 600, parent: cnt, color: 'rgba(255,255,255,.6)' }, 22);
+const bigNum = tx(22, 44, '38', { size: 76, weight: 800, parent: cnt }, 84);
+const plus = R3.mk('div', 'r3-el', { position: 'absolute', left: '146px', top: '72px', padding: '4px 12px', borderRadius: '999px',
+  border: '1.5px solid rgba(127,184,255,.8)', color: '#a8d0ff', fontSize: '17px', fontWeight: '700', lineHeight: '22px', whiteSpace: 'nowrap' }, cnt, '+3 new');
+const barH = [24, 32, 20, 38, 30, 44, 56];
+const bars = barH.map((h, i) => R3.mk('div', '', Object.assign(R3.box(24 + i * 40, 206 - h, 26, h), { position: 'absolute', borderRadius: '6px 6px 0 0',
+  transformOrigin: '50% 100%', background: i === 6 ? 'linear-gradient(180deg,#8fc4ff,#3f7fd6)' : 'rgba(255,255,255,.22)' }), cnt));
+const decl = tx(24, 216, 'declined today · <span style="color:rgba(255,255,255,.8)">0</span>', { size: 16, weight: 500, parent: cnt, color: 'rgba(255,255,255,.55)' }, 20);
+const declN = decl.querySelector('span');
+
+/* ---------- SUPPORT: avatar discs at the phone's left edge ---------- */
+const DX = 392, DD = 50, discCY = [449, 503, 557];
+const mkDisc = (i, k) => {
+  const e = R3.avatar(DX, discCY[i] - DD / 2, DD, k);
+  Object.assign(e.style, { position: 'absolute', borderRadius: '50%', boxSizing: 'border-box', border: '3px solid #0a0b0f', boxShadow: '0 0 0 1.5px rgba(255,255,255,.35)' });
+  return e;
+};
+const dKai = mkDisc(0, 4), dNova = mkDisc(1, 7), dTre = mkDisc(2, 1);
+const link = (i, t) => R3.connect([DX + DD, discCY[i]], [PX + 4, rowCY(i)], t, { svg, color: 'rgba(255,255,255,.4)', w: 1.5, curve: .2, d: .35 });
+
+/* ================= TIMELINE ================= */
+// w0 — major: phone settles, left panels + first row
+R3.ft(phone, { autoAlpha: 0, scale: .92, y: 18 }, { autoAlpha: 1, scale: 1, y: 0, duration: .8, ease: 'power3.out' }, S);
+R3.appear([cal, cnt], S + .1, { y: 20, stagger: .1, d: .5 });
+R3.appear(sqs, S + .28, { y: 0, scale: .6, d: .35, stagger: .08 });
+R3.appear(mira.r, T(0), { y: 14, scale: .97, d: .4 });
+tl.set(stamp, { rotation: -7 }, S);
+tl.set([bigAva], { autoAlpha: 0, x: -157, y: -63, scale: .347 }, S);
+tl.set([bigName, bigSub, plus], { autoAlpha: 0 }, S);
+tl.set(bars[6], { scaleY: .72 }, S);
+
+// w1 — row 2
+R3.appear(jay.r, T(1), { y: 14, scale: .97, d: .4 });
+// w3 — row 3 + quit chip
+R3.appear(lexi.r, T(3), { y: 14, scale: .97, d: .4 });
+R3.appear(quitChip, T(3) + .06, { y: 10, scale: .9, d: .45 });
+
+// w8 — jayden goes inactive
+tl.to(jay.r, { filter: 'grayscale(1)', opacity: .5, duration: .4, ease: 'sine.inOut' }, T(8));
+swap(jay.pv, T(8), 'last active 6w ago');
+swap(jay.tm, T(8), '6w');
+
+// w12 — major: lexi deactivated, calendar freezes (last day hatched)
+tl.to(lexi.r, { filter: 'grayscale(1)', opacity: .45, duration: .4, ease: 'sine.inOut' }, T(12));
+swap(lexi.pv, T(12), 'account deactivated');
+swap(lexi.tm, T(12), '—');
+R3.ft(sqs, { filter: 'grayscale(0) brightness(1)' }, { filter: 'grayscale(1) brightness(.72)', duration: .45, ease: 'sine.inOut', stagger: .06 }, T(12) + .04);
+R3.ft(ice, { autoAlpha: 0 }, { autoAlpha: 1, duration: .45, ease: 'sine.inOut', stagger: .06 }, T(12) + .04);
+swap(calS, T(12) + .04, 'paused');
+tl.to(calS, { color: 'rgba(255,255,255,.45)', duration: .18 }, T(12) + .16);
+
+// w16 — the one camera move: eased step-in toward the inbox, then hold
+tl.set(ctx.cam.el, { transformOrigin: '760px 567px' }, S);
+ctx.cam.push(T(16), 1.1, 1.04);
+
+// w17 — @kai.makes lands on top, disc joins
+tl.to(older, { y: PITCH, duration: .38, ease: 'power3.out' }, T(17));
+R3.appear(kai.r, T(17) + .08, { y: -14, scale: .97, d: .38, ease: 'back.out(1.4)' });
+R3.appear(dKai, T(17) + .14, { y: 0, x: -10, scale: .6, d: .38 });
+link(0, T(17) + .2);
+
+// w20 — @nova.lux
+tl.to(older, { y: PITCH * 2, duration: .18, ease: 'power2.out' }, T(20));
+R3.appear(nova.r, T(20) + .06, { y: -12, scale: .97, d: .36, ease: 'back.out(1.4)' });
+R3.appear(dNova, T(20) + .1, { y: 0, x: -10, scale: .6, d: .36 });
+const lNova = link(1, T(20) + .14);
+
+// w22 — @tre.visuals, counter rolls 38 → 41
+tl.to(older, { y: PITCH * 3, duration: .32, ease: 'power3.out' }, T(22));
+R3.appear(tre.r, T(22) + .08, { y: -12, scale: .97, d: .38, ease: 'back.out(1.4)' });
+R3.appear(dTre, T(22) + .12, { y: 0, x: -10, scale: .6, d: .38 });
+const lTre = link(2, T(22) + .16);
+R3.count(appCount, T(22) + .12, .6, 38, 41);
+R3.count(bigNum, T(22) + .12, .6, 38, 41);
+R3.appear(plus, T(22) + .2, { y: 8, scale: .85, d: .4 });
+R3.ft(bars[6], { scaleY: .72 }, { scaleY: 1, duration: .45, ease: 'back.out(1.6)' }, T(22) + .16);
+
+// w27 — red decline stamp on the top row; avatar starts to enlarge
+R3.ft(stamp, { autoAlpha: 0, scale: 1.7, rotation: -16 }, { autoAlpha: 1, scale: 1, rotation: -7, duration: .38, ease: 'back.out(1.8)' }, T(27));
+tl.to([kai.tm, kai.dot], { autoAlpha: 0, duration: .15 }, T(27));
+tl.to(kai.r, { borderColor: 'rgba(255,77,94,.55)', backgroundColor: 'rgba(255,77,94,.07)', duration: .3 }, T(27));
+tl.to(kai.av, { scale: 1.18, duration: .5, ease: 'back.out(1.5)' }, T(27) + .1);
+tl.to(dKai, { boxShadow: '0 0 0 2.5px rgba(255,77,94,.9)', duration: .3 }, T(27));
+swap(declN, T(27) + .1, '1');
+tl.to(declN, { color: '#ff4d5e', duration: .18 }, T(27) + .22);
+
+// w33 — inbox clears, kai avatar grows into the profile-picture position (match-cut setup)
+tl.to([mira.r, jay.r, lexi.r, nova.r, tre.r], { autoAlpha: 0, duration: .3, ease: 'power2.in' }, T(33));
+tl.to([dNova, dTre, lNova, lTre], { opacity: .25, duration: .3 }, T(33));
+tl.set(bigAva, { autoAlpha: 1 }, T(33));
+tl.set(kai.av, { autoAlpha: 0 }, T(33));
+tl.to(bigAva, { x: 0, y: 0, scale: 1, duration: .85, ease: 'power3.inOut' }, T(33));
+R3.appear([bigName, bigSub], T(33) + .45, { y: 10, d: .4, stagger: .08 });
+ })(ctx,R3,tl,W,S,E,G); } catch(e) { (window.__r3err=window.__r3err||[]).push('sec0: '+e.message); }
+ tl.set(sec,{autoAlpha:1},0.000);
+ 
+ tl.to(sec,{scale:1.06,filter:'blur(10px)',autoAlpha:0,duration:0.45,ease:'power2.in'},9.373); tl.set(sec,{autoAlpha:0},9.843);
+ KW.typeWords(tl,'#h0',0.050,.08); KW.exit(tl,'#h0','lift',9.523,.28);
+})();
+(function(){ const sec=document.getElementById('sec1'); const S=9.823, E=22.077;
+ const ctx=R3.begin({sec, mid:document.getElementById('sec1m'), fg:document.getElementById('sec1f'), camEl:document.getElementById('sec1c'), tl, S, E, W, G});
+ R3.light({"x": 860, "y": 110, "temp": "neutral"});
+ try { (function(ctx,R3,tl,W,S,E,G){
+/* ===== The empty shelf: @kai.makes profile → repost flood → empty grid ===== */
+const RED = '#e8283c';
+const at = (i, d = 0.05) => W[i] - d;
+const T = (x, y, html, o = {}) => {
+  const e = R3.text(x, y, html, o);
+  e.style.lineHeight = o.lh || '1.15';
+  e.style.whiteSpace = 'nowrap';
+  if (o.ls) e.style.letterSpacing = o.ls;
+  if (o.shadow) e.style.textShadow = '0 1px 4px rgba(0,0,0,.6)';
+  return e;
+};
+
+/* ---------------- PHONE (hero) ---------------- */
+const PX = 590, PY = 320, PW = 430, PH = 503;
+const phone = R3.card(PX, PY, PW, PH, null, {
+  borderRadius: '48px', border: '4px solid rgba(255,255,255,.8)', boxSizing: 'border-box'
+});
+const scr = R3.mk('div', 'r3-screen', Object.assign(R3.box(10, 10, 402, 475), {
+  position: 'absolute', overflow: 'hidden', borderRadius: '38px', background: '#0c0c10'
+}), phone);
+scr.dataset.device = '1';
+
+// scrollable page content (pushed into on w58)
+const SCROLL = 236;
+const pg = R3.mk('div', '', Object.assign(R3.box(0, 0, 402, 720), { position: 'absolute' }), scr);
+
+// profile block (fades out as it scrolls away, so nothing ever leaves the screen)
+const ava = R3.avatar(16, 92, 84, 1, pg);
+Object.assign(ava.style, { boxSizing: 'border-box', border: '3px solid #0c0c10', boxShadow: '0 0 0 2px rgba(255,255,255,.85)' });
+
+const statEls = [];
+[['2', 'posts'], ['412', 'followers'], ['1,038', 'following']].forEach(([v, l], i) => {
+  const x = 112 + i * 96;
+  statEls.push(T(x, 104, v, { size: 26, weight: 800, w: 92, align: 'center', parent: pg }));
+  statEls.push(T(x, 142, l, { size: 14, weight: 500, w: 92, align: 'center', color: 'rgba(255,255,255,.55)', parent: pg }));
+});
+const nameEl = T(16, 184, 'Kai Mendes', { size: 21, weight: 800, parent: pg });
+const handleEl = T(16, 217, '@kai.makes', { size: 16, weight: 500, color: 'rgba(255,255,255,.55)', parent: pg });
+const bioEl = T(16, 244, 'producer · ATL', { size: 16, weight: 500, color: 'rgba(255,255,255,.85)', parent: pg });
+
+const btn = (x, w, label, bg, col) => R3.mk('div', 'r3-el', Object.assign(R3.box(x, 272, w, 34), {
+  position: 'absolute', borderRadius: '10px', background: bg, color: col, fontSize: '15px', fontWeight: '700',
+  lineHeight: '34px', textAlign: 'center'
+}), pg, label);
+const bFollow = btn(16, 180, 'Follow', '#ffffff', '#0c0c10');
+const bMsg = btn(204, 182, 'Message', 'rgba(255,255,255,.12)', '#ffffff');
+
+const tabs = ['Posts', 'Reels', 'Tagged'].map((l, i) =>
+  T(i * 134, 320, l, { size: 14, weight: 700, w: 134, align: 'center', color: i ? 'rgba(255,255,255,.45)' : '#fff', parent: pg }));
+const tabHair = R3.mk('div', '', Object.assign(R3.box(0, 344, 402, 1), { position: 'absolute', background: 'rgba(255,255,255,.14)' }), pg);
+const tabLine = R3.mk('div', 'r3-el', Object.assign(R3.box(22, 342, 90, 2), { position: 'absolute', background: '#fff', borderRadius: '2px' }), pg);
+
+// post grid: 4 x 3, two real thumbs + ten dashed empties (fits the screen after the scroll)
+const CW = 95, CH = 114;
+const cx = (q) => 5 + q * 99, cy = (r) => 352 + r * 120;
+const TH = [{ label: 'Reel · Mar 2', views: '1,104 views', k: 4 }, { label: 'Reel · Mar 19', views: '866 views', k: 9 }];
+const thumbs = [], empties = [];
+for (let i = 0; i < 12; i++) {
+  const q = i % 4, r = Math.floor(i / 4);
+  if (i < 2) {
+    const th = R3.thumb(cx(q), cy(r), CW, CH, TH[i].k, { parent: pg });
+    Object.assign(th.style, { borderRadius: '6px', overflow: 'hidden' });
+    T(7, 7, TH[i].label, { size: 12, weight: 700, parent: th, shadow: true });
+    T(7, 90, TH[i].views, { size: 13, weight: 700, parent: th, shadow: true });
+    thumbs.push(th);
+  } else {
+    empties.push(R3.mk('div', 'r3-el', Object.assign(R3.box(cx(q), cy(r), CW, CH), {
+      position: 'absolute', boxSizing: 'border-box', borderRadius: '6px',
+      border: '1.5px dashed rgba(255,255,255,.28)', background: 'rgba(255,255,255,0.02)'
+    }), pg));
+  }
+}
+const day1 = T(0, 47, 'Day 1', { size: 15, weight: 800, w: CW, align: 'center', parent: empties[0] });
+
+// sticky header (notch + nav + repost pill dock)
+const hdr = R3.mk('div', '', Object.assign(R3.box(0, 0, 402, 80), {
+  position: 'absolute', background: '#0c0c10', borderBottom: '1px solid rgba(255,255,255,.06)', boxSizing: 'border-box'
+}), scr);
+R3.mk('div', '', Object.assign(R3.box(153, 8, 96, 24), { position: 'absolute', borderRadius: '14px', background: '#000' }), hdr);
+const navBack = T(16, 40, '‹', { size: 28, weight: 500, parent: hdr, lh: '1' });
+const navMore = T(360, 48, '•••', { size: 14, weight: 800, parent: hdr, lh: '1', color: 'rgba(255,255,255,.8)' });
+const pill = R3.mk('div', 'r3-el', Object.assign(R3.box(51, 40, 300, 34), {
+  position: 'absolute', borderRadius: '17px', background: RED, color: '#fff', fontSize: '15px', fontWeight: '700',
+  lineHeight: '34px', textAlign: 'center', whiteSpace: 'nowrap', boxShadow: '0 8px 20px rgba(0,0,0,.45)'
+}), hdr, '↻&nbsp; Reposted by @bigstage · 2.1M');
+
+/* ---------------- LEFT: insights card (counter + sparkline) ---------------- */
+const ins = R3.card(76, 320, 480, 300);
+T(28, 24, 'Profile visits', { size: 22, weight: 600, color: 'rgba(255,255,255,.6)', parent: ins });
+T(300, 26, 'Last 24h', { size: 18, weight: 500, color: 'rgba(255,255,255,.4)', w: 152, align: 'right', parent: ins });
+const numEl = T(24, 60, '0', { size: 104, weight: 800, parent: ins, lh: '1', ls: '-2px' });
+numEl.style.fontVariantNumeric = 'tabular-nums';
+
+const NS = 'http://www.w3.org/2000/svg';
+const sv = (tag, a, p) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+const spark = sv('svg', { width: 432, height: 100, style: 'position:absolute;left:24px;top:180px;overflow:visible' }, ins);
+const PTS = 'M0 88 L48 87 L96 88 L144 86 L192 87 L240 84 L276 78 L312 62 L348 38 L384 18 L416 6';
+sv('line', { x1: 0, y1: 92, x2: 432, y2: 92, stroke: 'rgba(255,255,255,.14)', 'stroke-width': 1.5 }, spark);
+const area = sv('path', { d: PTS + ' L416 92 L0 92 Z', fill: 'rgba(255,255,255,.07)', stroke: 'none' }, spark);
+const line = sv('path', { d: PTS, fill: 'none', stroke: '#fff', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+  pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, spark);
+const arrow = sv('path', { d: 'M400 3.4 L416 6 L405.8 18.4', fill: 'none', stroke: '#fff', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+  pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, spark);
+
+/* ---------------- LEFT: visitors row + chips ---------------- */
+const visitors = [];
+for (let i = 0; i < 6; i++) {
+  const a = R3.avatar(76 + i * 34, 640, 48, i + 2);
+  Object.assign(a.style, { boxSizing: 'border-box', border: '3px solid #121216', zIndex: String(10 - i) });
+  visitors.push(a);
+}
+const viaEl = T(310, 653, 'via @bigstage', { size: 20, weight: 600, color: 'rgba(255,255,255,.6)' });
+
+const mkChip = (x, y, html, red) => {
+  const c = R3.chip(x, y, html, null, { red });
+  Object.assign(c.style, { fontSize: '20px', padding: '8px 16px', lineHeight: '1.2', whiteSpace: 'nowrap', boxSizing: 'border-box' });
+  return c;
+};
+const bounceChip = mkChip(310, 640, 'Bounce rate <b>99.9%</b>', true);
+const avgChip = mkChip(76, 704, 'Avg watch <b>0:03</b>');
+const postsChip = mkChip(282, 704, 'Posts <b>2</b>');
+const convChip = mkChip(76, 760, '+31 follows / 48,213 <b>(0.06%)</b>');
+const underline = R3.mk('div', 'r3-el', Object.assign(R3.box(92, 810, 120, 3), {
+  position: 'absolute', background: RED, borderRadius: '2px', transformOrigin: '0% 50%'
+}));
+
+/* ================= TIMELINE ================= */
+// S / w40 — match cut: phone + avatar settle, stats row lands
+R3.appear(phone, S, { y: 18, scale: .97, d: .5, ease: 'power3.out' });
+R3.ft(ava, { autoAlpha: 0, scale: 1.45 }, { autoAlpha: 1, scale: 1, duration: .6, ease: 'power3.out' }, S + 0.02);
+R3.appear([navBack, navMore, ...statEls, nameEl, handleEl], at(40), { y: 12, d: .45, stagger: .04 });
+
+// w44 — insights card with empty counter + flat baseline
+R3.appear(ins, at(44), { y: 26, d: .55 });
+
+// w48 — bio, buttons, tabs complete the profile
+R3.appear([bioEl, bFollow, bMsg, ...tabs, tabHair, tabLine], at(48), { y: 10, d: .4, stagger: .04 });
+
+// w51 — red repost pill docks into the header
+R3.appear(pill, at(51), { y: -44, scale: .92, d: .5, ease: 'back.out(1.8)' });
+
+// w54 — visit counter rolls, sparkline draws up, visitors pour in
+R3.count(numEl, at(54), 1.1, 0, 48213);
+R3.draw(line, at(54) + .05, .9);
+R3.draw(arrow, at(54) + .9, .25);
+R3.ft(area, { opacity: 0 }, { opacity: 1, duration: .45, ease: 'sine.out' }, at(54) + .55);
+R3.appear([...visitors, viaEl], at(54) + .15, { y: 10, scale: .7, d: .4, stagger: .06, ease: 'back.out(1.6)' });
+
+// w58 — the one camera move: push down into the post grid
+// profile block fades before it can cross the screen edge
+R3.leave([ava, ...statEls], at(58), { d: .28 });
+R3.leave([nameEl, handleEl, bioEl, bFollow, bMsg], at(58) + .12, { d: .3 });
+tl.set(ctx.cam.el, { transformOrigin: '785px 650px' }, S);
+ctx.cam.push(at(58), 1.1, 1.06);
+tl.to(pg, { y: -SCROLL, duration: 1.1, ease: 'power2.inOut' }, at(58));
+
+// w61 — grid resolves: two thumbs, ten dashed empties
+R3.appear(thumbs, at(61), { y: 0, scale: .85, d: .4, stagger: .06, ease: 'back.out(1.5)' });
+R3.ft(empties, { autoAlpha: 0, scale: .82 }, { autoAlpha: 1, scale: 1, duration: .4, ease: 'back.out(1.4)', stagger: { amount: .5, from: 'start' } }, at(61) + .08);
+
+// w66 — avg watch chip, visitors thin out
+R3.appear(avgChip, at(66), { y: 10, scale: .9, d: .4, ease: 'back.out(1.6)' });
+R3.dim(visitors, at(66) + .1, .45);
+
+// w68 / w70 — the only two posts get white borders; posts chip
+const ringOff = '0 0 0 0px rgba(255,255,255,0), 0 0px 0px rgba(0,0,0,0)';
+const ringOn = '0 0 0 3px rgba(255,255,255,1), 0 10px 26px rgba(0,0,0,.55)';
+R3.ft(thumbs[0], { boxShadow: ringOff }, { boxShadow: ringOn, duration: .3, ease: 'power2.out' }, at(68));
+R3.ft(thumbs[1], { boxShadow: ringOff }, { boxShadow: ringOn, duration: .3, ease: 'power2.out' }, at(70));
+R3.appear(postsChip, at(70) + .05, { y: 10, scale: .9, d: .4, ease: 'back.out(1.6)' });
+
+// w74 — conversion chip lands, red underline draws
+R3.appear(convChip, at(74), { y: 12, scale: .9, d: .45, ease: 'back.out(1.5)' });
+R3.ft(underline, { autoAlpha: 0, scaleX: 0 }, { autoAlpha: 1, scaleX: 1, duration: .4, ease: 'power3.out' }, at(74) + .25);
+
+// w82 — the visitors are gone: bounce rate replaces the source label
+R3.dim(visitors, at(82), .15);
+R3.leave(viaEl, at(82), { d: .25 });
+R3.appear(bounceChip, at(82) + .12, { y: 10, scale: .9, d: .4, ease: 'back.out(1.6)' });
+
+// w86 — the empty shelf reads louder
+tl.to(empties, { borderColor: 'rgba(255,255,255,.5)', duration: .3, ease: 'power2.out', stagger: { amount: .45, from: 'start' } }, at(86));
+
+// w89 — first empty cell primes the next section's calendar ("Day 1")
+tl.to(empties[0], { borderColor: 'rgba(255,255,255,.95)', backgroundColor: 'rgba(255,255,255,.08)', duration: .3, ease: 'power2.out' }, at(89));
+R3.appear(day1, at(89), { y: 6, scale: .9, d: .32, ease: 'back.out(1.6)' });
+ })(ctx,R3,tl,W,S,E,G); } catch(e) { (window.__r3err=window.__r3err||[]).push('sec1: '+e.message); }
+ tl.set(sec,{autoAlpha:1},9.373);
+ tl.fromTo(sec,{scale:.94,filter:'blur(8px)'},{scale:1,filter:'blur(0px)',duration:0.6,ease:'power3.out',immediateRender:false},9.373);
+ tl.to(sec,{scale:1.06,filter:'blur(10px)',autoAlpha:0,duration:0.45,ease:'power2.in'},21.627); tl.set(sec,{autoAlpha:0},22.097);
+ KW.typeWords(tl,'#h1',9.873,.08); KW.exit(tl,'#h1','lift',21.777,.28);
+})();
+(function(){ const sec=document.getElementById('sec2'); const S=22.077, E=32.583;
+ const ctx=R3.begin({sec, mid:document.getElementById('sec2m'), fg:document.getElementById('sec2f'), camEl:document.getElementById('sec2c'), tl, S, E, W, G});
+ R3.light({"x": 540, "y": 50, "temp": "gold"});
+ try { (function(ctx,R3,tl,W,S,E,G){
+// ---------- helpers ----------
+const T = (i) => W[i] - 0.05;
+const IR = { immediateRender: false };
+const ab = (o) => Object.assign({ position: 'absolute' }, o);
+const tw = (tg, from, to, t) => tl.fromTo(tg, from, Object.assign({}, to, IR), t);
+const roll = (el, t, d, a, b, fmt) => {
+  const p = { v: a };
+  tl.fromTo(p, { v: a }, { v: b, duration: d, ease: 'power3.out', immediateRender: false,
+    onUpdate: () => { el.textContent = fmt(p.v); } }, t);
+};
+const nf = (v) => Math.round(v).toLocaleString('en-US');
+const ni = (v) => String(Math.round(v));
+const GOLD = '255,205,90';
+const L = (el, lh) => { el.style.lineHeight = lh || '1.2'; el.style.whiteSpace = 'nowrap'; return el; };
+const frameOf = (parent) => R3.mk('div', '', ab({ left: '0px', top: '0px', width: '100%', height: '100%', boxSizing: 'border-box',
+  borderRadius: 'inherit', border: `2px solid rgba(${GOLD},.9)`, boxShadow: `inset 0 0 36px rgba(${GOLD},.14)`, opacity: 0, pointerEvents: 'none' }), parent);
+
+// ---------- HERO: November upload calendar (Nov 1 2026 = Sunday) ----------
+const CX = 350, CY = 412, CW = 660, CH = 402, cw = 83, chh = 56;
+const cx = (q) => 18 + q * 90, cy = (r) => 76 + r * 63;
+const cal = R3.card(CX, CY, CW, CH);
+const calFrame = frameOf(cal);
+L(R3.text(20, 16, 'NOV <span style="opacity:.4">·</span> Upload calendar', { size: 22, parent: cal }));
+['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach((d, q) => R3.mk('div', '', ab({ left: cx(q) + 'px', top: '52px', width: cw + 'px', textAlign: 'center',
+  fontSize: '12px', fontWeight: '700', letterSpacing: '.08em', color: 'rgba(255,255,255,.42)', lineHeight: '14px' }), cal, d));
+
+const LAB = ['beat breakdown', 'studio vlog', 'hook test', 'cover remix', 'Q&A', 'snippet #4', 'sample flip',
+  '808 tuning', 'vocal chop', 'live loop', 'collab teaser', 'mix notes', 'snippet #5', 'crate dig',
+  'drum kit', 'BTS session', 'reaction', 'lyric cut', 'fx chain', 'snippet #6', 'duet',
+  'tape test', 'pack drop', 'open verse', 'bass line', 'studio tour', 'snippet #7', 'fan pick', 'mic check', 'live set'];
+const thumbs = [], overlays = [], glints = [], centers = [];
+for (let i = 0; i < 35; i++) {
+  const q = i % 7, r = Math.floor(i / 7), x = cx(q), y = cy(r);
+  if (i >= 30) { // December spill-over days, faint
+    R3.mk('div', '', ab({ left: x + 6 + 'px', top: y + 4 + 'px', fontSize: '11px', fontWeight: '700', color: 'rgba(255,255,255,.2)', lineHeight: '13px' }), cal, String(i - 29));
+    continue;
+  }
+  R3.mk('div', '', ab({ left: x + 'px', top: y + 'px', width: cw + 'px', height: chh + 'px', boxSizing: 'border-box', borderRadius: '10px',
+    border: '1.5px dashed rgba(255,255,255,.17)' }), cal);
+  R3.mk('div', '', ab({ left: x + 6 + 'px', top: y + 4 + 'px', fontSize: '11px', fontWeight: '700', color: 'rgba(255,255,255,.38)', lineHeight: '13px' }), cal, String(i + 1));
+  const th = R3.thumb(x, y, cw, chh, (i * 3 + 1) % 10, { parent: cal, play: false });
+  Object.assign(th.style, { borderRadius: '10px', overflow: 'hidden' });
+  R3.mk('div', '', ab({ left: '0px', top: '0px', width: '100%', height: '100%',
+    background: 'linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,0) 38%,rgba(0,0,0,.62))' }), th);
+  R3.mk('div', '', ab({ left: '6px', top: '4px', fontSize: '11px', fontWeight: '800', color: '#fff', lineHeight: '13px' }), th, String(i + 1));
+  R3.mk('div', '', ab({ left: '6px', top: '39px', width: (cw - 12) + 'px', fontSize: '10px', fontWeight: '600', color: 'rgba(255,255,255,.92)',
+    lineHeight: '12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }), th, LAB[i]);
+  const ov = R3.mk('div', '', ab({ left: '0px', top: '0px', width: '100%', height: '100%', opacity: 0,
+    background: `linear-gradient(180deg, rgba(255,240,190,.9), rgba(${GOLD},.45) 55%, rgba(${GOLD},.15))` }), th);
+  const g = R3.mk('div', '', ab({ right: '4px', top: '3px', width: '14px', height: '14px', opacity: 0 }), th);
+  R3.mk('div', '', ab({ left: '6px', top: '0px', width: '2px', height: '14px', borderRadius: '1px', background: '#fff8dc' }), g);
+  R3.mk('div', '', ab({ left: '0px', top: '6px', width: '14px', height: '2px', borderRadius: '1px', background: '#fff8dc' }), g);
+  thumbs.push(th); overlays.push(ov); glints.push(g);
+  centers.push([CX + x + cw / 2, CY + y + chh / 2]);
+}
+const BR = 1; // brightest cell (closest to key light) -> match-cut target
+thumbs[BR].style.zIndex = 6;
+tl.set(overlays, { opacity: 0 }, S);
+tl.set(glints, { scale: 0, opacity: 0, rotation: -30 }, S);
+
+// ---------- Streak chip (straddles calendar top-right) ----------
+const sc = R3.card(850, 386, 160, 52, null, { borderRadius: '26px' });
+const fl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+fl.setAttribute('width', 24); fl.setAttribute('height', 24); fl.setAttribute('viewBox', '0 0 24 24');
+Object.assign(fl.style, { position: 'absolute', left: '14px', top: '14px' });
+fl.innerHTML = '<path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-1-.5-2-1-3 2 1 4 3.5 4 6.5A6 6 0 0 1 6 14.5C6 9 12 7 12 2z" fill="#ff8a3d"/>';
+sc.appendChild(fl);
+const stNum = R3.mk('div', '', ab({ left: '44px', top: '9px', fontSize: '26px', fontWeight: '800', color: '#fff', lineHeight: '31px',
+  fontVariantNumeric: 'tabular-nums' }), sc, '0');
+const stUL = R3.mk('div', '', ab({ left: '44px', top: '42px', width: '32px', height: '3px', borderRadius: '2px', background: '#ff4d5e',
+  transformOrigin: '0% 50%' }), sc);
+tl.set(stUL, { scaleX: 0 }, S);
+L(R3.mk('div', '', ab({ left: '84px', top: '17px', fontSize: '14px', fontWeight: '600', color: 'rgba(255,255,255,.6)' }), sc, 'day streak'), '18px');
+
+// ---------- Vault side card with progress ring ----------
+const vc = R3.card(70, 320, 260, 226);
+const vFrame = frameOf(vc);
+L(R3.text(20, 16, 'Vault', { size: 22, parent: vc }));
+const rs = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+rs.setAttribute('width', 84); rs.setAttribute('height', 84);
+Object.assign(rs.style, { position: 'absolute', left: '18px', top: '60px', overflow: 'visible' });
+rs.innerHTML = '<circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="8"/>';
+const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+[['cx', 42], ['cy', 42], ['r', 34], ['fill', 'none'], ['stroke', `rgb(${GOLD})`], ['stroke-width', 8], ['stroke-linecap', 'butt'],
+  ['pathLength', 1], ['stroke-dasharray', 1], ['stroke-dashoffset', 1], ['transform', 'rotate(-90 42 42)']].forEach(([k, v]) => ring.setAttribute(k, v));
+rs.appendChild(ring); vc.appendChild(rs);
+const pct = R3.mk('div', '', ab({ left: '18px', top: '60px', width: '84px', height: '84px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+  fontSize: '18px', fontWeight: '800', color: '#fff', fontVariantNumeric: 'tabular-nums' }), vc, '0%');
+const vl1 = L(R3.text(116, 72, '<span>0</span> posted', { size: 22, parent: vc }));
+const vPosted = vl1.querySelector('span');
+L(R3.text(116, 108, '12 edits ready', { size: 15, weight: 600, parent: vc, color: 'rgba(255,255,255,.55)' }));
+for (let i = 0; i < 6; i++) { const t = R3.thumb(20 + i * 34, 164, 28, 40, i + 5, { parent: vc, play: false }); t.style.borderRadius = '6px'; t.style.opacity = .85; }
+L(R3.text(226, 175, '+6', { size: 14, weight: 700, parent: vc, color: 'rgba(255,255,255,.55)' }), '18px');
+
+// ---------- Views / payoff card ----------
+const pc = R3.card(70, 562, 260, 252);
+L(R3.text(20, 18, 'Channel views', { size: 16, weight: 600, parent: pc, color: 'rgba(255,255,255,.55)' }));
+const vNum = L(R3.text(20, 46, '0', { size: 44, weight: 800, parent: pc }), '1.1');
+Object.assign(vNum.style, { fontVariantNumeric: 'tabular-nums', letterSpacing: '-.01em' });
+const delta = R3.mk('div', 'r3-el', ab({ left: '20px', top: '110px', height: '28px', padding: '0 12px', borderRadius: '14px', lineHeight: '28px',
+  fontSize: '15px', fontWeight: '700', whiteSpace: 'nowrap', color: `rgb(${GOLD})`, background: `rgba(${GOLD},.14)`,
+  border: `1px solid rgba(${GOLD},.45)` }), pc, '↑ 2,399% vs Oct');
+const bars = [];
+for (let i = 0; i < 5; i++) {
+  bars.push(R3.mk('div', '', ab({ left: 20 + i * 45 + 'px', top: '152px', width: '32px', height: '76px', borderRadius: '7px 7px 2px 2px',
+    transformOrigin: '50% 100%', background: i === 4 ? `linear-gradient(180deg,#ffe08a,rgb(${GOLD}))` : 'linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.3))' }), pc));
+  R3.mk('div', '', ab({ left: 20 + i * 45 + 'px', top: '234px', width: '32px', textAlign: 'center', fontSize: '11px', fontWeight: '700',
+    color: 'rgba(255,255,255,.4)', lineHeight: '13px' }), pc, 'W' + (i + 1));
+}
+tl.set(bars, { scaleY: .04 }, S);
+
+// ---------- Offer pill + hairline connector ----------
+const pill = R3.mk('div', 'r3-el', ab({ left: '350px', top: '324px', width: '380px', height: '48px', borderRadius: '24px', boxSizing: 'border-box',
+  background: 'linear-gradient(135deg,#ffe28f,#f3b42e)', color: '#2a1a00',
+  boxShadow: '0 14px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.6)' }));
+R3.avatar(9, 9, 30, 4, pill);
+R3.mk('div', '', ab({ left: '50px', top: '0px', lineHeight: '48px', fontSize: '19px', fontWeight: '700', whiteSpace: 'nowrap' }), pill,
+  'Feature request <span style="opacity:.5">·</span> @bigstage');
+const svg = R3.svgLayer(ctx.mid);
+const wire = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+[['d', 'M540 373 L540 411'], ['fill', 'none'], ['stroke', `rgba(${GOLD},.95)`], ['stroke-width', 2], ['stroke-linecap', 'round'],
+  ['pathLength', 1], ['stroke-dasharray', 1], ['stroke-dashoffset', 1]].forEach(([k, v]) => wire.setAttribute(k, v));
+svg.appendChild(wire);
+const dock = R3.mk('div', 'r3-el', ab({ left: '535px', top: '407px', width: '10px', height: '10px', background: `rgb(${GOLD})`, transform: 'rotate(45deg)', borderRadius: '2px' }));
+
+// ================= TIMELINE =================
+// w92 — zoom through an empty cell lands on the blank calendar; streak shows 0
+cal.style.transformOrigin = `${cx(2) + cw / 2}px ${cy(2) + chh / 2}px`;
+R3.ft(cal, { autoAlpha: 0, scale: 1.16, filter: 'blur(10px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: .7, ease: 'power3.out' }, T(92));
+R3.appear([vc, pc], T(92) + .18, { x: -24, y: 0, d: .55, stagger: .08 });
+R3.appear(sc, T(93), { y: 10, scale: .85, d: .45, ease: 'back.out(1.6)' });
+
+// weeks fill (one tick per thumbnail)
+[[0, 2, 96, .09], [3, 6, 97, .06], [7, 13, 99, .05], [14, 20, 101, .05], [21, 29, 105, .045]].forEach(([a, b, w, st]) =>
+  R3.appear(thumbs.slice(a, b + 1), T(w), { y: 0, scale: .72, d: .4, stagger: st, ease: 'back.out(1.7)' }));
+
+// streak chip: 0 → 3 → 7 → 14 → 21 (red underline) → 30
+roll(stNum, T(96) + .12, .35, 0, 3, ni);
+roll(stNum, T(97) + .15, .35, 3, 7, ni);
+roll(stNum, T(99) + .2, .4, 7, 14, ni);
+roll(stNum, T(103), .35, 14, 21, ni);
+tw(stUL, { scaleX: 0 }, { scaleX: 1, duration: .3, ease: 'power3.out' }, T(103) + .05);
+roll(stNum, T(105) + .3, .4, 21, 30, ni);
+tl.to(stNum, { color: '#ffd36a', duration: .3 }, T(105) + .45);
+
+// vault ring + posted count follow the weeks, closes at w107
+const VS = [[96, 0, 3], [97, 3, 7], [99, 7, 14], [101, 14, 21], [107, 21, 30]];
+VS.forEach(([w, a, b]) => {
+  const t = T(w) + (w === 107 ? 0 : .15), d = w === 107 ? .6 : .4;
+  tw(ring, { attr: { 'stroke-dashoffset': 1 - a / 30 } }, { attr: { 'stroke-dashoffset': 1 - b / 30 }, duration: d, ease: 'power2.out' }, t);
+  roll(pct, t, d, a / 30 * 100, b / 30 * 100, (v) => Math.round(v) + '%');
+  roll(vPosted, t, d, a, b, ni);
+});
+tl.to(pct, { color: '#ffd36a', duration: .3 }, T(107) + .4);
+tw(vFrame, { opacity: 0 }, { opacity: 1, duration: .4, ease: 'power2.out' }, T(107) + .2);
+
+// views card evolves quietly with each week
+const VV = [[96, 0, 3120], [97, 3120, 8940], [99, 8940, 19870], [101, 19870, 31450], [105, 31450, 48213]];
+const BH = [.12, .2, .34, .38, .52];
+VV.forEach(([w, a, b], k) => {
+  roll(vNum, T(w) + .15, .45, a, b, nf);
+  tw(bars[k], { scaleY: .04 }, { scaleY: BH[k], duration: .45, ease: 'back.out(1.4)' }, T(w) + .15);
+});
+
+// w113 — gold offer pill settles above the calendar
+R3.appear(pill, T(113), { y: 26, scale: .94, blur: 6, d: .6, ease: 'back.out(1.3)' });
+
+// w116 — hairline docks on the frame, frame warms
+R3.draw(wire, T(116), .4);
+R3.ft(dock, { autoAlpha: 0, scale: 0, rotation: 45 }, { autoAlpha: 1, scale: 1, rotation: 45, duration: .3, ease: 'back.out(2)' }, T(116) + .35);
+tw(calFrame, { opacity: 0 }, { opacity: 1, duration: .5, ease: 'power2.out' }, T(116) + .4);
+
+// w117 — light wave from the key across every cell + spark glints; slow push-in begins
+const dist = centers.map(([x, y]) => Math.hypot(x - 540, y - 50));
+const dMin = Math.min(...dist), dMax = Math.max(...dist);
+overlays.forEach((ov, i) => {
+  const t = T(117) + (dist[i] - dMin) / (dMax - dMin) * .75;
+  tw(ov, { opacity: 0 }, { opacity: .95, duration: .18, ease: 'power2.out' }, t);
+  tl.to(ov, { opacity: i === BR ? .55 : .24, duration: .55, ease: 'power2.inOut' }, t + .18);
+  tw(glints[i], { scale: 0, opacity: 0, rotation: -30 }, { scale: 1, opacity: 1, rotation: 15, duration: .16, ease: 'power2.out' }, t + .06);
+  tl.to(glints[i], { scale: 0, opacity: 0, rotation: 45, duration: .3, ease: 'power2.in' }, t + .22);
+});
+ctx.cam.push(T(117), 2.3, 1.08, 0, -0.08 * (567 - (G.H || 958) / 2));
+
+// w118 — payoff counter rolls 48,213 → 1,204,880
+roll(vNum, T(118), 1.1, 48213, 1204880, nf);
+tl.to(vNum, { color: '#ffd36a', duration: .4 }, T(118) + .1);
+tw(bars[4], { scaleY: BH[4] }, { scaleY: 1, duration: .7, ease: 'back.out(1.3)' }, T(118) + .05);
+
+// w119 — delta chip lands under the number
+R3.appear(delta, T(119), { y: 8, scale: .9, d: .4, ease: 'back.out(1.6)' });
+
+// w124 — brightest lit cell takes focus (match-cut target)
+R3.dim(thumbs.filter((_, j) => j !== BR), T(124), .55);
+tl.to(thumbs[BR], { scale: 1.1, boxShadow: '0 0 0 3px rgba(255,222,125,1), 0 14px 30px rgba(0,0,0,.55)', duration: .45, ease: 'back.out(1.6)' }, T(124));
+ })(ctx,R3,tl,W,S,E,G); } catch(e) { (window.__r3err=window.__r3err||[]).push('sec2: '+e.message); }
+ tl.set(sec,{autoAlpha:1},21.627);
+ tl.fromTo(sec,{scale:.94,filter:'blur(8px)'},{scale:1,filter:'blur(0px)',duration:0.6,ease:'power3.out',immediateRender:false},21.627);
+ tl.to(sec,{scale:1.06,filter:'blur(10px)',autoAlpha:0,duration:0.45,ease:'power2.in'},32.133); tl.set(sec,{autoAlpha:0},32.603);
+ KW.typeWords(tl,'#h2',22.127,.08); KW.exit(tl,'#h2','lift',32.283,.28);
+})();
+(function(){ const sec=document.getElementById('sec3'); const S=32.583, E=43.203;
+ const ctx=R3.begin({sec, mid:document.getElementById('sec3m'), fg:document.getElementById('sec3f'), camEl:document.getElementById('sec3c'), tl, S, E, W, G});
+ R3.light({"x": 300, "y": 80, "temp": "warm"});
+ try { (function(ctx,R3,tl,W,S,E,G){
+// ---------- helpers ----------
+const T = (i) => W[i] - 0.05;
+const mk = R3.mk;
+const ab = (x, y, w, h, extra) => Object.assign({ position: 'absolute', left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' }, extra || {});
+const NS = 'http://www.w3.org/2000/svg';
+const sv = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+const txt = (x, y, html, o, css) => { const e = R3.text(x, y, html, o); Object.assign(e.style, { textShadow: 'none', position: 'absolute' }, css || {}); return e; };
+const GOLD = '#ffcd5a', RED = '#ff4d5e', GREEN = '#50ffa0';
+const shake = (el, t) => { [-10, 9, -6, 4, 0].forEach((x, k) => tl.to(el, { x, duration: .06, ease: 'sine.inOut' }, t + k * .06)); };
+
+// ================= PORCH CAM FEED (hero) =================
+const FX = 40, FY = 304, FW = 760, FH = 362;
+const feed = R3.card(FX, FY, FW, FH, null, { overflow: 'hidden', borderRadius: '22px', padding: '0', background: '#0a0f17', border: '1.5px solid rgba(255,255,255,.18)' });
+// the camera "lens": everything in the porch view zooms inside the clipped feed viewport
+const scene = mk('div', '', ab(0, 0, FW, FH, { transformOrigin: '422px 192px', overflow: 'visible' }), feed);
+
+// wall + siding
+mk('div', '', ab(0, 0, FW, 262, { background: 'linear-gradient(118deg, rgba(255,176,112,.22) 0%, #2a2f38 34%, #141a23 70%, #0e131b 100%)' }), scene);
+for (let j = 0; j < 10; j++) mk('div', '', ab(0, 12 + j * 25, FW, 2, { background: 'rgba(0,0,0,.3)' }), scene);
+// side window (warm interior)
+const win = mk('div', '', ab(46, 70, 118, 142, { background: 'linear-gradient(160deg, rgba(255,176,112,.30), rgba(255,140,80,.07))', border: '6px solid #2d2620', borderRadius: '3px', boxSizing: 'border-box' }), scene);
+mk('div', '', ab(50, 0, 6, 130, { background: '#2d2620' }), win);
+mk('div', '', ab(0, 62, 106, 6, { background: '#2d2620' }), win);
+// door + frame
+mk('div', '', ab(196, 0, 236, 264, { background: '#1f1812', boxShadow: 'inset 0 0 0 2px rgba(255,200,140,.12)' }), scene);
+const door = mk('div', '', ab(208, 10, 212, 254, { background: 'linear-gradient(100deg,#563d26,#2c1f14 70%)' }), scene);
+[[22, 18], [116, 18], [22, 104], [116, 104]].forEach(([x, y]) => mk('div', '', ab(x, y, 74, 72, { border: '2px solid rgba(255,220,170,.1)', borderRadius: '3px', boxSizing: 'border-box' }), door));
+// house number plate
+mk('div', '', ab(470, 60, 54, 30, { background: '#1d232c', border: '1.5px solid rgba(255,255,255,.25)', borderRadius: '4px', color: 'rgba(255,230,190,.85)', fontSize: '18px', lineHeight: '27px', fontWeight: '700', textAlign: 'center', boxSizing: 'border-box' }), scene, '214');
+// porch floor, step edge, doormat
+mk('div', '', ab(0, 262, FW, 100, { background: 'linear-gradient(180deg,#3d362d,#1a1815)' }), scene);
+mk('div', '', ab(0, 262, FW, 2, { background: 'rgba(255,200,140,.28)' }), scene);
+mk('div', '', ab(0, 334, FW, 3, { background: 'rgba(0,0,0,.45)' }), scene);
+mk('div', '', ab(170, 292, 380, 22, { background: '#16120f', borderRadius: '4px' }), scene);
+const shadow = mk('div', '', ab(180, 286, 360, 34, { background: 'radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.75), transparent 70%)', transformOrigin: '50% 50%' }), scene);
+
+// the parcel (lives inside the clipped feed viewport)
+const pw = mk('div', '', ab(200, 86, 320, 216, { transformOrigin: '50% 100%' }), scene);
+mk('div', '', ab(0, 0, 320, 34, { background: 'linear-gradient(180deg,#f6d79c,#dcae66)', clipPath: 'polygon(8% 0,94% 0,100% 100%,0 100%)' }), pw);
+mk('div', '', ab(58, 0, 34, 34, { background: 'rgba(255,244,215,.45)', clipPath: 'polygon(20% 0,80% 0,100% 100%,0 100%)' }), pw);
+mk('div', '', ab(0, 34, 320, 182, { background: 'linear-gradient(150deg,#f3c47e 0%,#c78c46 46%,#7a4f24 100%)', boxShadow: 'inset 0 -24px 40px rgba(0,0,0,.28), inset 3px 3px 0 rgba(255,235,190,.35)' }), pw);
+mk('div', '', ab(56, 34, 38, 182, { background: 'rgba(255,240,205,.32)' }), pw);
+mk('div', '', ab(14, 172, 40, 24, { color: 'rgba(60,32,12,.6)', fontSize: '20px', fontWeight: '700', lineHeight: '24px' }), pw, '↑↑');
+// shipping label
+const label = mk('div', '', ab(120, 62, 184, 124, { background: '#f6f1e6', borderRadius: '6px', boxShadow: '0 3px 8px rgba(0,0,0,.35)' }), pw);
+mk('div', '', ab(12, 8, 160, 12, { color: '#8a7f6e', fontSize: '11px', fontWeight: '700', lineHeight: '12px', letterSpacing: '1.5px' }), label, 'FROM');
+mk('div', '', ab(12, 30, 170, 22, { color: '#111', fontSize: '19px', fontWeight: '800', lineHeight: '22px', whiteSpace: 'nowrap' }), label, 'HALO RECORDS');
+mk('div', '', ab(12, 60, 160, 32, { color: '#4a4a4a', fontSize: '12px', fontWeight: '600', lineHeight: '15px' }), label, 'Global distribution · 3 albums');
+mk('div', '', ab(12, 98, 160, 16, { background: 'repeating-linear-gradient(90deg,#151515 0 2px,transparent 2px 4px,#151515 4px 7px,transparent 7px 9px,#151515 9px 10px,transparent 10px 13px)' }), label);
+// detection brackets (4 corners)
+const bsv = sv('svg', { width: 352, height: 248, viewBox: '0 0 352 248', style: 'position:absolute;left:-16px;top:-16px;overflow:visible' }, pw);
+const bps = ['M2 38V2H38', 'M314 2H350V38', 'M350 210V246H314', 'M38 246H2V210'].map((d) => {
+  const p = sv('path', { d, fill: 'none', 'stroke-width': 3.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, bsv);
+  p.style.stroke = GOLD; return p;
+});
+
+// feed overlay: vignette + cam UI chips (fixed to the viewport, not zoomed)
+mk('div', '', ab(0, 0, FW, FH, { background: 'radial-gradient(ellipse 80% 75% at 50% 48%, transparent 58%, rgba(0,0,0,.55) 100%)' }), feed);
+const camChip = (x, y, html, css) => {
+  const e = R3.chip(x, y, html, null, { parent: feed });
+  Object.assign(e.style, { position: 'absolute', fontSize: '19px', padding: '7px 14px', background: 'rgba(8,10,14,.62)', color: '#fff', border: '1px solid rgba(255,255,255,.18)', borderRadius: '10px', whiteSpace: 'nowrap', lineHeight: '22px' }, css || {});
+  return e;
+};
+const dot = (c) => `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c};margin-right:9px;vertical-align:1px"></span>`;
+const camTitle = camChip(18, 16, dot(RED) + 'Porch Cam · LIVE');
+const camTime = camChip(0, 16, '21:47', { left: 'auto', right: '134px' });
+const camBatt = camChip(0, 16, '<span style="display:inline-block;width:22px;height:11px;border:2px solid #fff;border-radius:3px;margin-right:8px;vertical-align:-1px;background:linear-gradient(90deg,#50ffa0 82%,transparent 82%)"></span>82%', { left: 'auto', right: '18px' });
+const camMeta = txt(0, 326, 'Front Door · HD', { size: 16, parent: feed, color: 'rgba(255,255,255,.6)', weight: 600 }, { left: 'auto', right: '22px', lineHeight: '20px' });
+const motionChip = camChip(18, 306, dot(GOLD) + 'Delivery detected', { border: '1px solid rgba(255,205,90,.6)' });
+const zoomChip = camChip(18, 258, 'Zoom 1.6×');
+const valueChip = camChip(548, 120, '$0K advance', { fontSize: '20px', background: 'rgba(40,28,8,.72)', border: '1.5px solid rgba(255,205,90,.75)', color: GOLD, fontWeight: '800' });
+
+// ================= SIZE METER (right column) =================
+const meter = R3.card(816, 304, 224, 362, null, { padding: '0' });
+txt(20, 18, 'Deal size', { size: 22, parent: meter }, { lineHeight: '28px' });
+mk('div', '', ab(30, 68, 12, 266, { borderRadius: '6px', background: 'rgba(255,255,255,.1)' }), meter);
+const fill = mk('div', 'r3-el', ab(30, 68, 12, 266, { borderRadius: '6px', background: 'linear-gradient(0deg,#b07a3a,#ffcd5a)', transformOrigin: '50% 100%' }), meter);
+const tiers = [['Major', '$100K+', 100], ['Mid', '$25K–100K', 200], ['Indie', '< $25K', 300]].map(([n, s, c], i) => {
+  const row = mk('div', 'r3-el', ab(0, c - 34, 224, 64), meter);
+  mk('div', '', ab(48, 32, 12, 2, { background: 'rgba(255,255,255,.35)' }), row);
+  const lab = txt(70, 4, n, { size: 24, parent: row, color: i === 2 ? '#fff' : 'rgba(255,255,255,.4)' }, { lineHeight: '28px', transformOrigin: '0% 50%' });
+  txt(70, 40, s, { size: 15, parent: row, color: 'rgba(255,255,255,.45)', weight: 600 }, { lineHeight: '18px' });
+  return { row, lab };
+});
+const [tMajor, tMid, tIndie] = tiers;
+const marker = mk('div', 'r3-el', ab(22, 293, 28, 12, { borderRadius: '6px', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,.5)' }), meter);
+
+// ================= ORDER STRIP =================
+const strip = R3.card(40, 678, 1000, 76, null, { padding: '0' });
+const slot = (x, css) => mk('div', 'r3-el', ab(x, 12, 300, 52, Object.assign({ borderRadius: '12px', boxSizing: 'border-box' }, css)), strip);
+const slot1 = slot(14, { background: 'rgba(80,255,160,.12)', border: '2px solid rgba(80,255,160,.75)' });
+mk('div', '', ab(10, 8, 32, 32, { borderRadius: '50%', background: GREEN, color: '#06281a', fontSize: '18px', lineHeight: '32px', fontWeight: '800', textAlign: 'center' }), slot1, '1');
+txt(54, 0, 'Offer', { size: 24, parent: slot1 }, { lineHeight: '48px' });
+txt(168, 0, '21:46', { size: 16, parent: slot1, color: 'rgba(255,255,255,.55)', weight: 600 }, { lineHeight: '48px' });
+const check = txt(252, 0, '✓', { size: 28, parent: slot1, color: GREEN, weight: 800 }, { lineHeight: '48px', transformOrigin: '50% 50%' });
+const slot2 = slot(486, { border: '2px dashed rgba(255,255,255,.35)' });
+mk('div', '', ab(10, 8, 32, 32, { borderRadius: '50%', border: '2px solid rgba(255,255,255,.4)', boxSizing: 'border-box', color: 'rgba(255,255,255,.6)', fontSize: '18px', lineHeight: '28px', fontWeight: '800', textAlign: 'center' }), slot2, '2');
+txt(54, 0, 'Prep', { size: 24, parent: slot2, color: 'rgba(255,255,255,.6)' }, { lineHeight: '48px' });
+const prepSub = txt(150, 0, '0 / 4 steps', { size: 16, parent: slot2, color: 'rgba(255,205,90,.9)', weight: 700 }, { lineHeight: '48px' });
+// reversed-order arrow
+const asv = sv('svg', { width: 1000, height: 76, viewBox: '0 0 1000 76', style: 'position:absolute;left:0;top:0;overflow:visible' }, strip);
+const arrow = sv('path', { d: 'M472 38 C444 10, 356 10, 328 38', fill: 'none', stroke: RED, 'stroke-width': 4, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, asv);
+const head = sv('path', { d: 'M341.5 34.4 L328 38 L331.6 24.5', fill: 'none', stroke: RED, 'stroke-width': 4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, asv);
+const orderChip = R3.chip(806, 19, '⚠ Out of order', null, { red: true, parent: strip });
+Object.assign(orderChip.style, { position: 'absolute', fontSize: '18px', padding: '7px 14px', lineHeight: '22px', whiteSpace: 'nowrap' });
+
+// ================= LOCKED BUTTONS =================
+const lockSvg = '<svg width="20" height="24" viewBox="0 0 20 24"><path d="M5 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="2" y="11" width="16" height="12" rx="3" fill="currentColor"/></svg>';
+const btns = [], locks = [];
+['Accept', 'Counter', 'Decline'].forEach((b, i) => {
+  const e = mk('div', 'r3-el', ab(40 + i * 339, 766, 322, 60, { borderRadius: '16px', background: 'rgba(255,255,255,.05)', border: '1.5px solid rgba(255,255,255,.14)', boxSizing: 'border-box',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', color: 'rgba(255,255,255,.42)', fontSize: '24px', fontWeight: '700', boxShadow: '0 14px 34px rgba(0,0,0,.45)' }), null,
+    `<span class="lk" style="display:flex;color:rgba(255,255,255,.5)">${lockSvg}</span><span>${b}</span>`);
+  btns.push(e); locks.push(e.querySelector('.lk'));
+});
+
+// ================= TIMELINE =================
+// S: match cut into the feed — cam UI on
+R3.appear([camTitle, camMeta], S + .02, { y: 8, scale: .94, d: .35, stagger: .05 });
+// W128: parcel drops and settles on the step
+const t28 = T(128);
+R3.ft(pw, { autoAlpha: 0, y: -90 }, { autoAlpha: 1, y: 0, duration: .5, ease: 'bounce.out' }, t28);
+R3.ft(shadow, { autoAlpha: 0, scaleX: .6 }, { autoAlpha: 1, scaleX: 1, duration: .5, ease: 'power2.out' }, t28);
+R3.ft(label, { filter: 'blur(5px)', opacity: .55 }, { filter: 'blur(5px)', opacity: .55, duration: .01 }, t28);
+R3.appear([camTime, camBatt], T(129), { y: 8, scale: .94, d: .35, stagger: .07 });
+
+// W131: size meter docks on the right at "Indie"
+const t31 = T(131);
+R3.appear(meter, t31, { y: 20, d: .45 });
+R3.appear([tIndie.row, tMid.row, tMajor.row], t31 + .1, { y: 10, d: .35, stagger: .06 });
+R3.ft(fill, { scaleY: 0 }, { scaleY: .132, duration: .4, ease: 'power3.out' }, t31 + .25);
+R3.appear(marker, t31 + .3, { y: 0, scale: .5, d: .35 });
+
+// W132: motion detected — brackets lock on, label sharpens
+const t32 = T(132);
+R3.appear(motionChip, t32, { y: 10, scale: .9, d: .4 });
+bps.forEach((p, k) => R3.draw(p, t32 + .05 + k * .05, .35));
+tl.to(label, { filter: 'blur(0px)', opacity: 1, duration: .4, ease: 'power2.out' }, t32 + .1);
+
+// W137: order strip lands — Offer filled, Prep empty
+const t37 = T(137);
+R3.appear(strip, t37, { y: 30, d: .45 });
+R3.appear([slot1, slot2], t37 + .12, { y: 12, d: .4, stagger: .1 });
+R3.ft(check, { scale: 0 }, { scale: 1, duration: .35, ease: 'back.out(2.5)' }, t37 + .4);
+
+// W139: Prep slot flags its empty checklist
+const t39 = T(139);
+R3.appear(prepSub, t39, { y: 6, d: .35 });
+tl.to(slot2, { borderColor: 'rgba(255,205,90,.75)', duration: .3 }, t39);
+
+// W140: red reversed-order arrow settles between the slots
+const t40 = T(140);
+R3.draw(arrow, t40, .45);
+R3.draw(head, t40 + .4, .2);
+R3.appear(orderChip, t40 + .25, { y: 8, scale: .9, d: .35 });
+
+// W142: Accept / Counter / Decline — all locked
+R3.appear(btns, T(142), { y: 20, d: .45, stagger: .08 });
+
+// W146: tap on Accept is refused; every lock turns red
+const t46 = T(146);
+shake(btns[0], t46);
+tl.to(btns[0], { borderColor: 'rgba(255,77,94,.8)', duration: .2 }, t46);
+tl.to(locks, { color: RED, duration: .2, stagger: .08 }, t46 + .05);
+
+// W157: MAJOR — meter jumps Indie → Major, parcel swells, lens push begins (inside the clipped feed)
+const t57 = T(157);
+tl.to(scene, { scale: 1.22, duration: 1.1, ease: 'power2.inOut' }, t57);
+tl.to(pw, { scale: 1.2, duration: .7, ease: 'back.out(1.3)' }, t57);
+tl.to(shadow, { scaleX: 1.22, scaleY: 1.1, duration: .7, ease: 'back.out(1.3)' }, t57);
+bps.forEach((p) => tl.to(p, { stroke: RED, duration: .3 }, t57 + .1));
+tl.to(marker, { y: -200, duration: .5, ease: 'back.out(1.7)' }, t57);
+tl.to(fill, { scaleY: .883, duration: .5, ease: 'back.out(1.5)' }, t57);
+tl.to(tIndie.lab, { color: 'rgba(255,255,255,.4)', duration: .15 }, t57);
+tl.to(tMid.lab, { color: '#ffffff', duration: .08 }, t57 + .08);
+tl.to(tMid.lab, { color: 'rgba(255,255,255,.4)', duration: .15 }, t57 + .2);
+tl.to(tMajor.lab, { color: GOLD, scale: 1.12, duration: .18, ease: 'power2.out' }, t57 + .25);
+tl.to(tMajor.lab, { scale: 1, duration: .25, ease: 'power2.out' }, t57 + .43);
+tl.to(meter, { borderColor: 'rgba(255,205,90,.75)', duration: .3 }, t57 + .25);
+
+// W159: value chip ticks on next to the parcel
+const t59 = T(159);
+R3.appear(valueChip, t59, { y: 10, scale: .88, d: .4 });
+R3.count(valueChip, t59 + .05, .8, 0, 250, { pre: '$', suf: 'K advance' });
+
+// W160: digital zoom tight onto the shipping label (hand-off to contract header)
+const t60 = T(160);
+R3.appear(zoomChip, t60, { y: 8, scale: .9, d: .3 });
+tl.to(scene, { scale: 1.6, duration: .5, ease: 'power2.inOut' }, t60);
+ })(ctx,R3,tl,W,S,E,G); } catch(e) { (window.__r3err=window.__r3err||[]).push('sec3: '+e.message); }
+ tl.set(sec,{autoAlpha:1},32.133);
+ tl.fromTo(sec,{scale:.94,filter:'blur(8px)'},{scale:1,filter:'blur(0px)',duration:0.6,ease:'power3.out',immediateRender:false},32.133);
+ tl.to(sec,{scale:1.06,filter:'blur(10px)',autoAlpha:0,duration:0.45,ease:'power2.in'},42.753); tl.set(sec,{autoAlpha:0},43.223);
+ KW.typeWords(tl,'#h3',32.633,.08); KW.exit(tl,'#h3','lift',42.903,.28);
+})();
+(function(){ const sec=document.getElementById('sec4'); const S=43.203, E=61.467;
+ const ctx=R3.begin({sec, mid:document.getElementById('sec4m'), fg:document.getElementById('sec4f'), camEl:document.getElementById('sec4c'), tl, S, E, W, G});
+ R3.light({"x": 900, "y": 100, "temp": "warm"});
+ try { (function(ctx,R3,tl,W,S,E,G){
+// ===== Section: "Out of order": contract page → fanned A–Z tabbed stack =====
+const mid = ctx.mid;
+const at = (i, o) => W[i] - 0.05 + (o || 0);
+const P = (v) => v + 'px';
+const div = (css, parent, html, cls) =>
+  R3.mk('div', cls == null ? 'r3-el' : cls, Object.assign({ position: 'absolute' }, css), parent || mid, html == null ? '' : html);
+const T = (x, y, html, o, parent) => {
+  o = o || {};
+  const e = R3.text(x, y, html, { size: o.size || 22, weight: o.weight || 700, color: o.color || '#fff', parent: parent || mid });
+  Object.assign(e.style, { position: 'absolute', whiteSpace: 'nowrap', lineHeight: o.lh || '1.2', letterSpacing: o.ls || 'normal' });
+  return e;
+};
+const DIM = 'rgba(255,255,255,.55)';
+
+// camera pivots around the centre of the usable stage (one pull-back later)
+tl.set(ctx.cam.el, { transformOrigin: '540px 567px' }, S);
+
+// ---------------- world geometry ----------------
+const DX = 290, DY = 310, DW = 700, DH = 510;
+const PAL = [['#ff8a65', '#c2185b'], ['#ffd54f', '#ff7043'], ['#4fc3f7', '#1565c0'], ['#81c784', '#00897b'],
+  ['#b39ddb', '#5e35b1'], ['#f48fb1', '#ad1457'], ['#80deea', '#00838f'], ['#ffcc80', '#ef6c00']];
+
+// ---------------- pages behind the contract (hidden until the pull-back) ----------------
+const behind = [];
+let Apage = null;
+const tiles = [];
+for (let k = 6; k >= 1; k--) {
+  const c1 = 46 - k * 2, c2 = 34 - k * 2;
+  const pg = R3.card(DX + 12 * k, DY + 8 * k, DW, DH, mid, {
+    position: 'absolute',
+    background: `var(--sheen), linear-gradient(180deg, rgb(${c1},${c1},${c1 + 10}), rgb(${c2},${c2},${c2 + 8}))`,
+    border: '1px solid rgba(255,255,255,.16)', borderRadius: '18px'
+  });
+  behind[k] = pg;
+  if (k === 6) {
+    Apage = pg;
+    const st = T(32, 28, 'Song Vault', { size: 32 }, pg); st.classList.add('r3-serif');
+    T(32, 76, '50 tracks · 3 h 12 m', { size: 18, weight: 500, color: DIM }, pg);
+    for (let n = 0; n < 50; n++) {
+      const q = n % 10, r = Math.floor(n / 10), [a, b] = PAL[(n * 3 + r) % PAL.length];
+      tiles.push(div({ left: P(35 + q * 64), top: P(124 + r * 64), width: '54px', height: '54px', borderRadius: '10px',
+        background: `linear-gradient(${135 + (n * 29) % 90}deg, ${a}, ${b})`, boxShadow: '0 6px 14px rgba(0,0,0,.35)' }, pg, '', ''));
+    }
+  } else {
+    for (let j = 0; j < 5; j++)
+      div({ left: '32px', top: P(36 + j * 34), width: P(DW * (.35 + .1 * ((j * 3 + k) % 4))), height: '8px', borderRadius: '4px',
+        background: 'rgba(255,255,255,.1)' }, pg, '', '');
+  }
+}
+
+// ---------------- the contract (top sheet, page Z) ----------------
+const doc = R3.card(DX, DY, DW, DH, mid, {
+  position: 'absolute',
+  background: 'var(--sheen), linear-gradient(180deg,#2b2b35,#1d1d25)',
+  border: '1px solid rgba(255,255,255,.18)', borderRadius: '18px', transformOrigin: '50% 0%'
+});
+const sender = R3.chip(28, 22, 'From: J. Reyes · A&amp;R, Halo Records', null, { parent: doc });
+Object.assign(sender.style, { position: 'absolute', fontSize: '19px', whiteSpace: 'nowrap' });
+const ref = T(DW - 190, 30, 'HR-2291 · Draft', { size: 17, weight: 600, color: 'rgba(255,255,255,.45)', ls: '.5px' }, doc);
+const ttl = T(28, 78, 'Exclusive Recording Agreement', { size: 36 }, doc); ttl.classList.add('r3-serif');
+const ul = div({ left: '28px', top: '128px', width: '320px', height: '4px', borderRadius: '2px', background: '#e8283c', transformOrigin: '0% 50%' }, doc);
+const advLab = T(28, 156, 'Advance', { size: 18, weight: 600, color: DIM }, doc);
+const advVal = T(112, 146, '$0', { size: 32, weight: 800 }, doc);
+const roy = T(330, 156, 'Royalty 16% · net', { size: 18, weight: 500, color: DIM }, doc);
+
+const CL = [['rgba(255,210,63,.55)', '§4.2 Recoupment of all advances'], ['rgba(255,92,138,.5)', '§7 Cross-collateralization'],
+  ['rgba(72,169,255,.5)', '§9 360 participation · 25%'], ['rgba(61,255,139,.42)', 'Term: 5 albums / 7 years']];
+const FW = [560, 470, 520, 430];
+const hls = [], txs = [], marks = [];
+CL.forEach(([col, txt], i) => {
+  const y = 206 + i * 56;
+  const row = div({ left: '28px', top: P(y), height: '30px', lineHeight: '30px', fontSize: '22px', fontWeight: 600, color: '#fff', whiteSpace: 'nowrap' }, doc);
+  hls.push(div({ left: '-8px', right: '-8px', top: '-3px', bottom: '-3px', borderRadius: '6px', background: col, transformOrigin: '0% 50%' }, row, '', ''));
+  txs.push(R3.mk('span', '', { position: 'relative' }, row, txt));
+  div({ left: '28px', top: P(y + 42), width: P(FW[i]), height: '6px', borderRadius: '3px', background: 'rgba(255,255,255,.13)', filter: 'blur(1px)' }, doc, '', '');
+  marks.push(div({ left: P(DW - 58), top: P(y), width: '30px', height: '30px', borderRadius: '50%', background: '#e8283c', color: '#fff',
+    fontSize: '19px', fontWeight: 800, textAlign: 'center', lineHeight: '30px' }, doc, '?'));
+});
+const sigLab = T(28, 440, 'Artist signature', { size: 20, weight: 500, color: 'rgba(255,255,255,.6)' }, doc);
+const sigLine = div({ left: '196px', top: '462px', width: '236px', height: '2px', background: 'rgba(255,255,255,.55)', transformOrigin: '0% 50%' }, doc);
+const cursor = div({ left: '204px', top: '438px', width: '3px', height: '24px', borderRadius: '2px', background: '#fff' }, doc);
+const deadline = R3.chip(450, 432, 'Sign by 5 PM today', null, { red: true, parent: doc });
+Object.assign(deadline.style, { position: 'absolute', fontSize: '19px', whiteSpace: 'nowrap' });
+
+// ---------------- left column: envelope, then the empty team ----------------
+const env = R3.card(40, 330, 232, 150, mid, { position: 'absolute' });
+div({ left: '20px', top: '16px', width: '54px', height: '6px', borderRadius: '3px', background: '#e8283c' }, env, '', '');
+T(20, 32, 'Halo Records', { size: 24 }, env);
+T(20, 68, 'Opened 4:12 PM', { size: 18, weight: 500, color: DIM }, env);
+let bx = 20;
+[3, 1, 2, 1, 3, 2, 1, 1, 3, 1, 2, 3, 1, 2, 1, 3, 1, 2, 2, 1, 3, 1].forEach((w) => {
+  div({ left: P(bx), top: '106px', width: P(w * 2), height: '26px', background: 'rgba(255,255,255,.5)' }, env, '', ''); bx += w * 2 + 3;
+});
+
+const SLOTS = ['Legal counsel', 'Manager', 'Accountant'];
+const slotC = [], slotL = [];
+SLOTS.forEach((name, i) => {
+  const y = 336 + i * 116;
+  slotC.push(div({ left: '44px', top: P(y), width: '76px', height: '76px', borderRadius: '50%', boxSizing: 'border-box',
+    border: '2.5px dashed rgba(255,255,255,.45)', color: 'rgba(255,255,255,.4)', fontSize: '30px', fontWeight: 300, textAlign: 'center', lineHeight: '70px' }, mid, '+'));
+  slotL.push(T(134, y + 12, `${name}<br><span style="color:rgba(255,255,255,.5);font-weight:500">unassigned</span>`, { size: 18, lh: '1.35' }));
+});
+const comp = R3.card(40, 692, 236, 110, mid, { position: 'absolute' });
+T(20, 14, '0 / 4', { size: 40, weight: 800, color: '#ff5a6a' }, comp);
+T(20, 72, 'clauses understood', { size: 18, weight: 500, color: DIM }, comp);
+
+// ---------------- letter tabs (one per page, Z at top → A at bottom) ----------------
+const TABS = [['Z', 'Sign the deal'], ['T', ''], ['M', 'Build the team'], ['J', ''], ['F', 'Find your sound'], ['C', ''], ['A', '50 songs in the vault']];
+const tabs = TABS.map(([L, lab], i) => div({
+  left: P(984 + 12 * i), top: P(324 + 78 * i), width: P(lab ? 450 : 84), height: '60px', boxSizing: 'border-box',
+  display: 'flex', alignItems: 'center', paddingLeft: lab ? '20px' : '25px', whiteSpace: 'nowrap', color: '#fff',
+  borderRadius: '0 14px 14px 0', background: 'linear-gradient(180deg,#31313d,#24242d)',
+  border: '1px solid rgba(255,255,255,.18)', borderLeft: 'none', boxShadow: '0 10px 24px rgba(0,0,0,.45)',
+  zIndex: 60, transformOrigin: '0% 50%'
+}, mid, `<b style="display:inline-block;width:34px;text-align:center;font-size:30px;font-weight:800">${L}</b>` +
+  (lab ? `<span style="margin-left:10px;font-size:25px;font-weight:600;color:rgba(255,255,255,.86)">· ${lab}</span>` : '')));
+
+// red highlight box (starts around tab Z)
+const rbox = div({ left: '978px', top: '318px', width: '462px', height: '72px', boxSizing: 'border-box', border: '4px solid #e8283c',
+  borderRadius: '16px', boxShadow: '0 10px 28px rgba(232,40,60,.3)', zIndex: 70 });
+
+// ================= TIMELINE =================
+// w164 — the label unfolds into the contract page; header ref types; envelope settles left
+R3.ft(doc, { autoAlpha: 0, scaleX: .42, scaleY: .1 }, { autoAlpha: 1, scaleX: 1, scaleY: 1, duration: .7, ease: 'power3.out' }, at(164));
+R3.appear(env, at(164, .14), { x: -24, y: 0, d: .5 });
+R3.ft(ref, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'steps(15)' }, at(164, .45));
+// blurred body until resolved
+R3.ft(txs, { filter: 'blur(5px)', opacity: .45 }, { filter: 'blur(5px)', opacity: .45, duration: .01 }, at(164));
+
+// w175 — sender chip
+R3.appear(sender, at(175), { x: -16, y: 0, d: .45 });
+
+// w179 — advance rolls $0 → $250,000
+R3.appear([advLab, advVal, roy], at(179), { y: 10, d: .4, stagger: .06 });
+R3.count(advVal, at(179, .08), .9, 0, 250000, { pre: '$' });
+
+// w184 — title sharpens + red underline
+R3.ft(ttl, { filter: 'blur(8px)', opacity: .35 }, { filter: 'blur(0px)', opacity: 1, duration: .5, ease: 'power2.out' }, at(184));
+R3.ft(ul, { scaleX: 0 }, { scaleX: 1, duration: .5, ease: 'power3.out' }, at(184, .15));
+
+// w187 — signature line, static cursor, deadline chip lands
+R3.appear(sigLab, at(187), { x: -12, y: 0, d: .4 });
+R3.ft(sigLine, { scaleX: 0 }, { scaleX: 1, duration: .45, ease: 'power3.out' }, at(187, .08));
+R3.ft(deadline, { autoAlpha: 0, y: -18, scale: 1.2 }, { autoAlpha: 1, y: 0, scale: 1, duration: .4, ease: 'back.out(1.8)' }, at(187, .18));
+R3.appear(cursor, at(187, .4), { y: 0, scale: .5, d: .2 });
+
+// w199 — single eased tilt down across the clause block, then hold
+tl.set(doc, { transformOrigin: '50% 100%', transformPerspective: 1400 }, at(199, -.02));
+tl.to(doc, { rotationX: 7, duration: .9, ease: 'power2.inOut' }, at(199));
+
+// w200–203 — highlighter sweeps, clauses resolve
+CL.forEach((_, i) => {
+  R3.ft(hls[i], { scaleX: 0 }, { scaleX: 1, duration: .4, ease: 'power2.out' }, at(200 + i));
+  R3.ft(txs[i], { filter: 'blur(5px)', opacity: .45 }, { filter: 'blur(0px)', opacity: 1, duration: .35, ease: 'power2.out' }, at(200 + i, .05));
+});
+R3.appear(marks, at(203, .18), { y: 0, scale: .4, d: .3, stagger: .07, ease: 'back.out(2)' });
+
+// w204 — envelope clears; w206 — first empty team slot
+R3.leave(env, at(204), { d: .3 });
+R3.appear([slotC[0], slotL[0]], at(206), { x: -18, y: 0, d: .45, stagger: .06 });
+
+// w209 — manager + accountant join, hairline connectors
+R3.appear([slotC[1], slotL[1], slotC[2], slotL[2]], at(209), { x: -18, y: 0, d: .45, stagger: .07 });
+const conns = [
+  R3.connect([82, 416], [82, 450], at(209, .12), { curve: 0, w: 2, color: 'rgba(255,255,255,.4)', d: .3 }),
+  R3.connect([82, 532], [82, 566], at(209, .26), { curve: 0, w: 2, color: 'rgba(255,255,255,.4)', d: .3 })
+];
+
+// w215 — comprehension chip pops on
+R3.ft(comp, { autoAlpha: 0, scale: .7 }, { autoAlpha: 1, scale: 1, duration: .4, ease: 'back.out(1.7)' }, at(215));
+
+// w219 — HERO: continuous pull-back, the contract becomes page Z of a tabbed stack
+ctx.cam.push(at(219), 2.0, .8, -290, -22);
+tl.to(doc, { rotationX: 0, duration: .8, ease: 'power2.inOut' }, at(219));
+R3.leave([...slotC, ...slotL, comp], at(219, .02), { d: .3 });
+tl.to(conns, { autoAlpha: 0, duration: .25, ease: 'power2.in' }, at(219, .02));
+for (let k = 1; k <= 6; k++)
+  R3.ft(behind[k], { autoAlpha: 0, x: -12 * k, y: -8 * k }, { autoAlpha: 1, x: 0, y: 0, duration: .5, ease: 'power3.out' }, at(219, .72 + (k - 1) * .07));
+tabs.forEach((tb, i) =>
+  R3.ft(tb, { autoAlpha: 0, scaleX: 0 }, { autoAlpha: 1, scaleX: 1, duration: .4, ease: 'power3.out' }, at(219, 1.17 + i * .08)));
+
+// w226 — red box lands on "Z · Sign the deal"
+R3.ft(rbox, { autoAlpha: 0, scale: 1.25 }, { autoAlpha: 1, scale: 1, duration: .4, ease: 'back.out(1.6)' }, at(226));
+
+// w227 — the Z sheet steps back
+tl.to(doc, { opacity: .6, duration: .4, ease: 'sine.inOut' }, at(227));
+
+// w233 — red box drops to tab A; page A fans forward and its 50 songs fill in
+tl.to(rbox, { x: 24, y: 468, duration: .6, ease: 'power3.inOut' }, at(233));
+tl.set(Apage, { zIndex: 50, opacity: 0 }, at(233, .12));
+tl.to(Apage, { opacity: 1, x: -48, duration: .5, ease: 'power3.out' }, at(233, .12));
+tl.to(tabs[6], { x: -48, duration: .5, ease: 'power3.out' }, at(233, .12));
+R3.ft(tiles, { autoAlpha: 0, scale: .6 }, { autoAlpha: 1, scale: 1, duration: .3, ease: 'back.out(1.6)', stagger: { amount: .35, from: 'start' } }, at(233, .25));
+ })(ctx,R3,tl,W,S,E,G); } catch(e) { (window.__r3err=window.__r3err||[]).push('sec4: '+e.message); }
+ tl.set(sec,{autoAlpha:1},42.753);
+ tl.fromTo(sec,{scale:.94,filter:'blur(8px)'},{scale:1,filter:'blur(0px)',duration:0.6,ease:'power3.out',immediateRender:false},42.753);
+ 
+ KW.typeWords(tl,'#h4',43.253,.08); KW.exit(tl,'#h4','lift',61.167,.28);
+})();KW.hide(tl,'#panel',7.440);KW.flash(tl,'#flash',7.440,.16);KW.show(tl,'#panel',9.873);KW.hide(tl,'#panel',18.967);KW.flash(tl,'#flash',18.967,.16);KW.show(tl,'#panel',22.127);KW.hide(tl,'#panel',30.007);KW.flash(tl,'#flash',30.007,.16);KW.show(tl,'#panel',32.633);KW.hide(tl,'#panel',38.493);KW.flash(tl,'#flash',38.493,.16);KW.show(tl,'#panel',40.133);KW.hide(tl,'#panel',48.080);KW.flash(tl,'#flash',48.080,.16);KW.show(tl,'#panel',50.160);KW.cap(tl,'#c0',0.126);KW.cap(tl,'#c1',0.666);KW.cap(tl,'#c2',1.346);KW.cap(tl,'#c3',1.826);KW.cap(tl,'#c4',2.286);KW.cap(tl,'#c5',2.586);KW.cap(tl,'#c6',3.286);KW.cap(tl,'#c7',3.906);KW.cap(tl,'#c8',4.826);KW.cap(tl,'#c9',5.246);KW.cap(tl,'#c10',5.686);KW.cap(tl,'#c11',6.226);KW.cap(tl,'#c12',7.033);KW.cap(tl,'#c13',7.473);KW.cap(tl,'#c14',8.193);KW.cap(tl,'#c15',8.513);KW.cap(tl,'#c16',9.013);KW.cap(tl,'#c17',9.513);KW.cap(tl,'#c18',9.906);KW.cap(tl,'#c19',10.226);KW.cap(tl,'#c20',11.213);KW.cap(tl,'#c21',12.133);KW.cap(tl,'#c22',13.133);KW.cap(tl,'#c23',13.513);KW.cap(tl,'#c24',14.373);KW.cap(tl,'#c25',14.993);KW.cap(tl,'#c26',15.480);KW.cap(tl,'#c27',16.080);KW.cap(tl,'#c28',16.720);KW.cap(tl,'#c29',17.240);KW.cap(tl,'#c30',18.120);KW.cap(tl,'#c31',18.480);KW.cap(tl,'#c32',18.820);KW.cap(tl,'#c33',19.000);KW.cap(tl,'#c34',19.400);KW.cap(tl,'#c35',20.060);KW.cap(tl,'#c36',20.160);KW.cap(tl,'#c37',21.000);KW.cap(tl,'#c38',21.400);KW.cap(tl,'#c39',22.160);KW.cap(tl,'#c40',22.720);KW.cap(tl,'#c41',22.920);KW.cap(tl,'#c42',23.900);KW.cap(tl,'#c43',24.680);KW.cap(tl,'#c44',25.260);KW.cap(tl,'#c45',25.640);KW.cap(tl,'#c46',26.380);KW.cap(tl,'#c47',26.940);KW.cap(tl,'#c48',28.000);KW.cap(tl,'#c49',29.173);KW.cap(tl,'#c50',30.040);KW.cap(tl,'#c51',30.820);KW.cap(tl,'#c52',31.746);KW.cap(tl,'#c53',32.126);KW.cap(tl,'#c54',32.666);KW.cap(tl,'#c55',33.046);KW.cap(tl,'#c56',33.226);KW.cap(tl,'#c57',33.586);KW.cap(tl,'#c58',34.786);KW.cap(tl,'#c59',37.046);KW.cap(tl,'#c60',37.526);KW.cap(tl,'#c61',37.986);KW.cap(tl,'#c62',38.446);KW.cap(tl,'#c63',38.526);KW.cap(tl,'#c64',39.026);KW.cap(tl,'#c65',39.646);KW.cap(tl,'#c66',40.526);KW.cap(tl,'#c67',42.626);KW.cap(tl,'#c68',43.286);KW.cap(tl,'#c69',43.646);KW.cap(tl,'#c70',44.066);KW.cap(tl,'#c71',44.566);KW.cap(tl,'#c72',45.313);KW.cap(tl,'#c73',45.993);KW.cap(tl,'#c74',46.246);KW.cap(tl,'#c75',46.606);KW.cap(tl,'#c76',46.846);KW.cap(tl,'#c77',47.426);KW.cap(tl,'#c78',48.113);KW.cap(tl,'#c79',48.573);KW.cap(tl,'#c80',49.433);KW.cap(tl,'#c81',49.993);KW.cap(tl,'#c82',50.533);KW.cap(tl,'#c83',51.173);KW.cap(tl,'#c84',51.933);KW.cap(tl,'#c85',52.373);KW.cap(tl,'#c86',52.933);KW.cap(tl,'#c87',53.533);KW.cap(tl,'#c88',53.893);KW.cap(tl,'#c89',54.233);KW.cap(tl,'#c90',54.813);KW.cap(tl,'#c91',55.293);KW.cap(tl,'#c92',56.473);KW.cap(tl,'#c93',59.133);KW.cap(tl,'#c94',59.833);
+tl.set({},{},61.467);
+window.__timelines=window.__timelines||{};window.__timelines['main']=tl;
+</script>
+</body></html>

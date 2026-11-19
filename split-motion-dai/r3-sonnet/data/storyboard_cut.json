@@ -1,0 +1,650 @@
+{
+ "title": "Fireworks Need a Catalog",
+ "keep": [
+  [
+   45,
+   223
+  ],
+  [
+   227,
+   282
+  ]
+ ],
+ "emph": [
+  3,
+  12,
+  27,
+  35,
+  44,
+  64,
+  70,
+  86,
+  91,
+  97,
+  99,
+  113,
+  116,
+  117,
+  127,
+  139,
+  159,
+  163,
+  184,
+  199,
+  209,
+  226,
+  233
+ ],
+ "speaker": [
+  [
+   29,
+   39
+  ],
+  [
+   77,
+   91
+  ],
+  [
+   119,
+   127
+  ],
+  [
+   149,
+   156
+  ],
+  [
+   189,
+   198
+  ]
+ ],
+ "sections": [
+  {
+   "w0": 0,
+   "w1": 39,
+   "header": {
+    "text": "Why most creators *quit* [red box]"
+   },
+   "hero": {
+    "structure": "phone DM requests inbox",
+    "concept": "A large phone mockup fills the right two-thirds of the panel, showing an Instagram-style 'Requests' inbox. During the hook, message rows build from creators chasing instant results; some rows then go grey as their accounts go inactive. After that, a second wave of rows begs for a repost, the counter climbs, and the top row gets a red decline stamp.",
+    "content": {
+     "app_bar": "Requests (38)",
+     "rows_wave_1": [
+      {
+       "handle": "@mira.cuts",
+       "preview": "how do i blow up in a week??",
+       "time": "2m"
+      },
+      {
+       "handle": "@jayden.wav",
+       "preview": "day 3… 14 views 😩",
+       "time": "9m"
+      },
+      {
+       "handle": "@lexi.mp4",
+       "preview": "is there a faster way",
+       "time": "21m"
+      }
+     ],
+     "greyed_rows": [
+      {
+       "handle": "@jayden.wav",
+       "status": "last active 6w ago"
+      },
+      {
+       "handle": "@lexi.mp4",
+       "status": "account deactivated"
+      }
+     ],
+     "rows_wave_2": [
+      {
+       "handle": "@kai.makes",
+       "preview": "repost my page fam? 🙏",
+       "time": "now"
+      },
+      {
+       "handle": "@nova.lux",
+       "preview": "1 story share pls",
+       "time": "now"
+      },
+      {
+       "handle": "@tre.visuals",
+       "preview": "tag me, it'd change everything",
+       "time": "now"
+      }
+     ],
+     "counter": "38 → 41",
+     "decline_stamp": "✕ Declined"
+    }
+   },
+   "supporting": "Group 1 (hook): the header types on, a thin white-bordered 'avg time to quit: 11 days' chip settles at the top left, and a faint row of three tiny calendar squares sits beside the phone. Group 2 (w58): those squares freeze, with the last one hatched grey. Group 3 (w63-70): three small avatar discs stack at the phone's left edge, connected to their rows by hairline connectors. The near-black grid background and the request counter chip stay on screen the whole time.",
+   "light": {
+    "x": 180,
+    "y": 60,
+    "temp": "cool"
+   },
+   "camera": "Static for the hook. At w62 the camera takes one small eased step-in (about 6%) toward the inbox and holds. There is no continuous move here.",
+   "transition_out": "At w73 the @kai.makes avatar enlarges inside the phone. When the panel returns at w86, that avatar has become the profile picture of the same creator's profile page, a match cut inside the same phone frame.",
+   "events": [
+    {
+     "w": 0,
+     "kind": "major",
+     "what": "Phone inbox settles in with an eased scale. The header starts typing and the first row (@mira.cuts) lands."
+    },
+    {
+     "w": 1,
+     "kind": "item",
+     "what": "Row 2 (@jayden.wav, 'day 3… 14 views') ticks in."
+    },
+    {
+     "w": 3,
+     "kind": "item",
+     "what": "Row 3 (@lexi.mp4) ticks in, and the 'avg time to quit: 11 days' chip pops on."
+    },
+    {
+     "w": 8,
+     "kind": "item",
+     "what": "@jayden.wav row desaturates to grey with the 'last active 6w ago' status."
+    },
+    {
+     "w": 12,
+     "kind": "major",
+     "what": "@lexi.mp4 row goes grey ('account deactivated'). The mini calendar squares freeze, with the last one hatched."
+    },
+    {
+     "w": 16,
+     "kind": "minor",
+     "what": "Eased step-in toward the inbox, then hold."
+    },
+    {
+     "w": 17,
+     "kind": "item",
+     "what": "New row @kai.makes 'repost my page fam? 🙏' lands at the top, and its avatar disc joins at the left edge."
+    },
+    {
+     "w": 20,
+     "kind": "item",
+     "what": "Row @nova.lux '1 story share pls' lands."
+    },
+    {
+     "w": 22,
+     "kind": "item",
+     "what": "Row @tre.visuals lands, and the counter rolls 38 → 41."
+    },
+    {
+     "w": 27,
+     "kind": "minor",
+     "what": "Red '✕ Declined' stamp settles on the @kai.makes row, and its avatar begins to enlarge for the match cut."
+    }
+   ],
+   "_t0": 0.0,
+   "_t1": 9.823
+  },
+  {
+   "w0": 40,
+   "w1": 91,
+   "header": {
+    "text": "The empty *shelf* problem"
+   },
+   "hero": {
+    "structure": "creator profile page with post grid",
+    "concept": "The same phone now shows @kai.makes' profile. A big repost sends a flood of visitors, and the visit counter rockets. The camera then pushes into the post grid, which turns out to hold only two thumbnails among ten dashed empty cells, so the visitors leave.",
+    "content": {
+     "profile": {
+      "handle": "@kai.makes",
+      "name": "Kai Mendes",
+      "bio": "producer · ATL",
+      "posts": "2",
+      "followers": "412",
+      "following": "1,038"
+     },
+     "repost_pill": "Reposted by @bigstage · 2.1M",
+     "visit_counter": "0 → 48,213 profile visits",
+     "grid": [
+      {
+       "cell": 1,
+       "type": "thumb",
+       "label": "Reel · Mar 2",
+       "views": "1,104"
+      },
+      {
+       "cell": 2,
+       "type": "thumb",
+       "label": "Reel · Mar 19",
+       "views": "866"
+      },
+      {
+       "cells": "3-12",
+       "type": "dashed empty"
+      }
+     ],
+     "chips": [
+      "Avg watch 0:03",
+      "+31 follows / 48,213 (0.06%)"
+     ]
+    }
+   },
+   "supporting": "Group 1 (w86-97): the profile stats row and a red repost pill docked to the top edge of the phone. Group 2 (w100): a large white counter on the left with a thin up-arrow sparkline. Group 3 (w107-116): dashed empty grid cells, two highlighted thumbnails with thin white borders, and a small 'posts' counter chip. Group 4 (w120): a conversion chip with a short red underline. The background grid stays dark, and the counter stays visible.",
+   "light": {
+    "x": 860,
+    "y": 110,
+    "temp": "neutral"
+   },
+   "camera": "Holds on the full profile until w104. From w104 to w107 a continuous eased push down into the post grid (hero beat), then hold.",
+   "transition_out": "When the panel returns at w138, the frame opens on the grid again. The camera zooms straight through one dashed empty cell, and that cell becomes 'day 1' of the next section's upload calendar.",
+   "events": [
+    {
+     "w": 40,
+     "kind": "major",
+     "what": "Match cut completes: the avatar becomes the profile picture and the stats row settles in. The header types on."
+    },
+    {
+     "w": 51,
+     "kind": "major",
+     "what": "Red 'Reposted by @bigstage · 2.1M' pill docks onto the profile with a soft riser landing."
+    },
+    {
+     "w": 54,
+     "kind": "item",
+     "what": "Visit counter rolls 0 → 48,213, and the sparkline draws upward."
+    },
+    {
+     "w": 58,
+     "kind": "minor",
+     "what": "Continuous eased push into the post grid begins."
+    },
+    {
+     "w": 61,
+     "kind": "item",
+     "what": "Grid resolves: ten dashed empty cells appear around two thumbnails."
+    },
+    {
+     "w": 66,
+     "kind": "item",
+     "what": "'Avg watch 0:03' chip ticks on beside the grid."
+    },
+    {
+     "w": 68,
+     "kind": "item",
+     "what": "Thumbnail 1 'Reel · Mar 2' gets a white highlight border."
+    },
+    {
+     "w": 70,
+     "kind": "item",
+     "what": "Thumbnail 2 'Reel · Mar 19' is highlighted, and the posts chip shows '2'."
+    },
+    {
+     "w": 74,
+     "kind": "minor",
+     "what": "Conversion chip '+31 follows / 48,213 (0.06%)' lands with a red underline."
+    }
+   ],
+   "_t0": 9.823,
+   "_t1": 22.077
+  },
+  {
+   "w0": 92,
+   "w1": 127,
+   "header": {
+    "text": "Stack the *vault* first"
+   },
+   "hero": {
+    "structure": "30-day upload calendar filling",
+    "concept": "A month calendar grid fills with thumbnails week by week while a streak counter climbs. A gold offer pill then arrives and connects to the full calendar, and a light wave sweeps every cell at once.",
+    "content": {
+     "title_bar": "NOV · Upload calendar",
+     "weeks": [
+      {
+       "days": "1-3",
+       "thumbs": [
+        "beat breakdown",
+        "studio vlog",
+        "hook test"
+       ]
+      },
+      {
+       "days": "4-7",
+       "thumbs": [
+        "cover remix",
+        "Q&A",
+        "snippet #4",
+        "sample flip"
+       ]
+      },
+      {
+       "days": "8-14",
+       "thumbs": "7 mixed thumbnails"
+      },
+      {
+       "days": "15-21",
+       "thumbs": "7 mixed thumbnails"
+      },
+      {
+       "days": "22-30",
+       "thumbs": "9 mixed thumbnails"
+      }
+     ],
+     "streak_counter": "0 → 30 days",
+     "side_card": "Vault: 30 posted · 12 edits ready",
+     "offer_pill": "Feature request · @bigstage",
+     "payoff_counter": "48,213 → 1,204,880 views"
+    }
+   },
+   "supporting": "Group 1 (w138): calendar frame plus a streak chip at the top right. Group 2 (w142-151): thumbnails fill the cells in staggered week-rows. Group 3 (w153): 'Vault' side card and a progress ring at the left. Group 4 (w159-164): gold offer pill, a hairline connector, and a large payoff counter. At least the calendar, the streak chip and one accent card are on screen throughout.",
+   "light": {
+    "x": 540,
+    "y": 50,
+    "temp": "gold"
+   },
+   "camera": "Holds while the weeks fill. At w163 a continuous slow push-in (about 8%) rides the light wave (hero beat), then holds.",
+   "transition_out": "When the panel returns at w174, the brightest lit calendar cell fills the frame. Its square border becomes the frame of a porch camera feed, a match cut on the lit square.",
+   "events": [
+    {
+     "w": 92,
+     "kind": "major",
+     "what": "Zoom through the empty cell lands on the blank November calendar, and the streak chip shows 0."
+    },
+    {
+     "w": 96,
+     "kind": "item",
+     "what": "Days 1-3 fill with thumbnails, one tick each."
+    },
+    {
+     "w": 97,
+     "kind": "item",
+     "what": "Days 4-7 fill."
+    },
+    {
+     "w": 99,
+     "kind": "item",
+     "what": "Days 8-14 fill, and the streak rolls to 14."
+    },
+    {
+     "w": 101,
+     "kind": "item",
+     "what": "Days 15-21 fill."
+    },
+    {
+     "w": 103,
+     "kind": "minor",
+     "what": "Streak counter rolls to 21 with a small red underline."
+    },
+    {
+     "w": 105,
+     "kind": "item",
+     "what": "Days 22-30 fill, and the streak reads 30."
+    },
+    {
+     "w": 107,
+     "kind": "minor",
+     "what": "'Vault: 30 posted · 12 edits ready' side card settles, and its progress ring closes to 100%."
+    },
+    {
+     "w": 113,
+     "kind": "major",
+     "what": "Gold 'Feature request · @bigstage' pill settles above the calendar with a soft riser."
+    },
+    {
+     "w": 116,
+     "kind": "item",
+     "what": "Hairline connector draws from the pill and docks on the calendar frame, which warms."
+    },
+    {
+     "w": 117,
+     "kind": "major",
+     "what": "Light wave sweeps from the key across every cell with staggered spark glints, and the slow push-in begins."
+    },
+    {
+     "w": 118,
+     "kind": "minor",
+     "what": "Payoff counter rolls 48,213 → 1,204,880 views."
+    }
+   ],
+   "_t0": 22.077,
+   "_t1": 32.583
+  },
+  {
+   "w0": 128,
+   "w1": 163,
+   "header": {
+    "text": "Too big, too *early*"
+   },
+   "hero": {
+    "structure": "porch camera feed with oversized delivery",
+    "concept": "A Ring-style night camera UI shows a huge gold-lit parcel on the doorstep. An order strip below shows the offer arriving before the prep slot is filled, and all the response buttons stay locked. A size meter then jumps to 'Major' as the parcel grows.",
+    "content": {
+     "cam_ui": {
+      "title": "Porch Cam · LIVE",
+      "time": "21:47",
+      "battery": "82%"
+     },
+     "parcel_label": {
+      "from": "HALO RECORDS",
+      "line": "Global distribution · 3 albums"
+     },
+     "motion_chip": "Delivery detected",
+     "order_strip": [
+      {
+       "slot": 1,
+       "label": "Offer",
+       "state": "filled ✓"
+      },
+      {
+       "slot": 2,
+       "label": "Prep",
+       "state": "dashed empty"
+      }
+     ],
+     "warning": "red reversed-order arrow",
+     "buttons": [
+      "Accept 🔒",
+      "Counter 🔒",
+      "Decline 🔒"
+     ],
+     "size_meter": [
+      "Indie",
+      "Mid",
+      "Major"
+     ],
+     "value_chip": "$250K advance"
+    }
+   },
+   "supporting": "Group 1 (w174-178): camera UI frame, timestamp, battery, and the motion chip. Group 2 (w183-186): order strip with filled and empty slots and a red reversed-order arrow. Group 3 (w188): three locked buttons. Group 4 (w203-205): vertical size meter and value chip. The parcel, the cam UI and at least two chips are always visible.",
+   "light": {
+    "x": 300,
+    "y": 80,
+    "temp": "warm"
+   },
+   "camera": "Holds until w203. From w203 a continuous push toward the parcel (hero beat), ending at w208 tight on the shipping label.",
+   "transition_out": "At w208 the camera pushes into the parcel's shipping label. At w210 the label unfolds flat and becomes the header strip of a contract page.",
+   "events": [
+    {
+     "w": 128,
+     "kind": "major",
+     "what": "Match cut into the porch camera feed: the gold-lit parcel settles on the doorstep and the header types."
+    },
+    {
+     "w": 132,
+     "kind": "minor",
+     "what": "'Delivery detected' motion chip pops in, and the 'HALO RECORDS' label sharpens."
+    },
+    {
+     "w": 137,
+     "kind": "item",
+     "what": "Order strip lands: slot 1 'Offer ✓' is filled and slot 2 'Prep' is dashed empty."
+    },
+    {
+     "w": 140,
+     "kind": "minor",
+     "what": "Red reversed-order arrow settles between the slots."
+    },
+    {
+     "w": 142,
+     "kind": "item",
+     "what": "Accept / Counter / Decline buttons appear, each locked and greyed."
+    },
+    {
+     "w": 157,
+     "kind": "major",
+     "what": "Size meter jumps from Indie to Major, the parcel grows, and the push-in begins."
+    },
+    {
+     "w": 159,
+     "kind": "item",
+     "what": "'$250K advance' value chip ticks on."
+    },
+    {
+     "w": 162,
+     "kind": "minor",
+     "what": "Push tight onto the shipping label for the transition."
+    }
+   ],
+   "_t0": 32.583,
+   "_t1": 43.203
+  },
+  {
+   "w0": 164,
+   "w1": 233,
+   "header": {
+    "text": "Out of *order* [red box]"
+   },
+   "hero": {
+    "structure": "contract document to fanned A-Z page stack",
+    "concept": "The contract page fills in sender, advance and title, then its jargon clauses build as colour-coded highlighter rows. Empty team avatar slots and a 0/4 chip appear beside it. A pull-back then reveals the contract as page Z on top of a tabbed stack of pages, and the red box drops all the way down to tab A.",
+    "content": {
+     "sender_chip": "From: J. Reyes · A&R, Halo Records",
+     "advance": "$0 → $250,000",
+     "title": "Exclusive Recording Agreement",
+     "signature": {
+      "line": "Artist signature ____________",
+      "deadline_chip": "Sign by 5 PM today"
+     },
+     "highlighter_rows": [
+      {
+       "color": "yellow",
+       "text": "§4.2 Recoupment of all advances"
+      },
+      {
+       "color": "pink",
+       "text": "§7 Cross-collateralization"
+      },
+      {
+       "color": "blue",
+       "text": "§9 360 participation · 25%"
+      },
+      {
+       "color": "green",
+       "text": "Term: 5 albums / 7 years"
+      }
+     ],
+     "team_slots": [
+      "Legal counsel — unassigned",
+      "Manager — unassigned",
+      "Accountant — unassigned"
+     ],
+     "comprehension_chip": "0 / 4 clauses understood",
+     "stack_tabs": {
+      "top": "Z · Sign the deal",
+      "middle_examples": [
+       "M · Build the team",
+       "F · Find your sound"
+      ],
+      "bottom": "A · 50 songs in the vault"
+     }
+    }
+   },
+   "supporting": "Group 1 (w210-236): contract page with blurred body lines, sender chip, advance counter, signature line and a red deadline chip. Group 2 (w248-252): highlighter rows and small red '?' markers in the right margin. Group 3 (w255-264): three dashed empty avatar circles to the left of the page and the comprehension chip. Group 4 (w268-282): fanned page edges with letter tabs and the moving red highlight box. The document or stack, at least one chip and one connector or tab are always visible.",
+   "light": {
+    "x": 900,
+    "y": 100,
+    "temp": "warm"
+   },
+   "camera": "Holds on the page. At w248 a single eased tilt down across the clauses, then hold. From w268 to w275 a continuous pull-back reveals the A-Z stack (hero beat). It holds on the full stack while the red box travels to tab A and settles.",
+   "transition_out": "End of reel. The final hold is on the fanned stack with the red highlight box resting on tab 'A · 50 songs in the vault'.",
+   "events": [
+    {
+     "w": 164,
+     "kind": "major",
+     "what": "The label unfolds into the contract page, with the body lines still blurred and the header typing."
+    },
+    {
+     "w": 175,
+     "kind": "item",
+     "what": "Sender chip 'From: J. Reyes · A&R, Halo Records' settles at the top left."
+    },
+    {
+     "w": 179,
+     "kind": "item",
+     "what": "Advance figure rolls $0 → $250,000."
+    },
+    {
+     "w": 184,
+     "kind": "major",
+     "what": "Title sharpens to 'Exclusive Recording Agreement' with a red underline and a soft riser."
+    },
+    {
+     "w": 187,
+     "kind": "item",
+     "what": "Signature line appears with a blinking cursor, and the red 'Sign by 5 PM today' chip lands."
+    },
+    {
+     "w": 199,
+     "kind": "minor",
+     "what": "Eased tilt down across the clause block."
+    },
+    {
+     "w": 200,
+     "kind": "item",
+     "what": "Yellow highlighter sweeps '§4.2 Recoupment of all advances'."
+    },
+    {
+     "w": 201,
+     "kind": "item",
+     "what": "Pink highlighter sweeps '§7 Cross-collateralization'."
+    },
+    {
+     "w": 202,
+     "kind": "item",
+     "what": "Blue highlighter sweeps '§9 360 participation · 25%'."
+    },
+    {
+     "w": 203,
+     "kind": "item",
+     "what": "Green highlighter sweeps 'Term: 5 albums / 7 years', and red '?' markers tick into the margin."
+    },
+    {
+     "w": 206,
+     "kind": "item",
+     "what": "Dashed avatar slot 'Legal counsel — unassigned' settles at the left."
+    },
+    {
+     "w": 209,
+     "kind": "item",
+     "what": "'Manager' and 'Accountant' dashed slots join, linked by hairline connectors."
+    },
+    {
+     "w": 215,
+     "kind": "minor",
+     "what": "'0 / 4 clauses understood' chip pops on."
+    },
+    {
+     "w": 219,
+     "kind": "major",
+     "what": "Continuous pull-back begins: the contract becomes the top sheet of a fanned stack of tabbed pages."
+    },
+    {
+     "w": 226,
+     "kind": "item",
+     "what": "Red highlight box lands on the top tab 'Z · Sign the deal'."
+    },
+    {
+     "w": 233,
+     "kind": "major",
+     "what": "Red box drops down the tabs and settles on 'A · 50 songs in the vault', whose page fans forward. Final hold."
+    }
+   ],
+   "_t0": 43.203,
+   "_t1": 61.467
+  }
+ ]
+}

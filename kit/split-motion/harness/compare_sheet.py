@@ -21,7 +21,9 @@ def dur(p):
                                 capture_output=True, text=True).stdout)
 
 
-T = min(dur(p) for _, p in cols)
+DUR = {p: dur(p) for _, p in cols}
+rel = "--relative" in a  # columns whose label ends with '*' are sampled at the same FRACTION of their own duration
+T = min(DUR[p] for n, p in cols if not n.endswith("*")) if any(not n.endswith("*") for n, _ in cols) else min(DUR.values())
 ts = [round(k * every + .5, 2) for k in range(int((T - .5) // every) + 1)]
 
 
@@ -47,6 +49,7 @@ for i, t in enumerate(ts):
     cv2.putText(img, f"{t:.1f}s", (x0 + 4, y0 + TH // 2), cv2.FONT_HERSHEY_SIMPLEX, .5, (255, 255, 255), 1)
     for c, (_, p) in enumerate(cols):
         x = x0 + lab_w + c * (TW + gap)
-        img[y0:y0 + TH, x:x + TW] = grab(p, t)
+        tt = (t / T * DUR[p]) if (rel and cols[c][0].endswith("*")) else t
+        img[y0:y0 + TH, x:x + TW] = grab(p, min(tt, DUR[p] - .05))
 cv2.imwrite(out, img, [cv2.IMWRITE_JPEG_QUALITY, 88])
 print(out, img.shape, len(ts), "rows")

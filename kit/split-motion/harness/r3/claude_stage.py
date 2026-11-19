@@ -80,7 +80,8 @@ DESIGN RULES
    sub-events (a new hero step every 1.5-3 s, small sub-events between). kind: "major" (hero evolution / chapter: a soft riser
    lands on it), "item" (a row/cell/node/card added: tiny tick), "minor" (highlight, chip, count, camera move).
 6. Full-screen speaker runs: 2-4 s on the strongest opinion lines, one every ~8-12 s (the panel hides during them).
-7. One header per section: 2-5 words, bold sans + ONE *serif italic* accent word (markup *word*), may use [red box].
+7. One header per section: 2-5 words, bold sans + ONE *serif italic* accent word (markup *word*); optionally put ONE other
+   word in square brackets to render it in a red highlight box, e.g. "Why creators *quit* [early]". Never write the words 'red box'.
 
 TRANSCRIPT (word index:word):
 {tx}
@@ -129,7 +130,10 @@ HARD RULES
 - Panel always FULL: build the hero + supporting accents so that >= 3 elements (class r3-el; all R3 helpers set it) are visible
   at every moment from S+0.5 to E-0.45, and never a single lonely object. Group arrivals with stagger + overshoot (R3.appear).
 - Evolve the hero on the words: schedule each step at W[i] (minus 0.05). 40-60 panel events per minute incl. sub-events.
-- Stillness between events is fine; NO constant drifting/sliding. Camera moves (ctx.cam.push/tilt) only on beats, eased.
+- Between events NOTHING moves. Forbidden: yoyo, repeat, blinking/"live" pulses, ticking clocks, idle floating, any tween longer
+  than 1.2 s — except at most ONE eased camera move per section (ctx.cam.push or ctx.cam.tilt, <= 2.5 s) on a major event.
+  (QC measures ambient motion in the holds; > 20 % fails the render.)
+- Text lines must never overlap each other: leave >= 8 px between lines/rows; keep UI text <= 2 short lines per card.
 - ONE light model: call nothing else for light (already set from the storyboard via R3.light); no glowing balls/halos.
 - No text that repeats the spoken words; real-looking UI text, names, numbers, labels only.
 - Deterministic: no Math.random, no Date. Everything scheduled on `tl` at absolute times between S and E.

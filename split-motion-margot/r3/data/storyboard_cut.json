@@ -1,0 +1,626 @@
+{
+ "title": "The pamphlet nobody wanted to make",
+ "keep": [
+  [
+   9,
+   10
+  ],
+  [
+   20,
+   21
+  ],
+  [
+   26,
+   30
+  ],
+  [
+   34,
+   39
+  ],
+  [
+   47,
+   54
+  ],
+  [
+   66,
+   75
+  ],
+  [
+   76,
+   83
+  ],
+  [
+   106,
+   112
+  ],
+  [
+   114,
+   122
+  ],
+  [
+   126,
+   133
+  ],
+  [
+   145,
+   157
+  ],
+  [
+   158,
+   166
+  ],
+  [
+   172,
+   174
+  ],
+  [
+   176,
+   182
+  ],
+  [
+   189,
+   200
+  ],
+  [
+   205,
+   220
+  ],
+  [
+   221,
+   230
+  ],
+  [
+   246,
+   264
+  ],
+  [
+   275,
+   280
+  ],
+  [
+   281,
+   295
+  ],
+  [
+   296,
+   301
+  ]
+ ],
+ "emph": [
+  7,
+  9,
+  32,
+  40,
+  47,
+  48,
+  67,
+  81,
+  100,
+  112,
+  120,
+  126,
+  128,
+  135,
+  156,
+  161,
+  176,
+  184
+ ],
+ "speaker": [
+  [
+   25,
+   34
+  ],
+  [
+   60,
+   76
+  ],
+  [
+   101,
+   112
+  ],
+  [
+   150,
+   157
+  ],
+  [
+   179,
+   184
+  ]
+ ],
+ "sections": [
+  {
+   "w0": 0,
+   "w1": 34,
+   "header": {
+    "text": "The [side] project *nobody* wanted"
+   },
+   "hero": {
+    "structure": "stapled pamphlet + masthead",
+    "concept": "A thin stapled company pamphlet rests on the dark grid desk with its masthead box visible. It builds into a real publication: cover rows print, a second spread fans out behind it, a mailing-list stack and a production checklist appear, and the checklist then goes stale and overdue.",
+    "content": {
+     "cover_title": "PRODUCT BULLETIN",
+     "cover_sub": "Vol. 1 · No. 1 · for our dealers & buyers",
+     "cover_rows": [
+      "New arrivals in stock",
+      "This month's top sellers",
+      "Order form inside"
+     ],
+     "page_chip": "8 pp · saddle-stitched",
+     "masthead": {
+      "Published by": "The Distributor, Inc.",
+      "Edited by": "— vacant —",
+      "Circulation": "mail list only"
+     },
+     "mailing_labels": [
+      "ACCT 00412 · Valley Computers",
+      "ACCT 00517 · Byte Shop West",
+      "ACCT 00733 · Micro Mart"
+     ],
+     "mail_counter": "2,400 addresses",
+     "checklist": [
+      "Layout ☐",
+      "Copy ☐",
+      "Print run ☐",
+      "No. 2 due: MAR 01"
+     ],
+     "overdue_chip": "OVERDUE"
+    }
+   },
+   "supporting": "Group A (w9-21): pamphlet, page-count chip and a thin paper shadow. Group B (w26-38): back spread fanned at 6°, mailing-label stack at bottom-left, address counter chip at top-right. Group C (w47-54): checklist card at the right edge, a red strike on the due date, and the overdue chip. A faint coffee-ring stain and a stapler outline sit as quiet foreground props.",
+   "light": {
+    "x": 200,
+    "y": 140,
+    "temp": "warm"
+   },
+   "camera": "Locked through the hook. Hero beat: a slow 6% push toward the masthead box runs from w47 to w54, then holds.",
+   "transition_out": "While the speaker is full-screen (w66-75), the camera pulls back. When the panel returns on w76, the same pamphlet is a small cover thumbnail sitting in slot 1 of a 12-slot issue shelf. It is a match cut on the cover art.",
+   "events": [
+    {
+     "w": 0,
+     "kind": "major",
+     "what": "Pamphlet settles onto the grid desk with a soft ease; header types on"
+    },
+    {
+     "w": 3,
+     "kind": "item",
+     "what": "Cover title row prints in"
+    },
+    {
+     "w": 6,
+     "kind": "item",
+     "what": "Second spread fans open behind the cover"
+    },
+    {
+     "w": 9,
+     "kind": "minor",
+     "what": "Page-count chip ticks to '8 pp'"
+    },
+    {
+     "w": 13,
+     "kind": "item",
+     "what": "Mailing-label stack lands bottom-left"
+    },
+    {
+     "w": 16,
+     "kind": "minor",
+     "what": "Address counter counts up to 2,400"
+    },
+    {
+     "w": 18,
+     "kind": "item",
+     "what": "Production checklist card appears with three unchecked boxes; camera push begins"
+    },
+    {
+     "w": 20,
+     "kind": "minor",
+     "what": "Checklist desaturates; boxes stay empty"
+    },
+    {
+     "w": 23,
+     "kind": "minor",
+     "what": "Due date gets a red strike; 'OVERDUE' chip flips on"
+    }
+   ],
+   "_t0": 0.0,
+   "_t1": 10.39
+  },
+  {
+   "w0": 34,
+   "w1": 67,
+   "header": {
+    "text": "A shelf of *empty* [slots]"
+   },
+   "hero": {
+    "structure": "12-slot issue shelf",
+    "concept": "A wall shelf of twelve monthly slots, with only slot 1 holding a cover. The other slots dim to dashed outlines. A price tag lands on the one real issue, then a loupe settles over it and reveals what is inside.",
+    "content": {
+     "slots": [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC"
+     ],
+     "filled": "JAN · No. 1",
+     "slot_counter": "1 / 12",
+     "price_tag": "$5.00",
+     "loupe_rows": [
+      "AD · Joystick bundle",
+      "AD · Disk 10-pack",
+      "ORDER FORM · p. 8"
+     ]
+    }
+   },
+   "supporting": "Group A (w76-83): the slot row outlines draw one after another, the 'No. 1' stamp lands, and a counter chip appears top-right. Group B (w108-112): a price tag card lands on slot 1, the price counter ticks up, and a thin red underline appears. Group C (w114-121): a loupe ring with a fine scale, magnified ad rows, and yellow highlighter ticks. The shelf edge and its shadow stay as a constant midground line.",
+   "light": {
+    "x": 900,
+    "y": 180,
+    "temp": "cool"
+   },
+   "camera": "Hero beat: a slow push into slot 1 starts on w114 and lands on w121, framing the loupe.",
+   "transition_out": "The loupe view of slot 1 keeps scaling until its magnified page fills the panel. When the panel returns after the speaker run (w153), that page is the opened pamphlet document of the next section.",
+   "events": [
+    {
+     "w": 34,
+     "kind": "major",
+     "what": "Shelf resolves around the pamphlet, which is now the cover in slot 1"
+    },
+    {
+     "w": 39,
+     "kind": "item",
+     "what": "'No. 1' stamp settles on the slot 1 label"
+    },
+    {
+     "w": 41,
+     "kind": "minor",
+     "what": "Slots 2-12 dim to dashed; counter shows '1 / 12'"
+    },
+    {
+     "w": 46,
+     "kind": "item",
+     "what": "Price tag card lands on slot 1"
+    },
+    {
+     "w": 48,
+     "kind": "minor",
+     "what": "Price counter ticks $0.00 → $5.00"
+    },
+    {
+     "w": 50,
+     "kind": "minor",
+     "what": "Thin red underline draws under the price"
+    },
+    {
+     "w": 51,
+     "kind": "major",
+     "what": "Camera push into slot 1 begins; loupe ring settles over the cover"
+    },
+    {
+     "w": 55,
+     "kind": "item",
+     "what": "Loupe reveals three magnified ad rows"
+    },
+    {
+     "w": 58,
+     "kind": "minor",
+     "what": "Ad rows get quick yellow highlighter ticks"
+    }
+   ],
+   "_t0": 10.39,
+   "_t1": 20.31
+  },
+  {
+   "w0": 69,
+   "w1": 112,
+   "header": {
+    "text": "Made to *sell*, not [read]"
+   },
+   "hero": {
+    "structure": "highlighted pamphlet page",
+    "concept": "The opened pamphlet page sits on light grid paper. Each row is marked as a sales row, yellow for promos and red for order or price calls-to-action, until the whole page reads as a catalogue. In the margin, the editor's blue-pen notes hint at a different magazine.",
+    "content": {
+     "page_header": "PRODUCT BULLETIN · p. 2-3",
+     "rows": [
+      {
+       "text": "NEW THIS MONTH — 14 titles in stock",
+       "mark": "yellow"
+      },
+      {
+       "text": "Top 10 sellers at your dealer",
+       "mark": "yellow"
+      },
+      {
+       "text": "Dealer special: order 5, get 1 free",
+       "mark": "yellow"
+      },
+      {
+       "text": "Order form — page 8",
+       "mark": "red"
+      },
+      {
+       "text": "Call our sales line: (213) 555-0144",
+       "mark": "red"
+      }
+     ],
+     "margin_notes": [
+      "reviews?",
+      "how-tos",
+      "letters page"
+     ],
+     "avatar_chips": [
+      "M · editor",
+      "A · partner"
+     ],
+     "tally_chip": "sales rows 5 / 5",
+     "ratio_bar": "100% selling"
+    }
+   },
+   "supporting": "Group A (w153-158): two avatar chips pair up top-right, joined by a thin connector line. Group B (w162-177): highlighter strokes, with small row-number ticks in the gutter. Group C (w181-182): tally chip, ratio bar and a red edge rule. The blue margin notes write on in their own hand, so the page is never alone.",
+   "light": {
+    "x": 760,
+    "y": 90,
+    "temp": "warm"
+   },
+   "camera": "Locked. A gentle 2° tilt toward the page happens once on w158, then holds.",
+   "transition_out": "The red order-form row lifts off the page. Its ruled lines stretch into the signature block of a publishing agreement, a match cut from form lines to contract lines, revealed when the panel returns on w205.",
+   "events": [
+    {
+     "w": 77,
+     "kind": "major",
+     "what": "Panel returns with the pamphlet page settled on grid paper; header types on"
+    },
+    {
+     "w": 79,
+     "kind": "item",
+     "what": "Avatar chip 'M' lands top-right"
+    },
+    {
+     "w": 81,
+     "kind": "item",
+     "what": "Avatar chip 'A' joins; connector line draws between them"
+    },
+    {
+     "w": 86,
+     "kind": "item",
+     "what": "Row 1 gets a yellow highlight; gentle tilt settles"
+    },
+    {
+     "w": 89,
+     "kind": "item",
+     "what": "Row 2 gets a yellow highlight"
+    },
+    {
+     "w": 93,
+     "kind": "item",
+     "what": "Row 3 gets a yellow highlight"
+    },
+    {
+     "w": 95,
+     "kind": "item",
+     "what": "Rows 4-5 get red highlights"
+    },
+    {
+     "w": 99,
+     "kind": "minor",
+     "what": "Tally chip counts up to 5 / 5; ratio bar fills to 100%"
+    },
+    {
+     "w": 100,
+     "kind": "minor",
+     "what": "Red rule draws down the page edge; blue margin notes write on"
+    }
+   ],
+   "_t0": 20.31,
+   "_t1": 33.623
+  },
+  {
+   "w0": 113,
+   "w1": 137,
+   "header": {
+    "text": "[Skin] in the *game*"
+   },
+   "hero": {
+    "structure": "three-signature agreement card",
+    "concept": "A dark contract card with thin white borders. A funding row fills, an equity bar splits into three equal segments, and three signature lines are inked one at a time, with the last one named.",
+    "content": {
+     "title": "PUBLISHING AGREEMENT",
+     "funding_row": "Startup capital · funded by Distributor",
+     "funding_bar": "0% → 100%",
+     "equity_split": [
+      "33.3%",
+      "33.3%",
+      "33.3%"
+     ],
+     "signatories": [
+      "The Distributor, Inc.",
+      "Editor",
+      "Al — co-founder"
+     ],
+     "status_stamp": "PENDING"
+    }
+   },
+   "supporting": "Group A (w205-212): agreement title, funding row and a fill bar with a small currency chip. Group B (w217-220): the equity bar's three segments, each with a percentage label. Group C (w221-230): ink strokes on the signature lines, an 'Al' avatar chip and a grey pending stamp. The thin clause lines stay visible as midground texture.",
+   "light": {
+    "x": 540,
+    "y": 60,
+    "temp": "gold"
+   },
+   "camera": "Hero beat: a slow upward tilt from the equity bar to the signature block runs w217-220.",
+   "transition_out": "The camera pushes into the clause area of the agreement. Its ruled clause lines lift and re-set as the numbered rows of an editorial charter. The rows start blurred and the gold light cools.",
+   "events": [
+    {
+     "w": 113,
+     "kind": "major",
+     "what": "Order-form lines resolve into the agreement card; title settles"
+    },
+    {
+     "w": 118,
+     "kind": "item",
+     "what": "Funding row appears"
+    },
+    {
+     "w": 120,
+     "kind": "minor",
+     "what": "Funding bar fills to 100%"
+    },
+    {
+     "w": 125,
+     "kind": "item",
+     "what": "Equity bar outline appears; camera tilt begins"
+    },
+    {
+     "w": 126,
+     "kind": "item",
+     "what": "Segment 1 fills to 33.3%"
+    },
+    {
+     "w": 127,
+     "kind": "item",
+     "what": "Segment 2 fills to 33.3%"
+    },
+    {
+     "w": 128,
+     "kind": "item",
+     "what": "Segment 3 fills; three signature lines draw; tilt lands"
+    },
+    {
+     "w": 129,
+     "kind": "minor",
+     "what": "First signature inks: The Distributor"
+    },
+    {
+     "w": 133,
+     "kind": "item",
+     "what": "Second signature inks: Editor"
+    },
+    {
+     "w": 135,
+     "kind": "item",
+     "what": "Third line labelled 'Al' gets an avatar chip and an ink stroke"
+    },
+    {
+     "w": 137,
+     "kind": "minor",
+     "what": "Grey 'PENDING' stamp settles on the card"
+    }
+   ],
+   "_t0": 33.623,
+   "_t1": 42.01
+  },
+  {
+   "w0": 139,
+   "w1": 184,
+   "header": {
+    "text": "[Nobody] gets *special* treatment"
+   },
+   "hero": {
+    "structure": "editorial charter + page layout",
+    "concept": "A numbered editorial charter whose blurred rows unblur one by one, then lock on a red independence row. Below it, a page layout builds three equal-width bylined cards, measured by a ruler to show that no one gets more space.",
+    "content": {
+     "charter_title": "EDITORIAL CHARTER · rev. 1",
+     "rows": [
+      "01 Honest reviews — every program, every publisher",
+      "02 How-to tutorials for new owners",
+      "03 Reader letters, printed unedited",
+      "04 Industry news, all houses",
+      "05 Ads stay ads — clearly marked",
+      "06 Independence clause"
+     ],
+     "locked_row": "06 — favors no publisher, including the backers",
+     "logo_chip": "Distributor, Inc. — no editorial pull",
+     "byline_cards": [
+      "Guest page · The Distributor",
+      "Guest page · Al",
+      "From the desk · Editor"
+     ],
+     "ruler": "⅓ · ⅓ · ⅓"
+    }
+   },
+   "supporting": "Group A (w246-255): blurred rows, row-number ticks and an unblur shimmer along each row. Group B (w275-280): red highlight box on row 06, a red underline and a struck logo chip. Group C (w281-295): three byline cards, byline avatar chips and the ruler with equal-width labels. The charter, the cards and the ruler are always on screen together.",
+   "light": {
+    "x": 300,
+    "y": 100,
+    "temp": "cool"
+   },
+   "camera": "Hero beat 1: a push into row 06 from w275 to w280. Hero beat 2: an eased pull-back that reveals the charter and the page layout together, from w293 to w295, then hold. The speaker takes the final line.",
+   "transition_out": "End of reel. The pulled-back charter holds under the final full-screen speaker run (w296-301).",
+   "events": [
+    {
+     "w": 139,
+     "kind": "major",
+     "what": "Clause lines re-set into six blurred, numbered charter rows; header types on"
+    },
+    {
+     "w": 142,
+     "kind": "item",
+     "what": "Row 01 unblurs"
+    },
+    {
+     "w": 144,
+     "kind": "item",
+     "what": "Row 02 unblurs"
+    },
+    {
+     "w": 146,
+     "kind": "item",
+     "what": "Row 03 unblurs"
+    },
+    {
+     "w": 148,
+     "kind": "item",
+     "what": "Rows 04-05 unblur"
+    },
+    {
+     "w": 159,
+     "kind": "major",
+     "what": "Row 06 unblurs into a red highlight box; camera push begins"
+    },
+    {
+     "w": 161,
+     "kind": "minor",
+     "what": "Red underline draws under 'favors no publisher'"
+    },
+    {
+     "w": 163,
+     "kind": "minor",
+     "what": "Distributor logo chip greys out with a thin strike"
+    },
+    {
+     "w": 164,
+     "kind": "item",
+     "what": "Page layout frame appears below the charter"
+    },
+    {
+     "w": 171,
+     "kind": "item",
+     "what": "Byline card 1 settles: The Distributor"
+    },
+    {
+     "w": 173,
+     "kind": "item",
+     "what": "Byline card 2 settles: Al"
+    },
+    {
+     "w": 176,
+     "kind": "item",
+     "what": "Byline card 3 settles: Editor; pull-back begins"
+    },
+    {
+     "w": 178,
+     "kind": "minor",
+     "what": "Ruler snaps on with equal ⅓ widths; pull-back lands and holds"
+    }
+   ],
+   "_t0": 42.01,
+   "_t1": 58.367
+  }
+ ]
+}

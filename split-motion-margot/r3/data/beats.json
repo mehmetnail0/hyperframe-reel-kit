@@ -1,0 +1,125 @@
+{
+ "beats": [
+  {
+   "sid": "sec0",
+   "t0": 0.0,
+   "t1": 8.84,
+   "layout": "split",
+   "type": "r3"
+  },
+  {
+   "sid": null,
+   "t0": 8.84,
+   "t1": 11.3,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "sec1",
+   "t0": 11.3,
+   "t1": 18.627,
+   "layout": "split",
+   "type": "r3"
+  },
+  {
+   "sid": null,
+   "t0": 18.627,
+   "t1": 21.68,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "sec2",
+   "t0": 21.68,
+   "t1": 30.313,
+   "layout": "split",
+   "type": "r3"
+  },
+  {
+   "sid": null,
+   "t0": 30.313,
+   "t1": 33.673,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "sec3",
+   "t0": 33.673,
+   "t1": 42.01,
+   "layout": "split",
+   "type": "r3"
+  },
+  {
+   "sid": "sec4",
+   "t0": 42.01,
+   "t1": 45.38,
+   "layout": "split",
+   "type": "r3"
+  },
+  {
+   "sid": null,
+   "t0": 45.38,
+   "t1": 48.3,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "sec4",
+   "t0": 48.3,
+   "t1": 53.8,
+   "layout": "split",
+   "type": "r3"
+  },
+  {
+   "sid": null,
+   "t0": 53.8,
+   "t1": 58.367,
+   "layout": "speaker",
+   "type": null
+  }
+ ],
+ "sections": [
+  [
+   0.0,
+   10.39
+  ],
+  [
+   10.39,
+   20.31
+  ],
+  [
+   20.31,
+   33.623
+  ],
+  [
+   33.623,
+   42.01
+  ],
+  [
+   42.01,
+   58.367
+  ]
+ ],
+ "speaker": [
+  [
+   8.84,
+   11.3
+  ],
+  [
+   18.627,
+   21.68
+  ],
+  [
+   30.313,
+   33.673
+  ],
+  [
+   45.38,
+   48.3
+  ],
+  [
+   53.8,
+   58.367
+  ]
+ ]
+}

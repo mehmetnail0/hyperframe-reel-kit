@@ -50,7 +50,9 @@ def compose(story, codes, words, total, ctx, chunk=None):
     body, js, cues = [], [], []
     for k, (s, (t0, t1)) in enumerate(zip(story["sections"], st)):
         sid = f"sec{k}"
-        hd = s.get("header") or {}
+        hd = dict(s.get("header") or {})
+        if hd.get("text"):
+            hd["text"] = re.sub(r"\s*\[\s*red\s*box\s*\]", "", hd["text"], flags=re.I).strip()
         if hd.get("text"):
             body.append(f'<div class="hd" id="h{k}">{scenes.words_markup(hd["text"])}</div>')
         body.append(f'<div class="r3-sec" id="{sid}"><div class="r3-light"></div><div class="r3-cam" id="{sid}c">'
