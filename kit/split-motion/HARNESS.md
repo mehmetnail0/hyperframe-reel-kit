@@ -47,6 +47,27 @@ Outputs: `FINAL.mp4` (1080×1920/30, −14 LUFS, TP ≤ −1 dBTP), `FINAL-sheet
   flat / neighbour-repetitive sections until density QC + no-glow gate pass (cap 3 rounds per section). Report calls,
   tokens, wall time as information only.
 
+## JIGSAW RULES (lead + Nail, 11-19 — apply to every reel; quality rule unchanged)
+
+Why (measured on the Nik reels, 11-19): a `claude --cloud` box is 4 vCPU with no GPU — person matting ran 6.6–9.3 s/frame
+there vs 0.116 s/frame on our GPU box, which sat idle; ~10 of 25 change requests were visible in text before any render;
+with no layers or caches a one-word change re-rendered everything. Nail: «yapboz gibi … sadece yerine koy çıkar» ·
+«fullcapacity … gpuya niye abandırtmıyorsun».
+
+1. **Approvals cheapest first:** text plan sheet (sections, the spoken words each covers, one-line motion idea per section)
+   → one still frame per section at 540p → full render. Nothing heavy starts before the cheaper step is accepted.
+2. **Per-section render cache** keyed by hash(section code + assets + timing): a change re-renders only its section, then
+   splice. Never a whole-reel re-render for a one-section change.
+3. **Anchor to transcript WORD ids, not seconds:** section boundaries and overlays move with the words when the cut changes.
+4. **Heavy steps never run in this container** (frame rendering, encodes, mattes, any model run): the harness packs one
+   self-contained bundle (`run_box.sh`, `NJOBS` from env, `out/steps.log` with wall time per step, `out/DONE` or
+   `out/FAILED`); the lead runs it on the GPU box. This container writes code, plans and gates.
+5. **Every report carries wall time per step.**
+6. **Variants only after the base is approved.**
+
+Unchanged: never trade dynamism or quality for fewer model calls (director Opus high, per-section coders in parallel,
+review pass over 4 frames per section, max 3 rounds).
+
 ## Round 3 (2026-11-19) — scene-layer redesign: Claude writes the motion
 
 Why: round 2 handed the planner a fixed menu of ~13 scene types, so every plan became a row of small standalone objects

@@ -28,6 +28,8 @@ Never hand the planner a fixed menu of scene types (round 2 failed exactly becau
    any deviation > 3 levels from the panel background, or a card edge not starting at its declared pixel, fails.
 4. **Density gates** (`r3/density.py`): panel events 40–60/min, >= 3 visible elements >= 95 % of panel time, lonely-object
    time <= 5 %, ambient drift <= 20 %, jump detector 0 flagged (`harness/jumps.py`).
+7. **Jigsaw (HARNESS.md › JIGSAW RULES):** approve cheapest first (text plan sheet → 540p still per section → full render);
+   per-section render cache + splice, word-id anchors, heavy steps only via a `run_box.sh` bundle on the GPU box, wall time per step.
 5. **Text:** never echo the captions; one header per section (bold sans + one *serif-italic* accent, optional [red box]
    word); numbers and real-looking UI text only.
 6. **Kept:** tall speaker card (940 px of 1920), no device overflow (content clipped to phone screens), seam caption,
