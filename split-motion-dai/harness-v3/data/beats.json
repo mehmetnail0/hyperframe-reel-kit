@@ -1,0 +1,763 @@
+{
+ "beats": [
+  {
+   "sid": "s0",
+   "t0": 0.0,
+   "t1": 3.673,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s1",
+   "t0": 3.673,
+   "t1": 8.673,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s2",
+   "t0": 8.673,
+   "t1": 10.34,
+   "layout": "split",
+   "type": "orbit"
+  },
+  {
+   "sid": "s3",
+   "t0": 10.34,
+   "t1": 11.56,
+   "layout": "split",
+   "type": "quote"
+  },
+  {
+   "sid": "s4",
+   "t0": 11.56,
+   "t1": 13.5,
+   "layout": "split",
+   "type": "quote"
+  },
+  {
+   "sid": "s5",
+   "t0": 13.5,
+   "t1": 16.44,
+   "layout": "split",
+   "type": "chat"
+  },
+  {
+   "sid": null,
+   "t0": 16.44,
+   "t1": 20.12,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "s7",
+   "t0": 20.12,
+   "t1": 23.727,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s8",
+   "t0": 23.727,
+   "t1": 25.693,
+   "layout": "split",
+   "type": "hero3d"
+  },
+  {
+   "sid": "s9",
+   "t0": 25.693,
+   "t1": 28.333,
+   "layout": "split",
+   "type": "grid"
+  },
+  {
+   "sid": "s10",
+   "t0": 28.333,
+   "t1": 30.373,
+   "layout": "split",
+   "type": "compare"
+  },
+  {
+   "sid": null,
+   "t0": 30.373,
+   "t1": 32.373,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "s12",
+   "t0": 32.373,
+   "t1": 34.893,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": null,
+   "t0": 34.893,
+   "t1": 36.593,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "s14",
+   "t0": 36.593,
+   "t1": 39.387,
+   "layout": "split",
+   "type": "custom_svg"
+  },
+  {
+   "sid": "s15",
+   "t0": 39.387,
+   "t1": 41.96,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s16",
+   "t0": 41.96,
+   "t1": 42.88,
+   "layout": "split",
+   "type": "quote"
+  },
+  {
+   "sid": "s17",
+   "t0": 42.88,
+   "t1": 44.46,
+   "layout": "split",
+   "type": "quote"
+  },
+  {
+   "sid": "s18",
+   "t0": 44.46,
+   "t1": 47.74,
+   "layout": "split",
+   "type": "compare"
+  },
+  {
+   "sid": null,
+   "t0": 47.74,
+   "t1": 49.7,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "s20",
+   "t0": 49.7,
+   "t1": 53.5,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s21",
+   "t0": 53.5,
+   "t1": 56.827,
+   "layout": "split",
+   "type": "chat"
+  },
+  {
+   "sid": "s22",
+   "t0": 56.827,
+   "t1": 58.56,
+   "layout": "split",
+   "type": "doc"
+  },
+  {
+   "sid": "s23",
+   "t0": 58.56,
+   "t1": 62.88,
+   "layout": "split",
+   "type": "steps"
+  },
+  {
+   "sid": null,
+   "t0": 62.88,
+   "t1": 65.267,
+   "layout": "speaker",
+   "type": null
+  }
+ ],
+ "captions": [
+  [
+   0.146,
+   0.846,
+   "you didn&#x27;t miss",
+   "split"
+  ],
+  [
+   0.846,
+   1.446,
+   "the moment",
+   "split"
+  ],
+  [
+   1.446,
+   1.786,
+   "And that&#x27;s what",
+   "split"
+  ],
+  [
+   1.786,
+   2.406,
+   "I keep saying",
+   "split"
+  ],
+  [
+   2.406,
+   3.006,
+   "you just don&#x27;t",
+   "split"
+  ],
+  [
+   3.006,
+   3.726,
+   "miss the moment",
+   "split"
+  ],
+  [
+   3.726,
+   4.886,
+   "And yeah",
+   "split"
+  ],
+  [
+   4.886,
+   6.546,
+   "the instant <i>gratification</i>",
+   "split"
+  ],
+  [
+   6.546,
+   7.566,
+   "that everyone&#x27;s chasing",
+   "split"
+  ],
+  [
+   7.566,
+   8.726,
+   "as well",
+   "split"
+  ],
+  [
+   8.726,
+   9.406,
+   "whether it&#x27;s money",
+   "split"
+  ],
+  [
+   9.406,
+   10.393,
+   "or attention",
+   "split"
+  ],
+  [
+   10.393,
+   10.933,
+   "just want it",
+   "split"
+  ],
+  [
+   10.933,
+   11.613,
+   "now",
+   "split"
+  ],
+  [
+   11.613,
+   12.093,
+   "And when they",
+   "split"
+  ],
+  [
+   12.093,
+   12.553,
+   "don&#x27;t get it",
+   "split"
+  ],
+  [
+   12.553,
+   12.853,
+   "<i>now</i>",
+   "split"
+  ],
+  [
+   12.853,
+   13.553,
+   "they stop",
+   "split"
+  ],
+  [
+   13.553,
+   14.173,
+   "By the way",
+   "split"
+  ],
+  [
+   14.173,
+   15.093,
+   "people ask me",
+   "split"
+  ],
+  [
+   15.093,
+   15.513,
+   "hey",
+   "split"
+  ],
+  [
+   15.513,
+   15.953,
+   "can you shout",
+   "split"
+  ],
+  [
+   15.953,
+   16.493,
+   "me out",
+   "split"
+  ],
+  [
+   16.493,
+   17.3,
+   "I say no",
+   "speaker"
+  ],
+  [
+   17.3,
+   17.74,
+   "Why",
+   "speaker"
+  ],
+  [
+   17.74,
+   18.46,
+   "Because it&#x27;s just",
+   "speaker"
+  ],
+  [
+   18.46,
+   18.78,
+   "like",
+   "speaker"
+  ],
+  [
+   18.78,
+   19.28,
+   "you&#x27;re not ready",
+   "speaker"
+  ],
+  [
+   19.28,
+   19.78,
+   "for a shout",
+   "speaker"
+  ],
+  [
+   19.78,
+   20.173,
+   "out",
+   "speaker"
+  ],
+  [
+   20.173,
+   20.493,
+   "When we talk",
+   "split"
+  ],
+  [
+   20.493,
+   21.48,
+   "about <i>preparation</i>",
+   "split"
+  ],
+  [
+   21.48,
+   22.4,
+   "it&#x27;s just like",
+   "split"
+  ],
+  [
+   22.4,
+   23.4,
+   "you get a",
+   "split"
+  ],
+  [
+   23.4,
+   23.78,
+   "shout out",
+   "split"
+  ],
+  [
+   23.78,
+   24.64,
+   "and people come",
+   "split"
+  ],
+  [
+   24.64,
+   25.26,
+   "to your page",
+   "split"
+  ],
+  [
+   25.26,
+   25.746,
+   "then what",
+   "split"
+  ],
+  [
+   25.746,
+   26.346,
+   "They don&#x27;t have",
+   "split"
+  ],
+  [
+   26.346,
+   26.986,
+   "nothing to watch",
+   "split"
+  ],
+  [
+   26.986,
+   27.506,
+   "You drop like",
+   "split"
+  ],
+  [
+   27.506,
+   28.386,
+   "two things",
+   "split"
+  ],
+  [
+   28.386,
+   28.746,
+   "So it&#x27;s just",
+   "split"
+  ],
+  [
+   28.746,
+   29.086,
+   "like",
+   "split"
+  ],
+  [
+   29.086,
+   29.266,
+   "well",
+   "split"
+  ],
+  [
+   29.266,
+   29.666,
+   "why do you",
+   "split"
+  ],
+  [
+   29.666,
+   30.326,
+   "want a shout",
+   "split"
+  ],
+  [
+   30.326,
+   30.426,
+   "out",
+   "speaker"
+  ],
+  [
+   30.426,
+   31.266,
+   "You&#x27;re not prepared",
+   "speaker"
+  ],
+  [
+   31.266,
+   31.666,
+   "<i>you</i> don&#x27;t have",
+   "speaker"
+  ],
+  [
+   31.666,
+   32.426,
+   "the catalog",
+   "speaker"
+  ],
+  [
+   32.426,
+   32.986,
+   "So it&#x27;s just",
+   "split"
+  ],
+  [
+   32.986,
+   33.186,
+   "like",
+   "split"
+  ],
+  [
+   33.186,
+   34.166,
+   "keep <i>dropping</i>",
+   "split"
+  ],
+  [
+   34.166,
+   34.946,
+   "be consistent",
+   "split"
+  ],
+  [
+   34.946,
+   35.526,
+   "do what you",
+   "speaker"
+  ],
+  [
+   35.526,
+   35.906,
+   "need to do",
+   "speaker"
+  ],
+  [
+   35.906,
+   36.646,
+   "on your end",
+   "speaker"
+  ],
+  [
+   36.646,
+   37.206,
+   "and then when",
+   "split"
+  ],
+  [
+   37.206,
+   38.266,
+   "the opportunity <i>meets</i>",
+   "split"
+  ],
+  [
+   38.266,
+   39.44,
+   "the preparation",
+   "split"
+  ],
+  [
+   39.44,
+   40.306,
+   "fireworks <i>happen</i>",
+   "split"
+  ],
+  [
+   40.306,
+   41.086,
+   "Because the opportunity",
+   "split"
+  ],
+  [
+   41.086,
+   42.013,
+   "will come",
+   "split"
+  ],
+  [
+   42.013,
+   42.393,
+   "You just gotta",
+   "split"
+  ],
+  [
+   42.393,
+   42.933,
+   "wait",
+   "split"
+  ],
+  [
+   42.933,
+   43.313,
+   "But it&#x27;s just",
+   "split"
+  ],
+  [
+   43.313,
+   43.493,
+   "like",
+   "split"
+  ],
+  [
+   43.493,
+   43.853,
+   "if you want",
+   "split"
+  ],
+  [
+   43.853,
+   45.053,
+   "the opportunity before",
+   "split"
+  ],
+  [
+   45.053,
+   47.313,
+   "the preparation comes",
+   "split"
+  ],
+  [
+   47.313,
+   47.793,
+   "in",
+   "split"
+  ],
+  [
+   47.793,
+   48.253,
+   "what are you",
+   "speaker"
+  ],
+  [
+   48.253,
+   48.713,
+   "gonna do with",
+   "speaker"
+  ],
+  [
+   48.713,
+   48.813,
+   "it",
+   "speaker"
+  ],
+  [
+   48.793,
+   49.293,
+   "You don&#x27;t even",
+   "speaker"
+  ],
+  [
+   49.293,
+   49.913,
+   "know how to",
+   "speaker"
+  ],
+  [
+   49.913,
+   50.793,
+   "handle that level",
+   "split"
+  ],
+  [
+   50.793,
+   52.893,
+   "of opportunity at",
+   "split"
+  ],
+  [
+   52.893,
+   53.553,
+   "your front door",
+   "split"
+  ],
+  [
+   53.553,
+   53.913,
+   "You don&#x27;t even",
+   "split"
+  ],
+  [
+   53.913,
+   54.333,
+   "know what to",
+   "split"
+  ],
+  [
+   54.333,
+   54.833,
+   "do when you",
+   "split"
+  ],
+  [
+   54.833,
+   55.58,
+   "gotta",
+   "split"
+  ],
+  [
+   55.58,
+   56.26,
+   "if somebody say",
+   "split"
+  ],
+  [
+   56.26,
+   56.36,
+   "hey",
+   "split"
+  ],
+  [
+   56.34,
+   56.64,
+   "I gotta",
+   "split"
+  ],
+  [
+   56.64,
+   56.88,
+   "okay",
+   "split"
+  ],
+  [
+   56.88,
+   57.24,
+   "you want it",
+   "split"
+  ],
+  [
+   57.24,
+   57.48,
+   "I got a",
+   "split"
+  ],
+  [
+   57.48,
+   58.06,
+   "contract for you",
+   "split"
+  ],
+  [
+   58.06,
+   58.613,
+   "right now",
+   "split"
+  ],
+  [
+   58.613,
+   59.093,
+   "So it&#x27;s just",
+   "split"
+  ],
+  [
+   59.093,
+   60.273,
+   "like you on",
+   "split"
+  ],
+  [
+   60.273,
+   62.933,
+   "step <i>Z</i> and",
+   "split"
+  ],
+  [
+   62.933,
+   63.633,
+   "you should be",
+   "speaker"
+  ],
+  [
+   63.633,
+   64.98,
+   "on step A",
+   "speaker"
+  ]
+ ]
+}

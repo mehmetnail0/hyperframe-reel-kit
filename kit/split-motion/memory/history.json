@@ -1,0 +1,354 @@
+{
+ "recent": [
+  {
+   "reel": "split-motion-margot:FINAL.mp4",
+   "date": "2026-11-19",
+   "types": [
+    "bars",
+    "browser",
+    "counter",
+    "custom_svg",
+    "icon",
+    "list",
+    "phone",
+    "quote",
+    "radar",
+    "tree"
+   ],
+   "enter": [
+    "drop",
+    "flipY",
+    "focus",
+    "iris",
+    "pop",
+    "rise",
+    "slideL",
+    "slideR",
+    "swing",
+    "tilt3d",
+    "unfold",
+    "wipe",
+    "zoomIn"
+   ],
+   "exit": [
+    "blur",
+    "collapse",
+    "dropOut",
+    "fade",
+    "irisOut",
+    "pushUp",
+    "shrink",
+    "whipL",
+    "whipR",
+    "zoomPast"
+   ],
+   "camera": [
+    "driftL",
+    "driftR",
+    "none",
+    "orbit",
+    "pull",
+    "push",
+    "rise",
+    "tilt"
+   ],
+   "headers": [
+    "box",
+    "serif",
+    "underline"
+   ],
+   "combos": [
+    [
+     "bars",
+     "wipe",
+     "fade"
+    ],
+    [
+     "browser",
+     "slideL",
+     "collapse"
+    ],
+    [
+     "counter",
+     "drop",
+     "collapse"
+    ],
+    [
+     "counter",
+     "pop",
+     "shrink"
+    ],
+    [
+     "counter",
+     "tilt3d",
+     "whipR"
+    ],
+    [
+     "custom_svg",
+     "unfold",
+     "blur"
+    ],
+    [
+     "icon",
+     "flipY",
+     "zoomPast"
+    ],
+    [
+     "icon",
+     "pop",
+     "fade"
+    ],
+    [
+     "icon",
+     "rise",
+     "blur"
+    ],
+    [
+     "icon",
+     "swing",
+     "dropOut"
+    ],
+    [
+     "icon",
+     "zoomIn",
+     "pushUp"
+    ],
+    [
+     "list",
+     "slideR",
+     "whipL"
+    ],
+    [
+     "phone",
+     "unfold",
+     "pushUp"
+    ],
+    [
+     "quote",
+     "zoomIn",
+     "irisOut"
+    ],
+    [
+     "radar",
+     "focus",
+     "shrink"
+    ],
+    [
+     "tree",
+     "iris",
+     "irisOut"
+    ]
+   ],
+   "sfx_first": {
+    "riser_short": [
+     "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav",
+     "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav"
+    ],
+    "riser_cine": [
+     "cinematic-whoosh-reverse-1-235604 (1).mp3"
+    ],
+    "whoosh_deep": [
+     "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 2 (1).wav",
+     "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 3 (1).wav"
+    ],
+    "whoosh_soft": [
+     "Infographic Jan 8 2025 (1)/Infographic 03 Swipe (1).wav"
+    ],
+    "tick_soft": [
+     "UI Draw Sound Effects (1)/UI Button 3 (1).wav",
+     "Infographic Jan 8 2025 (1)/Infographic 04 Blip (1).wav"
+    ],
+    "ding": [
+     "Successes (1)/Success 3 (1).wav",
+     "Confirmation Tone (1).wav"
+    ],
+    "flash": [
+     "Flash Sound Effects  (1)/Flash 1 (1).wav",
+     "Flash Sound Effects  (1)/Flash 3 (1).wav"
+    ]
+   }
+  },
+  {
+   "reel": "harness-v3:FINAL-v3.mp4",
+   "date": "2026-11-19",
+   "types": [
+    "chat",
+    "compare",
+    "custom_svg",
+    "doc",
+    "grid",
+    "hero3d",
+    "icon",
+    "orbit",
+    "quote",
+    "steps"
+   ],
+   "enter": [
+    "drop",
+    "flipY",
+    "focus",
+    "iris",
+    "pop",
+    "rise",
+    "slideL",
+    "slideR",
+    "swing",
+    "tilt3d",
+    "unfold",
+    "wipe",
+    "zoomIn"
+   ],
+   "exit": [
+    "blur",
+    "collapse",
+    "dropOut",
+    "fade",
+    "irisOut",
+    "pushUp",
+    "shrink",
+    "whipL",
+    "whipR",
+    "zoomPast"
+   ],
+   "camera": [
+    "driftL",
+    "driftR",
+    "none",
+    "orbit",
+    "pull",
+    "push",
+    "rise",
+    "tilt"
+   ],
+   "headers": [
+    "box",
+    "serif",
+    "underline"
+   ],
+   "combos": [
+    [
+     "chat",
+     "slideR",
+     "fade"
+    ],
+    [
+     "chat",
+     "slideR",
+     "whipL"
+    ],
+    [
+     "compare",
+     "flipY",
+     "shrink"
+    ],
+    [
+     "compare",
+     "wipe",
+     "collapse"
+    ],
+    [
+     "custom_svg",
+     "unfold",
+     "fade"
+    ],
+    [
+     "doc",
+     "unfold",
+     "collapse"
+    ],
+    [
+     "grid",
+     "iris",
+     "irisOut"
+    ],
+    [
+     "hero3d",
+     "tilt3d",
+     "zoomPast"
+    ],
+    [
+     "icon",
+     "drop",
+     "dropOut"
+    ],
+    [
+     "icon",
+     "flipY",
+     "whipL"
+    ],
+    [
+     "icon",
+     "pop",
+     "blur"
+    ],
+    [
+     "icon",
+     "rise",
+     "pushUp"
+    ],
+    [
+     "icon",
+     "swing",
+     "whipR"
+    ],
+    [
+     "orbit",
+     "unfold",
+     "shrink"
+    ],
+    [
+     "quote",
+     "focus",
+     "blur"
+    ],
+    [
+     "quote",
+     "focus",
+     "fade"
+    ],
+    [
+     "quote",
+     "slideL",
+     "whipR"
+    ],
+    [
+     "quote",
+     "zoomIn",
+     "pushUp"
+    ],
+    [
+     "steps",
+     "rise",
+     "zoomPast"
+    ]
+   ],
+   "sfx_first": {
+    "riser_short": [
+     "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav",
+     "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav"
+    ],
+    "riser_cine": [
+     "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh Logo 03 (1).wav"
+    ],
+    "whoosh_deep": [
+     "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 1 (1).wav",
+     "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 5 (1).wav"
+    ],
+    "tick_soft": [
+     "start-13691 (1).mp3",
+     "Infographic Jan 8 2025 (1)/Infographic 08 Bloop (1).wav"
+    ],
+    "ding": [
+     "Infographic Jan 8 2025 (1)/Infographic 19 Bell (1).wav",
+     "Success (1).wav"
+    ],
+    "whoosh_soft": [
+     "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 15 (1).wav"
+    ],
+    "flash": [
+     "Flash Sound Effects  (1)/Flash 2 (1).wav"
+    ]
+   }
+  }
+ ]
+}

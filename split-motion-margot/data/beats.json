@@ -1,0 +1,578 @@
+{
+ "beats": [
+  {
+   "sid": "s0",
+   "t0": 0.0,
+   "t1": 4.147,
+   "layout": "split",
+   "type": "custom_svg"
+  },
+  {
+   "sid": null,
+   "t0": 4.147,
+   "t1": 5.587,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "s2",
+   "t0": 5.587,
+   "t1": 9.507,
+   "layout": "split",
+   "type": "counter"
+  },
+  {
+   "sid": "s3",
+   "t0": 9.507,
+   "t1": 12.247,
+   "layout": "split",
+   "type": "list"
+  },
+  {
+   "sid": "s4",
+   "t0": 12.247,
+   "t1": 14.353,
+   "layout": "split",
+   "type": "counter"
+  },
+  {
+   "sid": null,
+   "t0": 14.353,
+   "t1": 16.647,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "s6",
+   "t0": 16.647,
+   "t1": 18.667,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s7",
+   "t0": 18.667,
+   "t1": 21.193,
+   "layout": "split",
+   "type": "tree"
+  },
+  {
+   "sid": "s8",
+   "t0": 21.193,
+   "t1": 23.693,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s9",
+   "t0": 23.693,
+   "t1": 29.24,
+   "layout": "split",
+   "type": "bars"
+  },
+  {
+   "sid": "s10",
+   "t0": 29.24,
+   "t1": 31.06,
+   "layout": "split",
+   "type": "radar"
+  },
+  {
+   "sid": null,
+   "t0": 31.06,
+   "t1": 34.6,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "s12",
+   "t0": 34.6,
+   "t1": 36.4,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s13",
+   "t0": 36.4,
+   "t1": 40.327,
+   "layout": "split",
+   "type": "counter"
+  },
+  {
+   "sid": "s14",
+   "t0": 40.327,
+   "t1": 43.247,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s15",
+   "t0": 43.247,
+   "t1": 46.647,
+   "layout": "split",
+   "type": "browser"
+  },
+  {
+   "sid": "s16",
+   "t0": 46.647,
+   "t1": 49.12,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "sid": "s17",
+   "t0": 49.12,
+   "t1": 51.98,
+   "layout": "split",
+   "type": "phone"
+  },
+  {
+   "sid": null,
+   "t0": 51.98,
+   "t1": 55.78,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "sid": "s19",
+   "t0": 55.78,
+   "t1": 58.533,
+   "layout": "split",
+   "type": "quote"
+  }
+ ],
+ "captions": [
+  [
+   0.0,
+   1.6,
+   "So we wondered",
+   "split"
+  ],
+  [
+   1.6,
+   2.66,
+   "maybe we would",
+   "split"
+  ],
+  [
+   2.66,
+   3.26,
+   "like to do",
+   "split"
+  ],
+  [
+   3.26,
+   4.04,
+   "this one",
+   "split"
+  ],
+  [
+   4.04,
+   4.5,
+   "Maybe you would",
+   "speaker"
+  ],
+  [
+   4.5,
+   4.96,
+   "like to be",
+   "speaker"
+  ],
+  [
+   4.96,
+   5.64,
+   "the <i>editor</i> for",
+   "speaker"
+  ],
+  [
+   5.64,
+   6.5,
+   "this",
+   "split"
+  ],
+  [
+   6.5,
+   7.28,
+   "they had put",
+   "split"
+  ],
+  [
+   7.28,
+   8.94,
+   "it out one",
+   "split"
+  ],
+  [
+   8.94,
+   9.34,
+   "issue",
+   "split"
+  ],
+  [
+   9.34,
+   9.72,
+   "I think They",
+   "split"
+  ],
+  [
+   9.72,
+   10.16,
+   "had put out",
+   "split"
+  ],
+  [
+   10.16,
+   11.0,
+   "one issue",
+   "split"
+  ],
+  [
+   11.0,
+   11.42,
+   "and it was",
+   "split"
+  ],
+  [
+   11.42,
+   12.3,
+   "five years",
+   "split"
+  ],
+  [
+   12.3,
+   12.78,
+   "and they charged",
+   "split"
+  ],
+  [
+   12.78,
+   13.9,
+   "<i>five</i> bucks for",
+   "split"
+  ],
+  [
+   13.9,
+   14.406,
+   "us",
+   "split"
+  ],
+  [
+   14.406,
+   15.566,
+   "So I said",
+   "speaker"
+  ],
+  [
+   15.566,
+   15.686,
+   "well",
+   "speaker"
+  ],
+  [
+   15.686,
+   16.066,
+   "let me look",
+   "speaker"
+  ],
+  [
+   16.066,
+   16.7,
+   "at it",
+   "speaker"
+  ],
+  [
+   16.7,
+   17.26,
+   "And I said",
+   "split"
+  ],
+  [
+   17.26,
+   17.78,
+   "I don&#x27;t know",
+   "split"
+  ],
+  [
+   17.78,
+   18.2,
+   "but I have",
+   "split"
+  ],
+  [
+   18.2,
+   18.98,
+   "an idea that",
+   "split"
+  ],
+  [
+   18.98,
+   19.58,
+   "maybe if you",
+   "split"
+  ],
+  [
+   19.58,
+   20.34,
+   "guys are interested",
+   "split"
+  ],
+  [
+   20.34,
+   21.0,
+   "in this",
+   "split"
+  ],
+  [
+   21.0,
+   21.586,
+   "you And so",
+   "split"
+  ],
+  [
+   21.586,
+   22.206,
+   "I went home",
+   "split"
+  ],
+  [
+   22.206,
+   23.746,
+   "with this little",
+   "split"
+  ],
+  [
+   23.746,
+   24.98,
+   "pamphlet",
+   "split"
+  ],
+  [
+   24.98,
+   25.84,
+   "was really what",
+   "split"
+  ],
+  [
+   25.84,
+   26.48,
+   "it was intended",
+   "split"
+  ],
+  [
+   26.48,
+   27.22,
+   "was to get",
+   "split"
+  ],
+  [
+   27.22,
+   28.64,
+   "their customers to",
+   "split"
+  ],
+  [
+   28.64,
+   29.293,
+   "buy more",
+   "split"
+  ],
+  [
+   29.293,
+   30.553,
+   "and other people",
+   "split"
+  ],
+  [
+   30.553,
+   31.113,
+   "and so forth",
+   "split"
+  ],
+  [
+   31.113,
+   31.973,
+   "Which was fine",
+   "speaker"
+  ],
+  [
+   31.973,
+   33.113,
+   "but that certainly",
+   "speaker"
+  ],
+  [
+   33.113,
+   33.833,
+   "wasn&#x27;t what was",
+   "speaker"
+  ],
+  [
+   33.833,
+   34.653,
+   "in my mind",
+   "speaker"
+  ],
+  [
+   34.653,
+   35.013,
+   "So we went",
+   "split"
+  ],
+  [
+   35.013,
+   35.473,
+   "home",
+   "split"
+  ],
+  [
+   35.473,
+   36.073,
+   "but they were",
+   "split"
+  ],
+  [
+   36.073,
+   36.613,
+   "willing to put",
+   "split"
+  ],
+  [
+   36.613,
+   37.333,
+   "some money into",
+   "split"
+  ],
+  [
+   37.333,
+   38.133,
+   "it and go",
+   "split"
+  ],
+  [
+   38.133,
+   39.373,
+   "partners",
+   "split"
+  ],
+  [
+   39.373,
+   40.38,
+   "<i>three</i> -way partners",
+   "split"
+  ],
+  [
+   40.38,
+   40.98,
+   "And one thing",
+   "split"
+  ],
+  [
+   40.98,
+   41.84,
+   "that was really",
+   "split"
+  ],
+  [
+   41.84,
+   43.76,
+   "important was that",
+   "split"
+  ],
+  [
+   43.76,
+   44.9,
+   "if they did",
+   "split"
+  ],
+  [
+   44.9,
+   45.52,
+   "want to do",
+   "split"
+  ],
+  [
+   45.52,
+   46.7,
+   "something with us",
+   "split"
+  ],
+  [
+   46.7,
+   47.52,
+   "it could not",
+   "split"
+  ],
+  [
+   47.52,
+   49.173,
+   "<i>favor</i> their company",
+   "split"
+  ],
+  [
+   49.173,
+   49.853,
+   "Didn&#x27;t mean we",
+   "split"
+  ],
+  [
+   49.853,
+   50.473,
+   "couldn&#x27;t have that",
+   "split"
+  ],
+  [
+   50.473,
+   50.833,
+   "and they could",
+   "split"
+  ],
+  [
+   50.833,
+   51.333,
+   "each write a",
+   "split"
+  ],
+  [
+   51.333,
+   52.033,
+   "column for it",
+   "split"
+  ],
+  [
+   52.033,
+   52.913,
+   "But it could",
+   "speaker"
+  ],
+  [
+   52.913,
+   55.833,
+   "not <i>favor</i> anything",
+   "speaker"
+  ],
+  [
+   55.833,
+   56.46,
+   "<i>Beagle</i> Brothers",
+   "split"
+  ],
+  [
+   56.46,
+   56.98,
+   "What",
+   "split"
+  ],
+  [
+   56.98,
+   57.36,
+   "Doug Carlson",
+   "split"
+  ],
+  [
+   57.36,
+   58.147,
+   "That&#x27;s it",
+   "split"
+  ]
+ ]
+}

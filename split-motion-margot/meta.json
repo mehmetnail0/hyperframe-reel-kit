@@ -1,0 +1,13 @@
+{
+  "id": "split-motion-margot",
+  "name": "split-motion-margot",
+  "createdAt": "2026-11-19T00:00:00.000Z",
+  "style": "split-motion (kit/split-motion), built by kit/split-motion/harness/run.py",
+  "source": {
+    "title": "Margot Comstock Interview at Apple II Reunion (2015-06-20)",
+    "url": "https://archive.org/details/2015_06_Margot_Comstock_Interview",
+    "license": "CC-BY 4.0 (http://creativecommons.org/licenses/by/4.0/)",
+    "segment": "original 4:50-6:50 (120 s piece), story-cut by the harness to ~58 s",
+    "credit": "Footage: \"Margot Comstock Interview at Apple II Reunion\", interview by Jason Scott, Internet Archive, licensed CC-BY 4.0. Edited into a vertical reel; motion graphics are original; SFX from the member's own library."
+  }
+}

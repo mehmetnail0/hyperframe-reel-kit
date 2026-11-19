@@ -1,0 +1,402 @@
+{
+ "title": "The Magazine That Couldn't Favor",
+ "theme": "dark",
+ "accent2": "#2ee6d6",
+ "keep": [
+  [
+   55,
+   75
+  ],
+  [
+   76,
+   83
+  ],
+  [
+   95,
+   112
+  ],
+  [
+   114,
+   142
+  ],
+  [
+   158,
+   166
+  ],
+  [
+   167,
+   188
+  ],
+  [
+   189,
+   200
+  ],
+  [
+   201,
+   220
+  ],
+  [
+   257,
+   280
+  ],
+  [
+   281,
+   295
+  ],
+  [
+   296,
+   301
+  ],
+  [
+   302,
+   308
+  ]
+ ],
+ "emph": [
+  73,
+  109,
+  218,
+  278,
+  300,
+  302
+ ],
+ "beats": [
+  {
+   "w0": 55,
+   "layout": "split",
+   "header": {
+    "text": "Be the *editor*?",
+    "style": "serif"
+   },
+   "scene": {
+    "type": "custom_svg",
+    "enter": "unfold",
+    "exit": "blur",
+    "camera": "push",
+    "svg": "<rect class=\"p\" x=\"230\" y=\"130\" width=\"440\" height=\"540\" rx=\"18\" stroke=\"#fff\" stroke-width=\"6\" fill=\"none\"/><rect class=\"p\" x=\"270\" y=\"170\" width=\"360\" height=\"160\" stroke=\"#e8283c\" stroke-width=\"6\" fill=\"none\"/><path class=\"d\" d=\"M270 380 H630\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/><path class=\"d\" d=\"M270 430 H630\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/><path class=\"d\" d=\"M270 480 H540\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/><path class=\"d\" d=\"M270 560 H450\" stroke=\"#e8283c\" stroke-width=\"6\" fill=\"none\"/><circle class=\"p\" cx=\"560\" cy=\"580\" r=\"36\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/>",
+    "at": [
+     55
+    ]
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 67,
+   "layout": "speaker"
+  },
+  {
+   "w0": 76,
+   "layout": "split",
+   "scene": {
+    "type": "counter",
+    "enter": "pop",
+    "exit": "shrink",
+    "camera": "none",
+    "value": 1,
+    "prefix": "",
+    "suffix": " issue",
+    "label": "Put out",
+    "at": [
+     82
+    ]
+   }
+  },
+  {
+   "w0": 95,
+   "layout": "split",
+   "header": {
+    "text": "One issue. *Five* years.",
+    "style": "box"
+   },
+   "scene": {
+    "type": "list",
+    "enter": "slideR",
+    "exit": "whipL",
+    "camera": "driftL",
+    "items": [
+     "One issue",
+     "Five years",
+     "Five bucks"
+    ],
+    "at": [
+     99,
+     104,
+     109
+    ]
+   }
+  },
+  {
+   "w0": 106,
+   "layout": "split",
+   "scene": {
+    "type": "counter",
+    "enter": "drop",
+    "exit": "collapse",
+    "camera": "pull",
+    "value": 5,
+    "prefix": "$",
+    "suffix": "",
+    "label": "Per copy",
+    "at": [
+     110
+    ]
+   },
+   "sfx": [
+    "ding"
+   ]
+  },
+  {
+   "w0": 114,
+   "layout": "speaker"
+  },
+  {
+   "w0": 123,
+   "layout": "split",
+   "scene": {
+    "type": "icon",
+    "enter": "zoomIn",
+    "exit": "pushUp",
+    "camera": "rise",
+    "icon": "bulb",
+    "label": "I have an idea",
+    "at": [
+     132
+    ]
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 134,
+   "layout": "split",
+   "scene": {
+    "type": "tree",
+    "enter": "iris",
+    "exit": "irisOut",
+    "camera": "tilt",
+    "root": "Interested?",
+    "children": [
+     "Go home",
+     "Think",
+     "Ask partner"
+    ],
+    "at": [
+     145,
+     150,
+     156
+    ]
+   }
+  },
+  {
+   "w0": 158,
+   "layout": "split",
+   "header": {
+    "text": "The little *pamphlet*",
+    "style": "underline"
+   },
+   "scene": {
+    "type": "icon",
+    "enter": "flipY",
+    "exit": "zoomPast",
+    "camera": "driftR",
+    "icon": "doc",
+    "label": "Pamphlet",
+    "at": [
+     165
+    ]
+   }
+  },
+  {
+   "w0": 167,
+   "layout": "split",
+   "scene": {
+    "type": "bars",
+    "enter": "wipe",
+    "exit": "fade",
+    "camera": "push",
+    "values": [
+     25,
+     45,
+     70,
+     95
+    ],
+    "labels": [
+     "Now",
+     "Sales",
+     "More",
+     "Most"
+    ],
+    "at": [
+     168,
+     177,
+     181,
+     181
+    ]
+   }
+  },
+  {
+   "w0": 183,
+   "layout": "split",
+   "scene": {
+    "type": "radar",
+    "enter": "focus",
+    "exit": "shrink",
+    "camera": "orbit",
+    "label": "Other people",
+    "n": 9,
+    "at": [
+     185
+    ]
+   }
+  },
+  {
+   "w0": 189,
+   "layout": "speaker"
+  },
+  {
+   "w0": 201,
+   "layout": "split",
+   "header": {
+    "text": "Money in. Three-way *partners*",
+    "style": "box"
+   },
+   "scene": {
+    "type": "icon",
+    "enter": "swing",
+    "exit": "dropOut",
+    "camera": "pull",
+    "icon": "money",
+    "label": "Their money",
+    "at": [
+     212
+    ]
+   }
+  },
+  {
+   "w0": 210,
+   "layout": "split",
+   "scene": {
+    "type": "counter",
+    "enter": "tilt3d",
+    "exit": "whipR",
+    "camera": "push",
+    "value": 3,
+    "prefix": "",
+    "suffix": "-way",
+    "label": "Partners",
+    "at": [
+     218
+    ]
+   },
+   "sfx": [
+    "ding"
+   ]
+  },
+  {
+   "w0": 257,
+   "layout": "split",
+   "header": {
+    "text": "The one *rule*",
+    "style": "serif"
+   },
+   "scene": {
+    "type": "icon",
+    "enter": "rise",
+    "exit": "blur",
+    "camera": "none",
+    "icon": "warning",
+    "label": "Important",
+    "at": [
+     263
+    ]
+   },
+   "sfx": [
+    "flash"
+   ]
+  },
+  {
+   "w0": 265,
+   "layout": "split",
+   "scene": {
+    "type": "browser",
+    "enter": "slideL",
+    "exit": "collapse",
+    "camera": "driftL",
+    "title": "The magazine",
+    "rows": [
+     "Their company",
+     "Our company",
+     "Neutral"
+    ],
+    "at": [
+     274,
+     274,
+     278
+    ]
+   }
+  },
+  {
+   "w0": 275,
+   "layout": "split",
+   "scene": {
+    "type": "icon",
+    "enter": "pop",
+    "exit": "fade",
+    "camera": "rise",
+    "icon": "cross",
+    "label": "No favoring",
+    "at": [
+     278
+    ]
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 281,
+   "layout": "split",
+   "scene": {
+    "type": "phone",
+    "enter": "unfold",
+    "exit": "pushUp",
+    "camera": "tilt",
+    "headline": "A column",
+    "sub": "each writes one",
+    "rows": [
+     "Them",
+     "Us"
+    ],
+    "at": [
+     291,
+     291
+    ]
+   }
+  },
+  {
+   "w0": 296,
+   "layout": "speaker"
+  },
+  {
+   "w0": 302,
+   "layout": "split",
+   "scene": {
+    "type": "quote",
+    "enter": "zoomIn",
+    "exit": "irisOut",
+    "camera": "pull",
+    "text": "Beagle *Brothers*",
+    "at": [
+     302
+    ]
+   },
+   "sfx": [
+    "flash"
+   ]
+  }
+ ],
+ "seed": 58
+}

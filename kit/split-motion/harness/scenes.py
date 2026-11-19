@@ -449,8 +449,8 @@ def gen_steps(sid, sp, t0, t1, R, wt):
     h = [f'<svg class="abs" style="left:0;top:0" width="1080" height="880"><path class="ln-draw {sid}_path" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d="{d}" stroke="rgba(255,255,255,.7)" stroke-width="5" stroke-dasharray="1"/></svg>']
     js = [f"KW.draw(tl,'#{sid} .{sid}_path',{t0 + .05:.3f},{max(.5, ts[-1] - t0):.2f});"]
     for k, ((x, y), it) in enumerate(zip(pts, items)):
-        h.append(f'<div class="{sid}_s{k}" style="position:absolute;left:{x - 26:.0f}px;top:{y - 26:.0f}px;width:52px;height:52px;border-radius:50%;background:{"var(--red)" if k == n - 1 else "#fff"};box-shadow:0 0 24px rgba(255,255,255,.5)"></div>'
-                 f'<div class="pill {sid}_l{k}" style="left:{min(800, x + 40):.0f}px;top:{y - 40:.0f}px;font-size:34px">{mark(it)}</div>')
+        h.append(f'<div class="{sid}_s{k}" style="position:absolute;left:{x - 26:.0f}px;top:{y - 26:.0f}px;width:64px;height:64px;border-radius:50%;background:{"var(--red)" if k == n - 1 else "#fff"};box-shadow:0 0 24px rgba(255,255,255,.5)"></div>'
+                 f'<div class="pill {sid}_l{k}" style="left:{min(700, x + 50):.0f}px;top:{y - 44:.0f}px;font-size:46px">{mark(it)}</div>')
         js.append(f"KW.enter(tl,'#{sid} .{sid}_s{k}','pop',{ts[k]});KW.enter(tl,'#{sid} .{sid}_l{k}','slideL',{ts[k] + .05:.3f},.35);")
     return "".join(h), js, [("counter", t) for t in ts]
 
@@ -474,9 +474,9 @@ def gen_chat(sid, sp, t0, t1, R, wt):
     y = 80
     for k, m in enumerate(msgs):
         side = "out" if m.get("from") == "out" else "in"
-        pos = "right:110px" if side == "out" else "left:110px"
-        h.append(f'<div class="bubble {side} {sid}_m{k}" style="{pos};top:{y}px">{mark(m.get("text", ""))}</div>')
-        y += 170
+        pos = "right:150px" if side == "out" else "left:150px"
+        h.append(f'<div class="bubble {side} {sid}_m{k}" style="{pos};top:{y}px;font-size:54px;max-width:640px">{mark(m.get("text", ""))}</div>')
+        y += 210
         js.append(f"KW.enter(tl,'#{sid} .{sid}_m{k}','{ 'slideL' if side == 'out' else 'slideR'}',{ts[k]},.35);")
     return "".join(h), js, [("tick", t) for t in ts]
 
@@ -527,6 +527,15 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDraw
 renderer.setPixelRatio(1); renderer.setSize(W, Hh, false);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 const scene = new THREE.Scene();
+{ const bc = document.createElement('canvas'); bc.width = W; bc.height = Hh; const b = bc.getContext('2d');
+  b.fillStyle = getComputedStyle(document.body).classList ? '#0a0a0c' : '#0a0a0c';
+  b.fillStyle = document.body.classList.contains('kw-light') ? '#e9e9ec' : '#0a0a0c'; b.fillRect(0, 0, W, Hh);
+  b.strokeStyle = document.body.classList.contains('kw-light') ? 'rgba(0,0,0,.07)' : 'rgba(255,255,255,.055)'; b.lineWidth = 2;
+  for (let x = -80 % 90 + 90; x < W; x += 90) { b.beginPath(); b.moveTo(x, 0); b.lineTo(x, Hh); b.stroke(); }
+  for (let y = -80 % 90 + 90; y < Hh; y += 90) { b.beginPath(); b.moveTo(0, y); b.lineTo(W, y); b.stroke(); }
+  const vg = b.createRadialGradient(W / 2, Hh * .48, Hh * .2, W / 2, Hh * .48, Hh * .7); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.5)');
+  b.fillStyle = vg; b.fillRect(0, 0, W, Hh);
+  const bt = new THREE.CanvasTexture(bc); bt.colorSpace = THREE.SRGBColorSpace; scene.background = bt; }
 const pm = new THREE.PMREMGenerator(renderer);
 scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; scene.environmentIntensity = .6;
 const cam = new THREE.PerspectiveCamera(36, W / Hh, .05, 100);
@@ -538,9 +547,18 @@ const neon = (r, g, b) => new THREE.MeshBasicMaterial({ color: new THREE.Color(r
 const P = {};
 // phone
 P.phone = new THREE.Group();
-P.phone.add(new THREE.Mesh(new RoundedBoxGeometry(1.5, 3.0, .2, 8, .2), new THREE.MeshPhysicalMaterial({ color: 0x111116, metalness: .6, roughness: .15, clearcoat: 1, envMapIntensity: 1.8 })));
-const scr = new THREE.Mesh(new THREE.PlaneGeometry(1.34, 2.7), neon(.42, .06, .1)); scr.position.z = .102; P.phone.add(scr);
-const halo = new THREE.Mesh(new RoundedBoxGeometry(1.56, 3.06, .05, 8, .22), neon(.45, .45, .5)); halo.position.z = -.09; P.phone.add(halo);
+P.phone.add(new THREE.Mesh(new RoundedBoxGeometry(1.5, 3.0, .2, 8, .2), new THREE.MeshPhysicalMaterial({ color: 0x050507, metalness: .7, roughness: .2, clearcoat: 1, envMapIntensity: .7 })));
+const sc = document.createElement('canvas'); sc.width = 512; sc.height = 1024; const g = sc.getContext('2d');
+g.fillStyle = '#0b0b10'; g.fillRect(0, 0, 512, 1024);
+g.fillStyle = '#e8283c'; g.font = '900 92px PS, sans-serif'; g.textAlign = 'center'; g.fillText('@you', 256, 210);
+g.fillStyle = '#ffffff'; g.font = '700 44px PS, sans-serif'; g.fillText('your page', 256, 280);
+const cols = ['#ff6b6b', '#48dbfb', '#feca57', '#a29bfe', '#1dd1a1', '#fd79a8'];
+for (let k = 0; k < 6; k++) { g.fillStyle = cols[k]; g.globalAlpha = .55; g.fillRect(40 + (k % 2) * 222, 340 + Math.floor(k / 2) * 215, 210, 200); }
+g.globalAlpha = 1;
+const st = new THREE.CanvasTexture(sc); st.colorSpace = THREE.SRGBColorSpace;
+const scr = new THREE.Mesh(new THREE.PlaneGeometry(1.34, 2.7), new THREE.MeshBasicMaterial({ map: st, color: new THREE.Color(.95, .95, .95), toneMapped: false }));
+scr.position.z = .102; P.phone.add(scr);
+const halo = new THREE.Mesh(new RoundedBoxGeometry(1.56, 3.06, .05, 8, .22), neon(.55, .07, .12)); halo.position.z = -.09; P.phone.add(halo);
 // coins
 P.coins = new THREE.Group();
 for (let k = 0; k < 7; k++) { const c = new THREE.Mesh(new THREE.CylinderGeometry(.55, .55, .12, 64), metal(0xffc53d)); c.position.y = -1 + k * .14; c.rotation.y = k * .3; P.coins.add(c); }
@@ -559,7 +577,7 @@ P.bars = new THREE.Group();
 Object.values(P).forEach(g => { g.visible = false; scene.add(g); });
 const composer = new EffectComposer(renderer); composer.setPixelRatio(1); composer.setSize(W, Hh);
 composer.addPass(new RenderPass(scene, cam));
-composer.addPass(new UnrealBloomPass(new THREE.Vector2(W / 2, Hh / 2), .45, .3, .95));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(W / 2, Hh / 2), .32, .25, .97));
 composer.addPass(new OutputPass());
 const cl = (x) => Math.min(1, Math.max(0, x));
 const back = (x) => { x = cl(x); const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
@@ -573,9 +591,9 @@ window.__kw3d = function (t) {
   const g = P[on.preset] || P.cube; g.visible = true;
   const u = t - on.t0, k = back(u / .6), out = cl((on.t1 - t) / .3);
   g.scale.setScalar(Math.max(.001, (.3 + .7 * k) * (.6 + .4 * out)));
-  g.rotation.set(.35 + .25 * Math.sin(u * .9), -1.0 * (1 - k) + u * .7 + on.spin, .05 * Math.sin(u));
+  g.rotation.set(.18 + .12 * Math.sin(u * .9), -1.0 * (1 - k) + .55 * Math.sin(u * .8 + on.spin), .04 * Math.sin(u));
   g.position.set(0, .35, 0);
-  cam.position.set(.25 * Math.sin(u * .5), .2, 7.6 - .5 * cl(u / (on.t1 - on.t0)));
+  cam.position.set(.25 * Math.sin(u * .5), .2, 9.6 - .6 * cl(u / (on.t1 - on.t0)));
   cam.lookAt(0, .3, 0);
   composer.render();
 };

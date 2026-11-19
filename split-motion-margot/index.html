@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=2040">
+<title>The Magazine That Couldn&#x27;t Favor</title>
+<script src="assets/vendor/gsap.min.js"></script>
+<style>/* ============================================================================
+   kw.css — the "Kallaway look" for split-motion (measured from 20 reference reels)
+   canvas 1080x2040 (render tall + crop to 1920). Geometry:
+     panel      y 0-1370   near-black, faint square grid, vignette
+     header     y 150-330  bold sans 2 lines + serif-italic accent, red box / underline
+     stage      y 340-1200 the scene (one hero per beat)
+     seam cap   y 1225-1310 1-3 words, white bold, centered x 90-990
+     card       y 1372-1900 speaker card, inset 24 px, radius 38 (baked into the video)
+   ============================================================================ */
+@font-face { font-family: "PS"; font-weight: 400; src: url("assets/fonts/ProductSans-Regular.woff") format("woff"); }
+@font-face { font-family: "PS"; font-weight: 700; src: url("assets/fonts/ProductSans-Bold.woff") format("woff"); }
+@font-face { font-family: "PS"; font-weight: 900; src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+@font-face { font-family: "IS"; font-style: italic; font-weight: 400; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); }
+:root {
+  --bg: #0a0a0c; --bg2: #121216; --line: rgba(255,255,255,.055); --ink: #fff; --dim: rgba(255,255,255,.62);
+  --card: #16161b; --stroke: rgba(255,255,255,.22);
+  --red: #e8283c; --red2: #ff4d5e; --acc2: #ffd23f;
+  --hl1: #ffd23f; --hl2: #b05cff; --hl3: #2ee6d6; --hl4: #3dff8b; --hl5: #ff5c8a;
+}
+.kw-light { --bg: #e9e9ec; --bg2: #f4f4f6; --line: rgba(0,0,0,.07); --ink: #111; --dim: rgba(0,0,0,.55); --card: #fff; --stroke: rgba(0,0,0,.18); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 2040px; overflow: hidden; background: #000; }
+body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.abs { position: absolute; }
+
+/* ---- panel ---- */
+#panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+#panelbg { position: absolute; left: 0; top: 0; width: 1080px; height: 1370px; overflow: hidden; background: var(--bg); }
+#panelbg .grid { position: absolute; inset: -80px; background-image:
+  linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px);
+  background-size: 90px 90px; }
+#panelbg .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 40%, rgba(0,0,0,.55) 100%); }
+.kw-light #panelbg .vig { background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 50%, rgba(0,0,0,.08) 100%); }
+#gfx { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: var(--bg); opacity: 0; }
+#gfx .grid { position: absolute; inset: 0; background-image:
+  linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px); background-size: 90px 90px; }
+
+/* ---- header ---- */
+.hd { position: absolute; left: 70px; width: 940px; top: 150px; text-align: center; font-weight: 700; font-size: 66px;
+  line-height: 1.04; letter-spacing: -.025em; opacity: 0; }
+.hd .w { display: inline-block; }
+.hd i { font-family: "IS", serif; font-style: italic; font-weight: 400; font-size: 1.1em; letter-spacing: -.01em; }
+.hd .box { background: var(--red); color: #fff; padding: 0 .16em .04em; border-radius: 4px; box-decoration-break: clone; }
+.hd .ul { position: relative; }
+.hd .ul::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.06em; height: .09em; background: var(--red);
+  transform-origin: left; transform: scaleX(var(--u, 1)); }
+.hd.sm { font-size: 54px; }
+.hd.lg { font-size: 80px; }
+
+/* ---- captions ---- */
+.cap { position: absolute; left: 90px; width: 900px; text-align: center; font-weight: 700; font-size: 58px; line-height: 1.02;
+  letter-spacing: -.02em; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.55); }
+.cap.seam { top: 1222px; }
+.kw-light .cap.seam { color: #111; text-shadow: none; }
+.cap.full { font-size: 72px; text-shadow: 0 3px 18px rgba(0,0,0,.7); }
+.cap i { font-family: "IS", serif; font-style: italic; font-weight: 400; font-size: 1.12em; }
+.cap .a { color: var(--red2); }
+.cap .y { color: var(--acc2); }
+
+/* ---- scene stage ---- */
+.sc { position: absolute; left: 0; top: 330px; width: 1080px; height: 880px; opacity: 0; perspective: 1400px; }
+.sc.gfx { top: 330px; height: 1300px; }
+.cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.card { position: absolute; background: var(--card); border: 2px solid var(--stroke); border-radius: 26px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 18px 60px rgba(0,0,0,.55), 0 0 40px rgba(255,255,255,.06); }
+.kw-light .card { box-shadow: 0 12px 40px rgba(0,0,0,.12); }
+.pill { position: absolute; padding: 14px 28px; border-radius: 14px; font-weight: 700; font-size: 38px; white-space: nowrap;
+  background: var(--card); border: 2px solid var(--stroke); }
+.pill.red { background: var(--red); border-color: var(--red2); color: #fff; box-shadow: 0 0 34px rgba(232,40,60,.45); }
+.pill i, .row i, .big i { font-family: "IS", serif; font-style: italic; font-weight: 400; }
+.thumb { position: absolute; border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,.75);
+  box-shadow: 0 10px 34px rgba(0,0,0,.6); }
+.thumb .sky { position: absolute; inset: 0; }
+.thumb .play { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-35%, -50%);
+  border-left: 26px solid rgba(255,255,255,.92); border-top: 16px solid transparent; border-bottom: 16px solid transparent; }
+.thumb .ln { position: absolute; left: 10%; height: 9px; border-radius: 5px; background: rgba(255,255,255,.85); }
+.thumb .who { position: absolute; left: 50%; bottom: -8%; width: 54%; height: 54%; transform: translateX(-50%); border-radius: 50% 50% 0 0;
+  background: rgba(0,0,0,.35); }
+.thumb .who::before { content: ""; position: absolute; left: 30%; top: -38%; width: 40%; height: 60%; border-radius: 50%; background: rgba(0,0,0,.35); }
+.row { position: absolute; display: flex; align-items: center; gap: 22px; height: 92px; padding: 0 26px 0 14px; border-radius: 16px;
+  background: linear-gradient(90deg, #1d1d23, #141418); border: 2px solid rgba(255,255,255,.14); font-weight: 700; font-size: 40px; }
+.kw-light .row { background: #fff; border-color: rgba(0,0,0,.14); }
+.row .n { flex: none; width: 64px; height: 64px; border-radius: 12px; background: var(--red); color: #fff; display: flex;
+  align-items: center; justify-content: center; font-weight: 900; font-size: 32px; }
+.row.ghost .t { color: transparent; text-shadow: 0 0 14px rgba(255,255,255,.55); }
+.kw-light .row.ghost .t { text-shadow: 0 0 14px rgba(0,0,0,.45); }
+.row.on { border-color: var(--red2); box-shadow: 0 0 30px rgba(232,40,60,.35); }
+.big { position: absolute; left: 0; width: 1080px; text-align: center; font-weight: 900; letter-spacing: -.04em; line-height: .95; }
+.serif { font-family: "IS", serif; font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+.hlbar { position: absolute; height: 22px; border-radius: 4px; transform-origin: left center; }
+.dash { fill: none; stroke: var(--stroke); stroke-width: 3; stroke-dasharray: 10 12; }
+.ln-draw { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.glowR { filter: drop-shadow(0 0 14px rgba(232,40,60,.75)); }
+.glowW { filter: drop-shadow(0 0 12px rgba(255,255,255,.55)); }
+.ico { position: absolute; }
+.ico svg { width: 100%; height: 100%; overflow: visible; }
+.chip { position: absolute; padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 34px; background: #fff; color: #111;
+  box-shadow: 0 8px 26px rgba(0,0,0,.45); white-space: nowrap; }
+.chip.red { background: var(--red); color: #fff; }
+.bubble { position: absolute; max-width: 700px; padding: 22px 30px; border-radius: 34px; font-size: 40px; font-weight: 700; line-height: 1.15; }
+.bubble.in { background: #26262e; color: #fff; border-bottom-left-radius: 8px; }
+.bubble.out { background: var(--red); color: #fff; border-bottom-right-radius: 8px; }
+#flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff; opacity: 0; pointer-events: none; }
+#gl3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1370px; opacity: 0; }
+
+:root { --acc2: #2ee6d6; }
+</style></head>
+<body class="">
+<div id="root" data-composition-id="main" data-start="0" data-duration="58.533" data-width="1080" data-height="2040">
+<video id="vid" class="clip" src="assets/video.mp4" data-start="0" data-duration="58.533" data-media-start="0.000" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video>
+<div id="panel" class="clip" data-start="0" data-duration="58.533" data-track-index="2" data-layout-allow-overflow>
+ <div id="panelbg"><div class="grid"></div><div class="vig"></div></div>
+ <div id="gfx"><div class="grid"></div></div>
+ 
+ <div class="hd  " id="h0"><span class="w">Be</span> <span class="w">the</span> <span class="w"><i>editor</i></span> <span class="w">?</span></div><div class="sc" id="s0"><div><div class="cam" id="s0c"><svg class="abs" style="left:90px;top:40px;width:900px;height:800px;overflow:visible" viewBox="0 0 900 800"><rect class="p" x="230" y="130" width="440" height="540" rx="18" stroke="#fff" stroke-width="6" fill="none"/><rect class="p" x="270" y="170" width="360" height="160" stroke="#e8283c" stroke-width="6" fill="none"/><path pathLength="1" stroke-dasharray="1" class="d" d="M270 380 H630" stroke="#fff" stroke-width="5" fill="none"/><path pathLength="1" stroke-dasharray="1" class="d" d="M270 430 H630" stroke="#fff" stroke-width="5" fill="none"/><path pathLength="1" stroke-dasharray="1" class="d" d="M270 480 H540" stroke="#fff" stroke-width="5" fill="none"/><path pathLength="1" stroke-dasharray="1" class="d" d="M270 560 H450" stroke="#e8283c" stroke-width="6" fill="none"/><circle class="p" cx="560" cy="580" r="36" stroke="#fff" stroke-width="5" fill="none"/></svg></div></div></div><div class="sc" id="s2"><div class="abs" style="inset:0;transform:scale(1.45);transform-origin:50% 50%"><div class="cam" id="s2c"><div class="big" id="s2_n" style="top:195px;font-size:210px">0 issue</div><div class="big serif s2_lab" style="top:465px;font-size:76px;color:var(--dim)">Put out</div><div class="s2_bar" style="position:absolute;left:240px;top:435px;width:600px;height:8px;border-radius:4px;background:var(--red);transform-origin:left"></div></div></div></div><div class="hd  box" id="h3"><span class="w">One</span> <span class="w">issue.</span> <span class="w"><i>Five</i></span> <span class="w">years.</span></div><div class="sc" id="s3"><div class="abs" style="inset:0;transform:scale(1.262);transform-origin:50% 50%"><div class="cam" id="s3c"><div class="row ghost s3_r0" style="left:160px;top:238px;width:760px"><div class="n">01</div><div class="t">One issue</div></div><div class="row ghost s3_r1" style="left:160px;top:366px;width:760px"><div class="n">02</div><div class="t">Five years</div></div><div class="row ghost s3_r2" style="left:160px;top:494px;width:760px"><div class="n">03</div><div class="t">Five bucks</div></div></div></div></div><div class="sc" id="s4"><div class="abs" style="inset:0;transform:scale(1.249);transform-origin:50% 50%"><div class="cam" id="s4c"><div class="big" id="s4_n" style="top:150px;font-size:300px">$0</div><div class="big serif s4_lab" style="top:510px;font-size:76px;color:var(--dim)">Per copy</div><div class="s4_bar" style="position:absolute;left:240px;top:480px;width:600px;height:8px;border-radius:4px;background:var(--red);transform-origin:left"></div></div></div></div><div class="sc" id="s6"><div class="abs" style="inset:0;transform:scale(0.97);transform-origin:50% 50%"><div class="cam" id="s6c"><div class="ico s6_i glowW" style="left:290px;top:60px;width:500px;height:500px"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1.3 1.8 1.4 2.9h5.2c.1-1.1.6-2.1 1.4-2.9A6 6 0 0 0 12 3z" stroke="#ffd23f" stroke-width="1.3"/></svg></div><div class="big s6_l" style="top:640px;font-size:80px;font-weight:700;letter-spacing:-.03em">I have an idea</div><div class="s6_halo" style="position:absolute;left:240px;top:10px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)"></div></div></div></div><div class="sc" id="s7"><div class="abs" style="inset:0;transform:scale(0.891);transform-origin:50% 50%"><div class="cam" id="s7c"><div class="pill red s7_root" style="left:120px;top:430px;transform:translateY(-50%);font-size:42px">Interested?</div><svg class="abs" style="left:0;top:0" width="1080" height="880"><path class="ln-draw s7_p0" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d="M420 430 C 500 430, 440 260.0, 560 260.0" stroke="rgba(255,255,255,.8)" stroke-width="4"/><path class="ln-draw s7_p1" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d="M420 430 C 500 430, 440 430.0, 560 430.0" stroke="rgba(255,255,255,.8)" stroke-width="4"/><path class="ln-draw s7_p2" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d="M420 430 C 500 430, 440 600.0, 560 600.0" stroke="rgba(255,255,255,.8)" stroke-width="4"/></svg><div class="row s7_k0" style="left:560px;top:214px;width:440px;font-size:36px"><div class="n">01</div><div class="t">Go home</div></div><div class="row s7_k1" style="left:560px;top:384px;width:440px;font-size:36px"><div class="n">02</div><div class="t">Think</div></div><div class="row s7_k2" style="left:560px;top:554px;width:440px;font-size:36px"><div class="n">03</div><div class="t">Ask partner</div></div></div></div></div><div class="hd  " id="h8"><span class="w">The</span> <span class="w">little</span> <span class="w"><i>pamphlet</i></span></div><div class="sc" id="s8"><div><div class="cam" id="s8c"><div class="ico s8_i glowW" style="left:290px;top:60px;width:500px;height:500px"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7" stroke="#fff" stroke-width="1.3"/></svg></div><div class="big s8_l" style="top:640px;font-size:80px;font-weight:700;letter-spacing:-.03em">Pamphlet</div><div class="s8_halo" style="position:absolute;left:240px;top:10px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)"></div></div></div></div><div class="sc" id="s9"><div class="abs" style="inset:0;transform:scale(1.097);transform-origin:50% 50%"><div class="cam" id="s9c"><div style="position:absolute;left:120px;top:760px;width:840px;height:4px;background:rgba(255,255,255,.4)"></div><div class="s9_b0" style="position:absolute;left:199px;top:605px;width:145px;height:155px;border-radius:14px 14px 0 0;background:rgba(255,255,255,.85);transform-origin:bottom"></div><div class="s9_t0" style="position:absolute;left:179px;width:185px;top:780px;text-align:center;font-weight:700;font-size:30px">Now</div><div class="s9_b1" style="position:absolute;left:378px;top:481px;width:145px;height:279px;border-radius:14px 14px 0 0;background:rgba(255,255,255,.85);transform-origin:bottom"></div><div class="s9_t1" style="position:absolute;left:358px;width:185px;top:780px;text-align:center;font-weight:700;font-size:30px">Sales</div><div class="s9_b2" style="position:absolute;left:557px;top:326px;width:145px;height:434px;border-radius:14px 14px 0 0;background:rgba(255,255,255,.85);transform-origin:bottom"></div><div class="s9_t2" style="position:absolute;left:537px;width:185px;top:780px;text-align:center;font-weight:700;font-size:30px">More</div><div class="s9_b3" style="position:absolute;left:736px;top:171px;width:145px;height:589px;border-radius:14px 14px 0 0;background:var(--red);transform-origin:bottom"></div><div class="s9_t3" style="position:absolute;left:716px;width:185px;top:780px;text-align:center;font-weight:700;font-size:30px">Most</div></div></div></div><div class="sc" id="s10"><div class="abs" style="inset:0;transform:scale(0.874);transform-origin:50% 50%"><div class="cam" id="s10c"><svg class="abs" style="left:0;top:0" width="1080" height="880"><circle class="s10_ring" cx="540" cy="430" r="110" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="5"/><circle class="s10_ring" cx="540" cy="430" r="200" fill="none" stroke="rgba(255,255,255,0.63)" stroke-width="4"/><circle class="s10_ring" cx="540" cy="430" r="290" fill="none" stroke="rgba(255,255,255,0.51)" stroke-width="3"/><circle class="s10_ring" cx="540" cy="430" r="380" fill="none" stroke="rgba(255,255,255,0.39)" stroke-width="2"/><circle class="s10_d0" cx="251" cy="454" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/><circle class="s10_d1" cx="709" cy="90" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/><circle class="s10_d2" cx="611" cy="346" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/><circle class="s10_d3" cx="806" cy="545" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/><circle class="s10_d4" cx="420" cy="69" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/><circle class="s10_d5" cx="276" cy="156" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/><circle class="s10_d6" cx="533" cy="630" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/><circle class="s10_d7" cx="440" cy="702" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/><circle class="s10_d8" cx="454" cy="361" r="16" fill="#e8283c" style="filter:drop-shadow(0 0 10px #e8283c)"/></svg><div class="pill s10_lab" style="left:540px;top:430px;transform:translate(-50%,-50%);font-size:36px">Other people</div></div></div></div><div class="hd  box" id="h12"><span class="w">Money</span> <span class="w">in.</span> <span class="w">Three-way</span> <span class="w"><i>partners</i></span></div><div class="sc" id="s12"><div class="abs" style="inset:0;transform:scale(0.968);transform-origin:50% 50%"><div class="cam" id="s12c"><div class="ico s12_i glowW" style="left:290px;top:60px;width:500px;height:500px"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M3 6h18v12H3zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6M6 9v.01M18 15v.01" stroke="#ff4d5e" stroke-width="1.3"/></svg></div><div class="big s12_l" style="top:640px;font-size:80px;font-weight:700;letter-spacing:-.03em">Their money</div><div class="s12_halo" style="position:absolute;left:240px;top:10px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)"></div></div></div></div><div class="sc" id="s13"><div class="abs" style="inset:0;transform:scale(1.133);transform-origin:50% 50%"><div class="cam" id="s13c"><div class="big" id="s13_n" style="top:150px;font-size:300px">0-way</div><div class="big serif s13_lab" style="top:510px;font-size:76px;color:var(--dim)">Partners</div><div class="s13_bar" style="position:absolute;left:240px;top:480px;width:600px;height:8px;border-radius:4px;background:var(--red);transform-origin:left"></div></div></div></div><div class="hd lg " id="h14"><span class="w">The</span> <span class="w">one</span> <span class="w"><i>rule</i></span></div><div class="sc" id="s14"><div><div class="cam" id="s14c"><div class="ico s14_i glowW" style="left:290px;top:60px;width:500px;height:500px"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M12 3l10 18H2L12 3zM12 10v4M12 17v.5" stroke="#ffd23f" stroke-width="1.3"/></svg></div><div class="big s14_l" style="top:640px;font-size:80px;font-weight:700;letter-spacing:-.03em">Important</div><div class="s14_halo" style="position:absolute;left:240px;top:10px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)"></div></div></div></div><div class="sc" id="s15"><div class="abs" style="inset:0;transform:scale(1.074);transform-origin:50% 50%"><div class="cam" id="s15c"><div class="card s15_w" style="left:90px;top:60px;width:900px;height:720px;border-radius:22px"><div style="position:absolute;left:0;right:0;top:0;height:64px;border-bottom:2px solid var(--stroke);display:flex;gap:12px;align-items:center;padding-left:24px"><span style="width:18px;height:18px;border-radius:50%;background:#ff5f57"></span><span style="width:18px;height:18px;border-radius:50%;background:#febc2e"></span><span style="width:18px;height:18px;border-radius:50%;background:#28c840"></span><span style="margin-left:24px;padding:6px 26px;border-radius:10px;background:rgba(255,255,255,.08);font-size:26px;color:var(--dim)">The magazine</span></div><div class="s15_r0" style="position:absolute;left:40px;right:40px;top:110px;height:96px;border-radius:14px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:22px;padding:0 22px"><span style="width:62px;height:62px;border-radius:12px;background:linear-gradient(135deg,#1dd1a1,#e84393)"></span><span style="font-weight:700;font-size:34px">Their company</span></div><div class="s15_r1" style="position:absolute;left:40px;right:40px;top:228px;height:96px;border-radius:14px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:22px;padding:0 22px"><span style="width:62px;height:62px;border-radius:12px;background:linear-gradient(135deg,#74b9ff,#0984e3)"></span><span style="font-weight:700;font-size:34px">Our company</span></div><div class="s15_r2" style="position:absolute;left:40px;right:40px;top:346px;height:96px;border-radius:14px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:22px;padding:0 22px"><span style="width:62px;height:62px;border-radius:12px;background:linear-gradient(135deg,#a29bfe,#636e72)"></span><span style="font-weight:700;font-size:34px">Neutral</span></div><svg class="abs s15_cur" style="left:640px;top:386px;width:54px;height:54px" viewBox="0 0 24 24"><path d="M4 3l15 8-7 2-3 7z" fill="#fff" stroke="#000" stroke-width="1"/></svg></div></div></div></div><div class="sc" id="s16"><div><div class="cam" id="s16c"><div class="ico s16_i glowW" style="left:290px;top:60px;width:500px;height:500px"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M5 5l14 14M19 5L5 19" stroke="#ffd23f" stroke-width="1.3"/></svg></div><div class="big s16_l" style="top:640px;font-size:80px;font-weight:700;letter-spacing:-.03em">No favoring</div><div class="s16_halo" style="position:absolute;left:240px;top:10px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)"></div></div></div></div><div class="sc" id="s17"><div class="abs" style="inset:0;transform:scale(0.824);transform-origin:50% 50%"><div class="cam" id="s17c"><div class="card s17_ph" style="left:300px;top:10px;width:480px;height:860px;border-radius:64px;border:5px solid rgba(255,255,255,.85);background:#0d0d10"><div style="position:absolute;left:170px;top:18px;width:130px;height:34px;border-radius:20px;background:#000"></div><div style="position:absolute;left:0;right:0;top:120px;text-align:center;font-weight:900;font-size:64px;color:var(--red2);letter-spacing:-.03em">A column</div><div style="position:absolute;left:0;right:0;top:200px;text-align:center;font-size:34px;font-weight:700">each writes one</div><div class="chip s17_c0" style="left:50%;transform:translateX(-50%);top:300px;font-size:30px">Them</div><div class="chip s17_c1" style="left:50%;transform:translateX(-50%);top:400px;font-size:30px">Us</div><div style="position:absolute;left:40px;top:500px;width:190px;height:136px;border-radius:14px;background:linear-gradient(135deg,#48dbfb,#b2bec3);opacity:.35"></div><div style="position:absolute;left:245px;top:500px;width:190px;height:136px;border-radius:14px;background:linear-gradient(135deg,#fd79a8,#e84393);opacity:.35"></div><div style="position:absolute;left:40px;top:650px;width:190px;height:136px;border-radius:14px;background:linear-gradient(135deg,#fd79a8,#6c5ce7);opacity:.35"></div><div style="position:absolute;left:245px;top:650px;width:190px;height:136px;border-radius:14px;background:linear-gradient(135deg,#1dd1a1,#e84393);opacity:.35"></div><div style="position:absolute;left:40px;top:800px;width:190px;height:136px;border-radius:14px;background:linear-gradient(135deg,#fab1a0,#ff6b6b);opacity:.35"></div><div style="position:absolute;left:245px;top:800px;width:190px;height:136px;border-radius:14px;background:linear-gradient(135deg,#81ecec,#e84393);opacity:.35"></div></div></div></div></div><div class="sc" id="s19"><div class="abs" style="inset:0;transform:scale(1.423);transform-origin:50% 50%"><div class="cam" id="s19c"><div class="big s19_q" style="top:300px;font-size:112px;font-weight:700;padding:0 80px;letter-spacing:-.03em"><span class="w">Beagle</span> <span class="w"><i>Brothers</i></span></div><div class="s19_u" style="position:absolute;left:300px;top:576px;width:480px;height:10px;border-radius:5px;background:var(--red);transform-origin:left"></div></div></div></div>
+</div>
+<div class="clip cap seam" id="c0" style="" data-start="0.000" data-duration="1.600" data-track-index="3">So we wondered</div><div class="clip cap seam" id="c1" style="" data-start="1.600" data-duration="1.060" data-track-index="3">maybe we would</div><div class="clip cap seam" id="c2" style="" data-start="2.660" data-duration="0.600" data-track-index="3">like to do</div><div class="clip cap seam" id="c3" style="" data-start="3.260" data-duration="0.780" data-track-index="3">this one</div><div class="clip cap full" id="c4" style="top:1346px" data-start="4.040" data-duration="0.460" data-track-index="3">Maybe you would</div><div class="clip cap full" id="c5" style="top:1346px" data-start="4.500" data-duration="0.460" data-track-index="3">like to be</div><div class="clip cap full" id="c6" style="top:1346px" data-start="4.960" data-duration="0.680" data-track-index="3">the <i>editor</i> for</div><div class="clip cap seam" id="c7" style="" data-start="5.640" data-duration="0.860" data-track-index="3">this</div><div class="clip cap seam" id="c8" style="" data-start="6.500" data-duration="0.780" data-track-index="3">they had put</div><div class="clip cap seam" id="c9" style="" data-start="7.280" data-duration="1.660" data-track-index="3">it out one</div><div class="clip cap seam" id="c10" style="" data-start="8.940" data-duration="0.400" data-track-index="3">issue</div><div class="clip cap seam" id="c11" style="" data-start="9.340" data-duration="0.380" data-track-index="3">I think They</div><div class="clip cap seam" id="c12" style="" data-start="9.720" data-duration="0.440" data-track-index="3">had put out</div><div class="clip cap seam" id="c13" style="" data-start="10.160" data-duration="0.840" data-track-index="3">one issue</div><div class="clip cap seam" id="c14" style="" data-start="11.000" data-duration="0.420" data-track-index="3">and it was</div><div class="clip cap seam" id="c15" style="" data-start="11.420" data-duration="0.880" data-track-index="3">five years</div><div class="clip cap seam" id="c16" style="" data-start="12.300" data-duration="0.480" data-track-index="3">and they charged</div><div class="clip cap seam" id="c17" style="" data-start="12.780" data-duration="1.120" data-track-index="3"><i>five</i> bucks for</div><div class="clip cap seam" id="c18" style="" data-start="13.900" data-duration="0.506" data-track-index="3">us</div><div class="clip cap full" id="c19" style="top:1346px" data-start="14.406" data-duration="1.160" data-track-index="3">So I said</div><div class="clip cap full" id="c20" style="top:1346px" data-start="15.566" data-duration="0.120" data-track-index="3">well</div><div class="clip cap full" id="c21" style="top:1346px" data-start="15.686" data-duration="0.380" data-track-index="3">let me look</div><div class="clip cap full" id="c22" style="top:1346px" data-start="16.066" data-duration="0.634" data-track-index="3">at it</div><div class="clip cap seam" id="c23" style="" data-start="16.700" data-duration="0.560" data-track-index="3">And I said</div><div class="clip cap seam" id="c24" style="" data-start="17.260" data-duration="0.520" data-track-index="3">I don&#x27;t know</div><div class="clip cap seam" id="c25" style="" data-start="17.780" data-duration="0.420" data-track-index="3">but I have</div><div class="clip cap seam" id="c26" style="" data-start="18.200" data-duration="0.780" data-track-index="3">an idea that</div><div class="clip cap seam" id="c27" style="" data-start="18.980" data-duration="0.600" data-track-index="3">maybe if you</div><div class="clip cap seam" id="c28" style="" data-start="19.580" data-duration="0.760" data-track-index="3">guys are interested</div><div class="clip cap seam" id="c29" style="" data-start="20.340" data-duration="0.660" data-track-index="3">in this</div><div class="clip cap seam" id="c30" style="" data-start="21.000" data-duration="0.586" data-track-index="3">you And so</div><div class="clip cap seam" id="c31" style="" data-start="21.586" data-duration="0.620" data-track-index="3">I went home</div><div class="clip cap seam" id="c32" style="" data-start="22.206" data-duration="1.540" data-track-index="3">with this little</div><div class="clip cap seam" id="c33" style="" data-start="23.746" data-duration="1.234" data-track-index="3">pamphlet</div><div class="clip cap seam" id="c34" style="" data-start="24.980" data-duration="0.860" data-track-index="3">was really what</div><div class="clip cap seam" id="c35" style="" data-start="25.840" data-duration="0.640" data-track-index="3">it was intended</div><div class="clip cap seam" id="c36" style="" data-start="26.480" data-duration="0.740" data-track-index="3">was to get</div><div class="clip cap seam" id="c37" style="" data-start="27.220" data-duration="1.420" data-track-index="3">their customers to</div><div class="clip cap seam" id="c38" style="" data-start="28.640" data-duration="0.653" data-track-index="3">buy more</div><div class="clip cap seam" id="c39" style="" data-start="29.293" data-duration="1.260" data-track-index="3">and other people</div><div class="clip cap seam" id="c40" style="" data-start="30.553" data-duration="0.560" data-track-index="3">and so forth</div><div class="clip cap full" id="c41" style="top:1346px" data-start="31.113" data-duration="0.860" data-track-index="3">Which was fine</div><div class="clip cap full" id="c42" style="top:1346px" data-start="31.973" data-duration="1.140" data-track-index="3">but that certainly</div><div class="clip cap full" id="c43" style="top:1346px" data-start="33.113" data-duration="0.720" data-track-index="3">wasn&#x27;t what was</div><div class="clip cap full" id="c44" style="top:1346px" data-start="33.833" data-duration="0.820" data-track-index="3">in my mind</div><div class="clip cap seam" id="c45" style="" data-start="34.653" data-duration="0.360" data-track-index="3">So we went</div><div class="clip cap seam" id="c46" style="" data-start="35.013" data-duration="0.460" data-track-index="3">home</div><div class="clip cap seam" id="c47" style="" data-start="35.473" data-duration="0.600" data-track-index="3">but they were</div><div class="clip cap seam" id="c48" style="" data-start="36.073" data-duration="0.540" data-track-index="3">willing to put</div><div class="clip cap seam" id="c49" style="" data-start="36.613" data-duration="0.720" data-track-index="3">some money into</div><div class="clip cap seam" id="c50" style="" data-start="37.333" data-duration="0.800" data-track-index="3">it and go</div><div class="clip cap seam" id="c51" style="" data-start="38.133" data-duration="1.240" data-track-index="3">partners</div><div class="clip cap seam" id="c52" style="" data-start="39.373" data-duration="1.007" data-track-index="3"><i>three</i> -way partners</div><div class="clip cap seam" id="c53" style="" data-start="40.380" data-duration="0.600" data-track-index="3">And one thing</div><div class="clip cap seam" id="c54" style="" data-start="40.980" data-duration="0.860" data-track-index="3">that was really</div><div class="clip cap seam" id="c55" style="" data-start="41.840" data-duration="1.920" data-track-index="3">important was that</div><div class="clip cap seam" id="c56" style="" data-start="43.760" data-duration="1.140" data-track-index="3">if they did</div><div class="clip cap seam" id="c57" style="" data-start="44.900" data-duration="0.620" data-track-index="3">want to do</div><div class="clip cap seam" id="c58" style="" data-start="45.520" data-duration="1.180" data-track-index="3">something with us</div><div class="clip cap seam" id="c59" style="" data-start="46.700" data-duration="0.820" data-track-index="3">it could not</div><div class="clip cap seam" id="c60" style="" data-start="47.520" data-duration="1.653" data-track-index="3"><i>favor</i> their company</div><div class="clip cap seam" id="c61" style="" data-start="49.173" data-duration="0.680" data-track-index="3">Didn&#x27;t mean we</div><div class="clip cap seam" id="c62" style="" data-start="49.853" data-duration="0.620" data-track-index="3">couldn&#x27;t have that</div><div class="clip cap seam" id="c63" style="" data-start="50.473" data-duration="0.360" data-track-index="3">and they could</div><div class="clip cap seam" id="c64" style="" data-start="50.833" data-duration="0.500" data-track-index="3">each write a</div><div class="clip cap seam" id="c65" style="" data-start="51.333" data-duration="0.700" data-track-index="3">column for it</div><div class="clip cap full" id="c66" style="top:1346px" data-start="52.033" data-duration="0.880" data-track-index="3">But it could</div><div class="clip cap full" id="c67" style="top:1346px" data-start="52.913" data-duration="2.920" data-track-index="3">not <i>favor</i> anything</div><div class="clip cap seam" id="c68" style="" data-start="55.833" data-duration="0.627" data-track-index="3"><i>Beagle</i> Brothers</div><div class="clip cap seam" id="c69" style="" data-start="56.460" data-duration="0.520" data-track-index="3">What</div><div class="clip cap seam" id="c70" style="" data-start="56.980" data-duration="0.380" data-track-index="3">Doug Carlson</div><div class="clip cap seam" id="c71" style="" data-start="57.360" data-duration="0.787" data-track-index="3">That&#x27;s it</div>
+<div id="flash" class="clip" data-start="0" data-duration="58.533" data-track-index="4"></div>
+<audio id="aud" class="clip" src="assets/mix.wav" data-start="0" data-duration="58.533" data-track-index="8"></audio>
+</div>
+<script>/* ============================================================================
+   kw.js — motion VERBS for the split-motion harness (window.KW)
+   Every helper: (tl, target, t, opts) with ABSOLUTE reel time t; deterministic.
+   The scene compiler (harness/scenes.py) only emits calls to these, so a new
+   verb added here is instantly available to every planner/model.
+   All fromTo use immediateRender:false (a late fromTo must not paint at t=0).
+   ============================================================================ */
+(function () {
+  const IR = { immediateRender: false };
+  const q = (s) => (typeof s === 'string' ? document.querySelectorAll(s) : s);
+  const ENTER = {
+    rise:    (tl, el, t, d = .42) => tl.fromTo(el, { autoAlpha: 0, y: 70, filter: 'blur(6px)' }, { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: d, ease: 'power3.out', ...IR }, t),
+    pop:     (tl, el, t, d = .38) => tl.fromTo(el, { autoAlpha: 0, scale: .55 }, { autoAlpha: 1, scale: 1, duration: d, ease: 'back.out(1.8)', ...IR }, t),
+    slideL:  (tl, el, t, d = .45) => tl.fromTo(el, { autoAlpha: 0, x: 420 }, { autoAlpha: 1, x: 0, duration: d, ease: 'expo.out', ...IR }, t),
+    slideR:  (tl, el, t, d = .45) => tl.fromTo(el, { autoAlpha: 0, x: -420 }, { autoAlpha: 1, x: 0, duration: d, ease: 'expo.out', ...IR }, t),
+    drop:    (tl, el, t, d = .55) => tl.fromTo(el, { autoAlpha: 0, y: -380 }, { autoAlpha: 1, y: 0, duration: d, ease: 'bounce.out', ...IR }, t),
+    flipY:   (tl, el, t, d = .55) => tl.fromTo(el, { autoAlpha: 0, rotationY: -82, transformPerspective: 1200 }, { autoAlpha: 1, rotationY: 0, duration: d, ease: 'power3.out', ...IR }, t),
+    tilt3d:  (tl, el, t, d = .6) => tl.fromTo(el, { autoAlpha: 0, rotationX: 58, y: 120, transformPerspective: 1300 }, { autoAlpha: 1, rotationX: 0, y: 0, duration: d, ease: 'power3.out', ...IR }, t),
+    iris:    (tl, el, t, d = .5) => tl.fromTo(el, { autoAlpha: 1, clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(75% at 50% 50%)', duration: d, ease: 'power2.inOut', ...IR }, t),
+    wipe:    (tl, el, t, d = .45) => tl.fromTo(el, { autoAlpha: 1, clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: d, ease: 'power3.inOut', ...IR }, t),
+    unfold:  (tl, el, t, d = .45) => tl.fromTo(el, { autoAlpha: 0, scaleY: .05, transformOrigin: '50% 0%' }, { autoAlpha: 1, scaleY: 1, duration: d, ease: 'expo.out', ...IR }, t),
+    zoomIn:  (tl, el, t, d = .5) => tl.fromTo(el, { autoAlpha: 0, scale: 1.7, filter: 'blur(10px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: d, ease: 'power3.out', ...IR }, t),
+    swing:   (tl, el, t, d = .7) => tl.fromTo(el, { autoAlpha: 0, rotation: -14, y: 40, transformOrigin: '50% 0%' }, { autoAlpha: 1, rotation: 0, y: 0, duration: d, ease: 'elastic.out(1,.55)', ...IR }, t),
+    focus:   (tl, el, t, d = .55) => tl.fromTo(el, { autoAlpha: 0, filter: 'blur(18px)', scale: 1.05 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: d, ease: 'power2.out', ...IR }, t),
+  };
+  const EXIT = {
+    fade:    (tl, el, t, d = .22) => tl.to(el, { autoAlpha: 0, duration: d, ease: 'power1.in' }, t),
+    blur:    (tl, el, t, d = .25) => tl.to(el, { autoAlpha: 0, filter: 'blur(10px)', scale: 1.06, duration: d, ease: 'power2.in' }, t),
+    whipL:   (tl, el, t, d = .26) => tl.to(el, { autoAlpha: 0, x: -560, duration: d, ease: 'power3.in' }, t),
+    whipR:   (tl, el, t, d = .26) => tl.to(el, { autoAlpha: 0, x: 560, duration: d, ease: 'power3.in' }, t),
+    shrink:  (tl, el, t, d = .25) => tl.to(el, { autoAlpha: 0, scale: .4, duration: d, ease: 'back.in(1.6)' }, t),
+    pushUp:  (tl, el, t, d = .3) => tl.to(el, { autoAlpha: 0, y: -260, duration: d, ease: 'power3.in' }, t),
+    zoomPast:(tl, el, t, d = .3) => tl.to(el, { autoAlpha: 0, scale: 2.6, duration: d, ease: 'power2.in' }, t),
+    collapse:(tl, el, t, d = .25) => tl.to(el, { autoAlpha: 0, scaleY: .02, duration: d, ease: 'power3.in' }, t),
+    irisOut: (tl, el, t, d = .3) => tl.to(el, { clipPath: 'circle(0% at 50% 50%)', duration: d, ease: 'power2.in' }, t),
+    dropOut: (tl, el, t, d = .32) => tl.to(el, { autoAlpha: 0, y: 420, rotation: 6, duration: d, ease: 'power2.in' }, t),
+  };
+  const CAMERA = {
+    push:     (tl, el, t0, t1) => tl.fromTo(el, { scale: 1 }, { scale: 1.07, duration: Math.max(.2, t1 - t0), ease: 'none', ...IR }, t0),
+    pull:     (tl, el, t0, t1) => tl.fromTo(el, { scale: 1.08 }, { scale: 1, duration: Math.max(.2, t1 - t0), ease: 'none', ...IR }, t0),
+    driftL:   (tl, el, t0, t1) => tl.fromTo(el, { x: 26 }, { x: -26, duration: Math.max(.2, t1 - t0), ease: 'none', ...IR }, t0),
+    driftR:   (tl, el, t0, t1) => tl.fromTo(el, { x: -26 }, { x: 26, duration: Math.max(.2, t1 - t0), ease: 'none', ...IR }, t0),
+    rise:     (tl, el, t0, t1) => tl.fromTo(el, { y: 24 }, { y: -24, duration: Math.max(.2, t1 - t0), ease: 'none', ...IR }, t0),
+    tilt:     (tl, el, t0, t1) => tl.fromTo(el, { rotationX: 10, rotationY: -8, transformPerspective: 1600 }, { rotationX: -4, rotationY: 8, duration: Math.max(.2, t1 - t0), ease: 'sine.inOut', ...IR }, t0),
+    orbit:    (tl, el, t0, t1) => tl.fromTo(el, { rotationY: -12, transformPerspective: 1500 }, { rotationY: 12, duration: Math.max(.2, t1 - t0), ease: 'sine.inOut', ...IR }, t0),
+    none:     (tl) => tl,
+  };
+  window.KW = {
+    ENTER, EXIT, CAMERA,
+    enter(tl, el, verb, t, d) { (ENTER[verb] || ENTER.rise)(tl, el, t, d); return tl; },
+    exit(tl, el, verb, t, d) { (EXIT[verb] || EXIT.fade)(tl, el, t, d); tl.set(el, { autoAlpha: 0 }, t + (d || .35) + .02); return tl; },
+    camera(tl, el, kind, t0, t1) { (CAMERA[kind] || CAMERA.none)(tl, el, t0, t1); return tl; },
+    show(tl, el, t) { tl.set(el, { autoAlpha: 1 }, t); return tl; },
+    hide(tl, el, t) { tl.set(el, { autoAlpha: 0 }, t); return tl; },
+    draw(tl, el, t, d = .5) { tl.fromTo(el, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d, ease: 'power2.inOut', ...IR }, t); return tl; },
+    grow(tl, el, t, d = .45, axis = 'scaleX') { tl.fromTo(el, { [axis]: 0 }, { [axis]: 1, duration: d, ease: 'power3.out', ...IR }, t); return tl; },
+    pulse(tl, el, t) { tl.fromTo(el, { scale: 1 }, { scale: 1.08, duration: .12, yoyo: true, repeat: 1, ease: 'power1.inOut', ...IR }, t); return tl; },
+    count(tl, sel, t, d, from, to, dec = 0, pre = '', suf = '') {
+      const node = document.querySelector(sel); const p = { v: from };
+      tl.fromTo(p, { v: from }, { v: to, duration: d, ease: 'power2.out', ...IR,
+        onUpdate: () => { node.textContent = pre + (dec ? p.v.toFixed(dec) : Math.round(p.v).toLocaleString('en-US')) + suf; } }, t);
+      return tl;
+    },
+    typeWords(tl, sel, t, step = .09) {
+      const ws = q(sel + ' .w');
+      tl.set(sel, { autoAlpha: 1 }, t);
+      ws.forEach((w, i) => tl.fromTo(w, { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: .26, ease: 'power3.out', ...IR }, t + i * step));
+      const u = document.querySelector(sel + ' .ul');
+      if (u) tl.fromTo(u, { '--u': 0 }, { '--u': 1, duration: .35, ease: 'power2.out', ...IR }, t + ws.length * step);
+      return tl;
+    },
+    cap(tl, el, t, style) {
+      if (style === 'slam') tl.fromTo(el, { scale: 1.35, opacity: 0 }, { scale: 1, opacity: 1, duration: .12, ease: 'power3.out', ...IR }, t);
+      else tl.fromTo(el, { scale: .86, y: 8, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: .1, ease: 'back.out(2.4)', ...IR }, t);
+      return tl;
+    },
+    flash(tl, el, t, a = .55) { tl.fromTo(el, { opacity: a }, { opacity: 0, duration: .24, ease: 'power2.out', ...IR }, t); return tl; },
+  };
+})();
+</script>
+<script>
+const tl = gsap.timeline({paused:true});
+gsap.set('#panel',{autoAlpha:1});
+KW.show(tl,'#panel',0.000);KW.hide(tl,'#gfx',0.000);tl.fromTo('#panel',{y:-30},{y:0,duration:.28,ease:'power3.out',immediateRender:false},0.000);
+KW.typeWords(tl,'#h0',0.020,0.07);
+KW.enter(tl,'#s0','unfold',0.000);
+KW.camera(tl,'#s0c','push',0.000,4.147);
+tl.fromTo('#s0 path',{strokeDashoffset:1},{strokeDashoffset:0,duration:.6,stagger:.06,ease:'power2.inOut',immediateRender:false},0.050);
+tl.fromTo('#s0 .p, #s0 text',{autoAlpha:0,scale:.6,transformOrigin:'50% 50%'},{autoAlpha:1,scale:1,duration:.3,stagger:.08,ease:'back.out(2)',immediateRender:false},0.400);
+KW.exit(tl,'#s0','blur',3.867,.26);
+KW.hide(tl,'#panel',4.147);KW.hide(tl,'#gfx',4.147);KW.flash(tl,'#flash',4.147,.18);
+KW.hide(tl,'#h0',4.147);
+KW.show(tl,'#panel',5.587);KW.hide(tl,'#gfx',5.587);tl.fromTo('#panel',{y:-30},{y:0,duration:.28,ease:'power3.out',immediateRender:false},5.587);
+KW.enter(tl,'#s2','pop',5.587);
+KW.camera(tl,'#s2c','none',5.587,9.507);
+KW.count(tl,'#s2_n',5.687,1.60,0,1.0,0,'',' issue');
+KW.grow(tl,'#s2 .s2_bar',5.687,1.60);
+KW.enter(tl,'#s2 .s2_lab','rise',7.187);
+KW.exit(tl,'#s2','shrink',9.227,.26);
+KW.exit(tl,'#h0','pushUp',9.457,.2);
+KW.typeWords(tl,'#h3',9.527,0.09);
+KW.enter(tl,'#s3','slideR',9.507);
+KW.camera(tl,'#s3c','driftL',9.507,12.247);
+tl.fromTo('#s3 .row',{autoAlpha:0,x:-60},{autoAlpha:1,x:0,duration:.3,stagger:.06,ease:'power3.out',immediateRender:false},9.557);
+tl.set('#s3 .s3_r0',{className:'row on s3_r0'},10.177);KW.pulse(tl,'#s3 .s3_r0',10.177);tl.set('#s3 .s3_r0',{className:'row s3_r0'},11.437);
+tl.set('#s3 .s3_r1',{className:'row on s3_r1'},11.437);KW.pulse(tl,'#s3 .s3_r1',11.437);tl.set('#s3 .s3_r1',{className:'row s3_r1'},10.857);
+tl.set('#s3 .s3_r2',{className:'row on s3_r2'},10.857);KW.pulse(tl,'#s3 .s3_r2',10.857);tl.set('#s3 .s3_r2',{className:'row s3_r2'},12.197);
+KW.exit(tl,'#s3','whipL',11.967,.26);
+KW.enter(tl,'#s4','drop',12.247);
+KW.camera(tl,'#s4c','pull',12.247,14.353);
+KW.count(tl,'#s4_n',12.347,1.05,0,5.0,0,'$','');
+KW.grow(tl,'#s4 .s4_bar',12.347,1.05);
+KW.enter(tl,'#s4 .s4_lab','rise',13.300);
+KW.exit(tl,'#s4','collapse',14.073,.26);
+KW.hide(tl,'#panel',14.353);KW.hide(tl,'#gfx',14.353);KW.flash(tl,'#flash',14.353,.18);
+KW.hide(tl,'#h3',14.353);
+KW.show(tl,'#panel',16.647);KW.hide(tl,'#gfx',16.647);tl.fromTo('#panel',{y:-30},{y:0,duration:.28,ease:'power3.out',immediateRender:false},16.647);
+KW.enter(tl,'#s6','zoomIn',16.647);
+KW.camera(tl,'#s6c','rise',16.647,18.667);
+KW.draw(tl,'#s6 .s6_i path',16.697,.7);KW.enter(tl,'#s6 .s6_halo','focus',16.647);
+KW.enter(tl,'#s6 .s6_l','rise',17.097);
+KW.exit(tl,'#s6','pushUp',18.387,.26);
+KW.enter(tl,'#s7','iris',18.667);
+KW.camera(tl,'#s7c','tilt',18.667,21.193);
+KW.enter(tl,'#s7 .s7_root','slideR',18.717);
+KW.draw(tl,'#s7 .s7_p0',18.717,.35);KW.enter(tl,'#s7 .s7_k0','slideL',18.917);
+KW.draw(tl,'#s7 .s7_p1',19.267,.35);KW.enter(tl,'#s7 .s7_k1','slideL',19.467);
+KW.draw(tl,'#s7 .s7_p2',19.817,.35);KW.enter(tl,'#s7 .s7_k2','slideL',20.017);
+KW.exit(tl,'#s7','irisOut',20.913,.26);
+KW.exit(tl,'#h3','pushUp',21.143,.2);
+KW.typeWords(tl,'#h8',21.213,0.09);
+KW.enter(tl,'#s8','flipY',21.193);
+KW.camera(tl,'#s8c','driftR',21.193,23.693);
+KW.draw(tl,'#s8 .s8_i path',21.243,.7);KW.enter(tl,'#s8 .s8_halo','focus',21.193);
+KW.enter(tl,'#s8 .s8_l','rise',21.643);
+KW.exit(tl,'#s8','zoomPast',23.413,.26);
+KW.enter(tl,'#s9','wipe',23.693);
+KW.camera(tl,'#s9c','push',23.693,29.240);
+KW.grow(tl,'#s9 .s9_b0',23.943,.45,'scaleY');KW.enter(tl,'#s9 .s9_t0','rise',24.043,.3);
+KW.grow(tl,'#s9 .s9_b1',27.057,.45,'scaleY');KW.enter(tl,'#s9 .s9_t1','rise',27.157,.3);
+KW.grow(tl,'#s9 .s9_b2',28.657,.45,'scaleY');KW.enter(tl,'#s9 .s9_t2','rise',28.757,.3);
+KW.grow(tl,'#s9 .s9_b3',28.657,.45,'scaleY');KW.enter(tl,'#s9 .s9_t3','rise',28.757,.3);
+KW.exit(tl,'#s9','fade',28.960,.26);
+KW.enter(tl,'#s10','focus',29.240);
+KW.camera(tl,'#s10c','orbit',29.240,31.060);
+tl.fromTo('#s10 .s10_ring',{scale:0,transformOrigin:'540px 430px'},{scale:1,duration:.5,stagger:.08,ease:'expo.out',immediateRender:false},29.240);
+tl.fromTo('#s10 .s10_d0',{scale:0,transformOrigin:'251px 454px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},29.69);
+tl.fromTo('#s10 .s10_d1',{scale:0,transformOrigin:'709px 90px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},29.793);
+tl.fromTo('#s10 .s10_d2',{scale:0,transformOrigin:'611px 346px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},29.896);
+tl.fromTo('#s10 .s10_d3',{scale:0,transformOrigin:'806px 545px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},29.999);
+tl.fromTo('#s10 .s10_d4',{scale:0,transformOrigin:'420px 69px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},30.102);
+tl.fromTo('#s10 .s10_d5',{scale:0,transformOrigin:'276px 156px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},30.205);
+tl.fromTo('#s10 .s10_d6',{scale:0,transformOrigin:'533px 630px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},30.308);
+tl.fromTo('#s10 .s10_d7',{scale:0,transformOrigin:'440px 702px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},30.411);
+tl.fromTo('#s10 .s10_d8',{scale:0,transformOrigin:'454px 361px'},{scale:1,duration:.25,ease:'back.out(3)',immediateRender:false},30.514);
+KW.enter(tl,'#s10 .s10_lab','pop',29.440);
+KW.exit(tl,'#s10','shrink',30.780,.26);
+KW.hide(tl,'#panel',31.060);KW.hide(tl,'#gfx',31.060);KW.flash(tl,'#flash',31.060,.18);
+KW.hide(tl,'#h8',31.060);
+KW.show(tl,'#panel',34.600);KW.hide(tl,'#gfx',34.600);tl.fromTo('#panel',{y:-30},{y:0,duration:.28,ease:'power3.out',immediateRender:false},34.600);
+KW.exit(tl,'#h8','pushUp',34.550,.2);
+KW.typeWords(tl,'#h12',34.620,0.09);
+KW.enter(tl,'#s12','swing',34.600);
+KW.camera(tl,'#s12c','pull',34.600,36.400);
+KW.draw(tl,'#s12 .s12_i path',34.650,.7);KW.enter(tl,'#s12 .s12_halo','focus',34.600);
+KW.enter(tl,'#s12 .s12_l','rise',35.050);
+KW.exit(tl,'#s12','dropOut',36.120,.26);
+KW.enter(tl,'#s13','tilt3d',36.400);
+KW.camera(tl,'#s13c','push',36.400,40.327);
+KW.count(tl,'#s13_n',36.500,1.60,0,3.0,0,'','-way');
+KW.grow(tl,'#s13 .s13_bar',36.500,1.60);
+KW.enter(tl,'#s13 .s13_lab','rise',38.000);
+KW.exit(tl,'#s13','whipR',40.047,.26);
+KW.exit(tl,'#h12','pushUp',40.277,.2);
+KW.typeWords(tl,'#h14',40.347,0.09);
+KW.enter(tl,'#s14','rise',40.327);
+KW.camera(tl,'#s14c','none',40.327,43.247);
+KW.draw(tl,'#s14 .s14_i path',40.377,.7);KW.enter(tl,'#s14 .s14_halo','focus',40.327);
+KW.enter(tl,'#s14 .s14_l','rise',40.777);
+KW.exit(tl,'#s14','blur',42.967,.26);
+KW.flash(tl,'#flash',40.327,.5);
+KW.enter(tl,'#s15','slideL',43.247);
+KW.camera(tl,'#s15c','driftL',43.247,46.647);
+KW.enter(tl,'#s15 .s15_r0','rise',46.177,.3);
+KW.enter(tl,'#s15 .s15_r1','rise',46.177,.3);
+KW.enter(tl,'#s15 .s15_r2','rise',44.597,.3);
+tl.fromTo('#s15 .s15_cur',{autoAlpha:0,x:180,y:120},{autoAlpha:1,x:0,y:0,duration:.4,ease:'power2.out',immediateRender:false},44.597);tl.to('#s15 .s15_r2',{backgroundColor:'rgba(232,40,60,.35)',duration:.15},44.997);
+KW.exit(tl,'#s15','collapse',46.367,.26);
+KW.enter(tl,'#s16','pop',46.647);
+KW.camera(tl,'#s16c','rise',46.647,49.120);
+KW.draw(tl,'#s16 .s16_i path',46.697,.7);KW.enter(tl,'#s16 .s16_halo','focus',46.647);
+KW.enter(tl,'#s16 .s16_l','rise',47.097);
+KW.exit(tl,'#s16','fade',48.840,.26);
+KW.enter(tl,'#s17','unfold',49.120);
+KW.camera(tl,'#s17c','tilt',49.120,51.980);
+KW.enter(tl,'#s17 .s17_c0','pop',51.03);
+KW.enter(tl,'#s17 .s17_c1','pop',51.03);
+KW.exit(tl,'#s17','pushUp',51.700,.26);
+KW.hide(tl,'#panel',51.980);KW.hide(tl,'#gfx',51.980);KW.flash(tl,'#flash',51.980,.18);
+KW.hide(tl,'#h14',51.980);
+KW.show(tl,'#panel',55.780);KW.hide(tl,'#gfx',55.780);tl.fromTo('#panel',{y:-30},{y:0,duration:.28,ease:'power3.out',immediateRender:false},55.780);
+KW.enter(tl,'#s19','zoomIn',55.780);
+KW.camera(tl,'#s19c','pull',55.780,58.533);
+tl.fromTo('#s19 .s19_q .w',{autoAlpha:0,y:40,filter:'blur(6px)'},{autoAlpha:1,y:0,filter:'blur(0px)',duration:.35,stagger:.1,ease:'power3.out',immediateRender:false},55.830);
+KW.grow(tl,'#s19 .s19_u',56.280,.45);
+KW.exit(tl,'#s19','irisOut',58.253,.26);
+KW.flash(tl,'#flash',55.780,.5);
+KW.cap(tl,'#c0',0.000,'pop');
+KW.cap(tl,'#c1',1.600,'pop');
+KW.cap(tl,'#c2',2.660,'pop');
+KW.cap(tl,'#c3',3.260,'pop');
+KW.cap(tl,'#c4',4.040,'pop');
+KW.cap(tl,'#c5',4.500,'pop');
+KW.cap(tl,'#c6',4.960,'slam');
+KW.cap(tl,'#c7',5.640,'pop');
+KW.cap(tl,'#c8',6.500,'pop');
+KW.cap(tl,'#c9',7.280,'pop');
+KW.cap(tl,'#c10',8.940,'pop');
+KW.cap(tl,'#c11',9.340,'pop');
+KW.cap(tl,'#c12',9.720,'pop');
+KW.cap(tl,'#c13',10.160,'pop');
+KW.cap(tl,'#c14',11.000,'pop');
+KW.cap(tl,'#c15',11.420,'pop');
+KW.cap(tl,'#c16',12.300,'pop');
+KW.cap(tl,'#c17',12.780,'pop');
+KW.cap(tl,'#c18',13.900,'pop');
+KW.cap(tl,'#c19',14.406,'pop');
+KW.cap(tl,'#c20',15.566,'pop');
+KW.cap(tl,'#c21',15.686,'slam');
+KW.cap(tl,'#c22',16.066,'pop');
+KW.cap(tl,'#c23',16.700,'pop');
+KW.cap(tl,'#c24',17.260,'pop');
+KW.cap(tl,'#c25',17.780,'pop');
+KW.cap(tl,'#c26',18.200,'pop');
+KW.cap(tl,'#c27',18.980,'pop');
+KW.cap(tl,'#c28',19.580,'pop');
+KW.cap(tl,'#c29',20.340,'pop');
+KW.cap(tl,'#c30',21.000,'pop');
+KW.cap(tl,'#c31',21.586,'pop');
+KW.cap(tl,'#c32',22.206,'pop');
+KW.cap(tl,'#c33',23.746,'pop');
+KW.cap(tl,'#c34',24.980,'pop');
+KW.cap(tl,'#c35',25.840,'pop');
+KW.cap(tl,'#c36',26.480,'pop');
+KW.cap(tl,'#c37',27.220,'pop');
+KW.cap(tl,'#c38',28.640,'pop');
+KW.cap(tl,'#c39',29.293,'pop');
+KW.cap(tl,'#c40',30.553,'pop');
+KW.cap(tl,'#c41',31.113,'pop');
+KW.cap(tl,'#c42',31.973,'slam');
+KW.cap(tl,'#c43',33.113,'pop');
+KW.cap(tl,'#c44',33.833,'pop');
+KW.cap(tl,'#c45',34.653,'pop');
+KW.cap(tl,'#c46',35.013,'pop');
+KW.cap(tl,'#c47',35.473,'pop');
+KW.cap(tl,'#c48',36.073,'pop');
+KW.cap(tl,'#c49',36.613,'pop');
+KW.cap(tl,'#c50',37.333,'pop');
+KW.cap(tl,'#c51',38.133,'pop');
+KW.cap(tl,'#c52',39.373,'pop');
+KW.cap(tl,'#c53',40.380,'pop');
+KW.cap(tl,'#c54',40.980,'pop');
+KW.cap(tl,'#c55',41.840,'pop');
+KW.cap(tl,'#c56',43.760,'pop');
+KW.cap(tl,'#c57',44.900,'pop');
+KW.cap(tl,'#c58',45.520,'pop');
+KW.cap(tl,'#c59',46.700,'pop');
+KW.cap(tl,'#c60',47.520,'pop');
+KW.cap(tl,'#c61',49.173,'pop');
+KW.cap(tl,'#c62',49.853,'pop');
+KW.cap(tl,'#c63',50.473,'pop');
+KW.cap(tl,'#c64',50.833,'pop');
+KW.cap(tl,'#c65',51.333,'pop');
+KW.cap(tl,'#c66',52.033,'slam');
+KW.cap(tl,'#c67',52.913,'pop');
+KW.cap(tl,'#c68',55.833,'pop');
+KW.cap(tl,'#c69',56.460,'pop');
+KW.cap(tl,'#c70',56.980,'pop');
+KW.cap(tl,'#c71',57.360,'pop');
+tl.set({},{},58.533);
+window.__timelines=window.__timelines||{};window.__timelines['main']=tl;
+</script>
+
+</body></html>

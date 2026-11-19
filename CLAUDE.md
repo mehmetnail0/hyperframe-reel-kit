@@ -65,7 +65,7 @@ User drops a video and says *"make me a reel about X"* (Turkish or English): pro
 ## Themes and map
 
 - Themes (same class contract, swap ONE block): `kit/themes/nail.css` = repo owner (default) · `kit/themes/fork-sunset.css` = when sharing with other people.
-- `kit/` — design system: `themes/`, `captions.css`, `components.html` (drawn SVG snippets), `anim.js` (HFKit GSAP helpers), `split-motion/` (split-motion skill), `README.md`, `AGENT.md`. No SFX files in the kit: always the user's own library.
+- `kit/` — design system: `themes/`, `captions.css`, `components.html` (drawn SVG snippets), `anim.js` (HFKit GSAP helpers), `split-motion/` (split-motion skill + fast harness: `split-motion/HARNESS.md`), `README.md`, `AGENT.md`. No SFX files in the kit: always the user's own library.
 - `personal-brand-reel/` — **canonical example** (an 18s reel). Copy its structure for new reels.
 
 ## Commands (per reel folder)

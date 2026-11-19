@@ -1,5 +1,44 @@
 # split-motion-dai
 
+## v3 — built by the harness (Kallaway grammar), `renders/FINAL-v3.mp4`
+
+Fresh end-to-end run of `kit/split-motion/harness/run.py` on the raw 86 s 4K60 VP9 multicam
+clip, nothing cached, one Claude planning call: **298.9 s wall (5.0 min) including render.**
+Project: `harness-v3/` (`data/plan.json` = the model's plan, `data/sfx-map.json` = the engine's
+SFX picks, `index.html` = the compiled composition). Sheets: `renders/FINAL-v3-sheet.jpg`
+(2 fps), `renders/compare-v3.jpg` (v3 | proof #2 | Kallaway DfzlY0XMeeN | Dfx2dzvuI2V, first 36 s, 1 fps).
+
+| step (fresh run) | s | at |
+| --- | --- | --- |
+| 1a transcribe (faster-whisper small.en, cold model load) | 49.0 | 49.0 |
+| 2 plan — Claude, $0.12, overlaps vision | 64.6 | 113.6 |
+| 1b vision: ONE 4K60 VP9 decode → shots, faces, sheet, 1080p mezzanine | 73.1 | (inside 113.6) |
+| 3 cut + remap (+1 speaker beat on a faceless camera → split) | 0.0 | 113.6 |
+| 4 build: base video 39 sub-segments ∥ speech+SFX(16 events)+mix ∥ HTML + DOM fit (11 scenes rescaled) | 40.7 | 154.3 |
+| 5 render: 4 cost-weighted chunks, 1958 frames, crop+overlay as they finish | 134.0 | 288.3 |
+| 6 QC: −14.1 LUFS, −1.5 dBTP, longest static 2.3 s, 54 panel changes/min | 10.6 | **298.9** |
+
+Look-and-fix round (skill §7): bigger chat bubbles/step labels, the 3D phone got a real
+screen + darker body + grid background, render-cost weight for 3D → re-render from the same
+plan with cached ingest: **174 s**. That is `FINAL-v3.mp4`.
+
+What it does: hook "Don't miss the *moment*" (hourglass → clock "instant gratification") →
+orbit "chasing: money / attention / followers" → "Want it *now*" → chat "Can you shout me
+out?" / "No." → full-screen "I say no. Why?" → megaphone → **3D phone** "your page… then
+what?" → grid "two videos" → compare shout-out ✕ / catalog ✓ → calendar "be consistent" →
+custom SVG "opportunity meets preparation" → star "fireworks" → "You gotta *wait*" →
+compare → padlock "your front door" → chat "got a contract for you" → contract doc →
+steps "Step Z, not step A". SFX: intro riser + deep whoosh, risers into the 3D reveal and
+punches, tick runs on rows/orbit cards, glows on landings, no file twice in a row.
+
+Still weaker than Kallaway: some heroes hold 3–4 s without a sub-event (clock, padlock),
+the panel changes ~54/min vs his ~58; no real b-roll/screenshots (all drawn); the card shows
+the wide/B-camera during multicam cuts.
+
+---
+
+## v2 (hand-built, previous session) — `renders/FINAL.mp4`
+
 Proof reel for the **split-motion** style (`kit/split-motion/`): a raw 4K 16:9 two-person
 podcast clip (86 s, multicam) cut into a 67 s English vertical reel. The top panel carries
 the motion, the bottom card holds the speaker, there's a one-word seam caption on every

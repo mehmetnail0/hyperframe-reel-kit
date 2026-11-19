@@ -97,14 +97,17 @@ def mix(mp, lib, speech, out, total, music=None, music_db=-17.0):
                           "-ar", "48000", "-ac", "2", "-c:a", "pcm_f32le", pre], check=True)
     _, I, _ = loud(pre, "anull")
     g = -14.0 - I
-    for _ in range(4):  # linear gain + limiter; nudge until I = -14 +-0.2 and TP <= -1
+    lim = 0.83
+    for _ in range(6):  # linear gain + limiter; nudge gain to I = -14 +-0.2 and the ceiling to TP <= -1
         subprocess.run(FFM + ["-v", "error", "-y", "-i", pre, "-af",
-                              f"volume={g:.2f}dB,alimiter=limit=0.83:attack=1:release=60:level=disabled",
+                              f"volume={g:.2f}dB,alimiter=limit={lim:.3f}:attack=1:release=60:level=disabled",
                               "-ar", "48000", "-ac", "2", out], check=True)
         _, I2, tp = loud(out, "anull")
         if abs(I2 + 14) <= .2 and tp <= -1.0:
             break
         g += (-14.0 - I2)
+        if tp > -1.0:  # inter-sample overs: lower the limiter ceiling by the overshoot (+0.3 dB margin)
+            lim *= 10 ** ((-1.3 - tp) / 20)
     os.remove(pre)
     print(f"mix: {len(labels) - 1} sfx events, I {I2:.1f} LUFS, true peak {tp:.1f} dBTP -> {out}")
 

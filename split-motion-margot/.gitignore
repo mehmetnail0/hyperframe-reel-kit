@@ -1,0 +1,6 @@
+build/
+assets/
+_chunk*.html
+_qc.html
+_one.html
+renders/_chunks/

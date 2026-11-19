@@ -9,7 +9,7 @@ const fs = require('fs');
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1080, height: 2040 } });
   await page.goto('file://' + html, { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => window.__timelines && window.__timelines.main, null, { timeout: 40000 });
+  await page.waitForFunction(() => !!(window.__timelines && window.__timelines.main), null, { timeout: 40000, polling: 200 });
   await page.evaluate(() => document.fonts.ready);
   const res = [];
   for (const b of beats) {
@@ -20,14 +20,17 @@ const fs = require('fs');
       const root = document.getElementById(sid);
       if (!root) return null;
       let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, n = 0;
+      const add = (q) => { if (q.width < 2 || q.height < 2) return;
+        x0 = Math.min(x0, q.left); y0 = Math.min(y0, q.top); x1 = Math.max(x1, q.right); y1 = Math.max(y1, q.bottom); n++; };
       root.querySelectorAll('*').forEach((el) => {
         const cs = getComputedStyle(el);
-        if (cs.visibility === 'hidden' || +cs.opacity === 0) return;
-        const hasInk = el.childElementCount === 0 || el.tagName === 'svg' || cs.backgroundColor !== 'rgba(0, 0, 0, 0)' || cs.borderTopWidth !== '0px';
-        if (!hasInk) return;
-        const q = el.getBoundingClientRect();
-        if (q.width < 2 || q.height < 2) return;
-        x0 = Math.min(x0, q.left); y0 = Math.min(y0, q.top); x1 = Math.max(x1, q.right); y1 = Math.max(y1, q.bottom); n++;
+        if (cs.visibility === 'hidden' || +cs.opacity === 0 || cs.display === 'none') return;
+        if (el.closest('svg') && el.tagName !== 'svg') return;               // the svg box covers its children
+        const boxy = el.tagName === 'svg' || cs.backgroundColor !== 'rgba(0, 0, 0, 0)' || cs.backgroundImage !== 'none' || cs.borderTopWidth !== '0px';
+        if (boxy) { add(el.getBoundingClientRect()); return; }
+        // text: the tight box of the glyphs, not the (often full-width) block
+        for (const c of el.childNodes) if (c.nodeType === 3 && c.textContent.trim()) {
+          const r = document.createRange(); r.selectNodeContents(c); add(r.getBoundingClientRect()); }
       });
       return n ? { x0, y0, x1, y1, n } : null;
     }, [b.sid, t]);

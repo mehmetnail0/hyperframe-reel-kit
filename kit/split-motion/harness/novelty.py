@@ -8,8 +8,8 @@ apply(plan, memory, seed):
   * a (type, enter, exit) combo used by any of the last 3 reels is re-rolled (enter/exit/camera
     from the verbs least used in history, seeded) — the TYPE stays (it is the meaning)
   * two consecutive beats never share an enter verb, an exit verb or a camera move
-  * if > 60 % of this plan's scene types appeared in the previous reel, the most repeated
-    decorative types (icon/quote/grid/orbit/radar) are swapped for types the last reel did not use
+  * scene TYPES are never swapped in code (they carry the meaning); the planner sees the last
+    reels' types in its prompt and is told to vary them; a > 60 % overlap is reported
   * header styles rotate (no style three times in a row)
 record(plan, memory, reel, sfx_events): appends this reel's fingerprint (keeps 12).
 """
@@ -31,9 +31,9 @@ def _least_used(options, counts, R, avoid=()):
     return R.choice(pool)
 
 
-def apply(plan, memory, seed):
+def apply(plan, memory, seed, reel=None):
     R = random.Random(seed * 7919 + 13)
-    recent = memory.get("recent", [])[-3:]
+    recent = [r for r in memory.get("recent", []) if not (reel and r["reel"] == reel)][-3:]
     used_combos = {tuple(c) for r in recent for c in r.get("combos", [])}
     cnt = collections.Counter()
     for r in recent:
@@ -46,20 +46,8 @@ def apply(plan, memory, seed):
     types = [b["scene"]["type"] for b in scene_beats]
     if types and last_types:
         overlap = sum(t in last_types for t in types) / len(types)
-        if overlap > .6:
-            fresh = [t for t in VOCAB["scenes"] if t not in last_types and t not in ("hero3d", "cta", "chapter", "custom_svg")]
-            R.shuffle(fresh)
-            for b in scene_beats:
-                if not fresh or overlap <= .6:
-                    break
-                sc = b["scene"]
-                if sc["type"] in SWAPPABLE and sc["type"] in last_types and sc["type"] in ("icon", "quote", "grid", "orbit", "radar"):
-                    new = fresh.pop()
-                    changes.append(f"type {sc['type']}->{new} (last reel overlap)")
-                    sc["type"] = new
-                    sc.setdefault("items", [sc.get("label") or sc.get("text") or ""])
-                    types = [x["scene"]["type"] for x in scene_beats]
-                    overlap = sum(t in last_types for t in types) / len(types)
+        if overlap > .6:  # types carry meaning: report only (the planner already saw the memory)
+            changes.append(f"note: {overlap:.0%} of scene types also in the previous reel")
     prev = {}
     for b in scene_beats:
         sc = b["scene"]

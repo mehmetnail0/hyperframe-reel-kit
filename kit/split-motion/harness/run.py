@@ -122,7 +122,8 @@ def main(argv):
     import numpy as np
     en = np.load(os.path.join(work, "energy.npy"))
     t = time.time()
-    plan, nov = novelty.apply(plan, mem, seed)
+    reel_id = os.path.basename(reel) + ":" + os.path.basename(out)
+    plan, nov = novelty.apply(plan, mem, seed, reel_id)
     json.dump(plan, open(os.path.join(reel, "data", "plan.json"), "w"), indent=1, ensure_ascii=False)
     clk.step("2b novelty pass", time.time() - t, changes=nov)
 
@@ -236,13 +237,25 @@ def main(argv):
     rr = render.render(reel, lambda off, dur: scenes.compile_reel(plan, cw, total, rctx, chunk=(off, dur))[0],
                        total, os.path.join(reel, "assets", "mix.wav"), out, n=nchunks, workers=int(opt("--workers", "1")),
                        card_from=os.path.join(reel, "assets", "video.mp4"), split_iv=split_iv,
-                       cost=lambda t: next((3.0 if b["type"] == "hero3d" else (1.6 if b["layout"] == "speaker" else 1.0)
+                       cost=lambda t: next((5.0 if b["type"] == "hero3d" else (1.6 if b["layout"] == "speaker" else 1.0)
                                             for b in mb if b["t0"] <= t < b["t1"]), 1.0))
     clk.step("5 render (chunked, parallel)", time.time() - t, **rr)
 
     # 6 qc
     t = time.time()
     rep = qc.final(out, mb, None, os.path.join(reel, "renders"))
+    if any(i.startswith(("true peak", "loudness")) for i in rep["issues"]) and lib:
+        # auto-fix: re-mix (the mixer lowers its limiter ceiling until TP <= -1) and re-mux, video copied
+        subprocess.run([sys.executable, "-I", os.path.join(KIT, "sfx_mix.py"), "mix", mp, lib, os.path.join(work, "speech.wav"),
+                        os.path.join(reel, "assets", "mix.wav"), f"{total:.3f}"], check=True)
+        tmp = out + ".fix.mp4"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", out, "-i", os.path.join(reel, "assets", "mix.wav"), "-map", "0:v", "-map", "1:a",
+                        "-c:v", "copy", "-c:a", "aac", "-b:a", "320k", "-shortest", "-movflags", "+faststart", tmp], check=True)
+        os.replace(tmp, out)
+        I, tp = qc.loudness(out)
+        rep["autofix_audio"] = dict(lufs=I, true_peak=tp)
+        rep["issues"] = [i for i in rep["issues"] if not i.startswith(("true peak", "loudness"))] + \
+            ([f"true peak {tp} after fix"] if tp > -1 else [])
     os.replace(os.path.join(reel, "renders", "sheet-v.jpg"), os.path.splitext(out)[0] + "-sheet.jpg")
     clk.step("6 qc", time.time() - t, **rep)
 
