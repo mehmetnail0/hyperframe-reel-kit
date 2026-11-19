@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=2040">
+<title>Preparation Before Opportunity</title>
+<script src="assets/vendor/gsap.min.js"></script>
+<style>/* ============================================================================
+   kw.css — the "Kallaway look" for split-motion (measured from 20 reference reels)
+   canvas 1080x2040 (render tall + crop to 1920). Geometry:
+     panel      y 0-1370   near-black, faint square grid, vignette
+     header     y 150-330  bold sans 2 lines + serif-italic accent, red box / underline
+     stage      y 340-1200 the scene (one hero per beat)
+     seam cap   y 1225-1310 1-3 words, white bold, centered x 90-990
+     card       y 1372-1900 speaker card, inset 24 px, radius 38 (baked into the video)
+   ============================================================================ */
+@font-face { font-family: "PS"; font-weight: 400; src: url("assets/fonts/ProductSans-Regular.woff") format("woff"); }
+@font-face { font-family: "PS"; font-weight: 700; src: url("assets/fonts/ProductSans-Bold.woff") format("woff"); }
+@font-face { font-family: "PS"; font-weight: 900; src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+@font-face { font-family: "IS"; font-style: italic; font-weight: 400; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); }
+:root {
+  --bg: #0a0a0c; --bg2: #121216; --line: rgba(255,255,255,.055); --ink: #fff; --dim: rgba(255,255,255,.62);
+  --card: #16161b; --stroke: rgba(255,255,255,.22);
+  --red: #e8283c; --red2: #ff4d5e; --acc2: #ffd23f;
+  --hl1: #ffd23f; --hl2: #b05cff; --hl3: #2ee6d6; --hl4: #3dff8b; --hl5: #ff5c8a;
+}
+.kw-light { --bg: #e9e9ec; --bg2: #f4f4f6; --line: rgba(0,0,0,.07); --ink: #111; --dim: rgba(0,0,0,.55); --card: #fff; --stroke: rgba(0,0,0,.18); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 2040px; overflow: hidden; background: #000; }
+body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.abs { position: absolute; }
+
+/* ---- panel ---- */
+#panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+#panelbg { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; background: var(--bg); }
+#panelbg .grid { position: absolute; inset: -80px; background-image:
+  linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px);
+  background-size: 90px 90px; }
+#panelbg .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 40%, rgba(0,0,0,.55) 100%); }
+.kw-light #panelbg .vig { background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 50%, rgba(0,0,0,.08) 100%); }
+#gfx { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: var(--bg); opacity: 0; }
+#gfx .grid { position: absolute; inset: 0; background-image:
+  linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px); background-size: 90px 90px; }
+
+/* ---- header ---- */
+.hd { position: absolute; left: 70px; width: 940px; top: 150px; text-align: center; font-weight: 700; font-size: 66px;
+  line-height: 1.04; letter-spacing: -.025em; opacity: 0; }
+.hd .w { display: inline-block; }
+.hd i { font-family: "IS", serif; font-style: italic; font-weight: 400; font-size: 1.1em; letter-spacing: -.01em; }
+.hd .box { background: var(--red); color: #fff; padding: 0 .16em .04em; border-radius: 4px; box-decoration-break: clone; }
+.hd .ul { position: relative; }
+.hd .ul::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.06em; height: .09em; background: var(--red);
+  transform-origin: left; transform: scaleX(var(--u, 1)); }
+.hd.sm { font-size: 54px; }
+.hd.lg { font-size: 80px; }
+
+/* ---- captions ---- */
+.cap { position: absolute; left: 90px; width: 900px; text-align: center; font-weight: 700; font-size: 58px; line-height: 1.02;
+  letter-spacing: -.02em; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.55); }
+.cap.seam { top: var(--cap-top, 854px); }
+.kw-light .cap.seam { color: #111; text-shadow: none; }
+.cap.full { font-size: 72px; text-shadow: 0 3px 18px rgba(0,0,0,.7); }
+.cap i { font-family: "IS", serif; font-style: italic; font-weight: 400; font-size: 1.12em; }
+.cap .a { color: var(--red2); }
+.cap .y { color: var(--acc2); }
+
+/* ---- scene stage ---- */
+.sc { position: absolute; left: 0; top: var(--stage-top, 300px); width: 1080px; height: var(--stage-h, 538px); opacity: 0; perspective: 1400px; }
+.sc.gfx { top: 330px; height: 1300px; }
+.sc .base { position: absolute; left: 0; top: 0; width: 1080px; height: 880px; transform-origin: 50% 0; }
+/* substance layers: light, particles, one shine — they settle into stillness */
+.fx-glow { position: absolute; left: -60px; top: -60px; width: 1200px; height: 1000px; opacity: 0; pointer-events: none; }
+.fx-pts { position: absolute; inset: 0; pointer-events: none; }
+.fx-pts .pt { position: absolute; border-radius: 50%; opacity: 0; }
+.fx-shine { position: absolute; inset: 0; opacity: 0; visibility: visible; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.16) 48%, rgba(255,255,255,.05) 53%, transparent 62%);
+  background-size: 300% 100%; background-repeat: no-repeat; }
+.cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.card { position: absolute; background: var(--card); border: 2px solid var(--stroke); border-radius: 26px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 18px 60px rgba(0,0,0,.55), 0 0 40px rgba(255,255,255,.06); }
+.kw-light .card { box-shadow: 0 12px 40px rgba(0,0,0,.12); }
+.pill { position: absolute; padding: 14px 28px; border-radius: 14px; font-weight: 700; font-size: 38px; white-space: nowrap;
+  background: var(--card); border: 2px solid var(--stroke); }
+.pill.red { background: var(--red); border-color: var(--red2); color: #fff; box-shadow: 0 0 34px rgba(232,40,60,.45); }
+.pill i, .row i, .big i { font-family: "IS", serif; font-style: italic; font-weight: 400; }
+.thumb { position: absolute; border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,.75);
+  box-shadow: 0 10px 34px rgba(0,0,0,.6); }
+.thumb .sky { position: absolute; inset: 0; }
+.thumb .play { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-35%, -50%);
+  border-left: 26px solid rgba(255,255,255,.92); border-top: 16px solid transparent; border-bottom: 16px solid transparent; }
+.thumb .ln { position: absolute; left: 10%; height: 9px; border-radius: 5px; background: rgba(255,255,255,.85); }
+.thumb .who { position: absolute; left: 50%; bottom: -8%; width: 54%; height: 54%; transform: translateX(-50%); border-radius: 50% 50% 0 0;
+  background: rgba(0,0,0,.35); }
+.thumb .who::before { content: ""; position: absolute; left: 30%; top: -38%; width: 40%; height: 60%; border-radius: 50%; background: rgba(0,0,0,.35); }
+.row { position: absolute; display: flex; align-items: center; gap: 22px; height: 92px; padding: 0 26px 0 14px; border-radius: 16px;
+  background: linear-gradient(90deg, #1d1d23, #141418); border: 2px solid rgba(255,255,255,.14); font-weight: 700; font-size: 40px; }
+.kw-light .row { background: #fff; border-color: rgba(0,0,0,.14); }
+.row .n { flex: none; width: 64px; height: 64px; border-radius: 12px; background: var(--red); color: #fff; display: flex;
+  align-items: center; justify-content: center; font-weight: 900; font-size: 32px; }
+.row.ghost .t { color: transparent; text-shadow: 0 0 14px rgba(255,255,255,.55); }
+.kw-light .row.ghost .t { text-shadow: 0 0 14px rgba(0,0,0,.45); }
+.row.on { border-color: var(--red2); box-shadow: 0 0 30px rgba(232,40,60,.35); }
+.big { position: absolute; left: 0; width: 1080px; text-align: center; font-weight: 900; letter-spacing: -.04em; line-height: .95; }
+.serif { font-family: "IS", serif; font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+.hlbar { position: absolute; height: 22px; border-radius: 4px; transform-origin: left center; }
+.dash { fill: none; stroke: var(--stroke); stroke-width: 3; stroke-dasharray: 10 12; }
+.ln-draw { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.glowR { filter: drop-shadow(0 0 14px rgba(232,40,60,.75)); }
+.glowW { filter: drop-shadow(0 0 12px rgba(255,255,255,.55)); }
+.ico { position: absolute; }
+.ico svg { width: 100%; height: 100%; overflow: visible; }
+.chip { position: absolute; padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 34px; background: #fff; color: #111;
+  box-shadow: 0 8px 26px rgba(0,0,0,.45); white-space: nowrap; }
+.chip.red { background: var(--red); color: #fff; }
+.bubble { position: absolute; max-width: 700px; padding: 22px 30px; border-radius: 34px; font-size: 40px; font-weight: 700; line-height: 1.15; }
+.bubble.in { background: #26262e; color: #fff; border-bottom-left-radius: 8px; }
+.bubble.out { background: var(--red); color: #fff; border-bottom-right-radius: 8px; }
+#flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff; opacity: 0; pointer-events: none; }
+#gl3d { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); opacity: 0; }
+.big, .chip, .pill, .row { font-variant-numeric: tabular-nums; }
+
+:root { --acc2: #ffd23f; --panel-h: 958px; --cap-top: 854px; --stage-top: 300px; --stage-h: 538px; }
+</style></head>
+<body class="">
+<div id="root" data-composition-id="main" data-start="0" data-duration="65.267" data-width="1080" data-height="2040">
+<video id="vid" class="clip" src="assets/video.mp4" data-start="0" data-duration="65.267" data-media-start="0.000" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video>
+<div id="panel" class="clip" data-start="0" data-duration="65.267" data-track-index="2" data-layout-allow-overflow>
+ <div id="panelbg"><div class="grid"></div><div class="vig"></div></div>
+ <div id="gfx"><div class="grid"></div></div>
+ <canvas id="gl3d" width="1080" height="958"></canvas>
+ <div class="hd  box" id="h0"><span class="w">DON&#x27;T</span> <span class="w">MISS</span> <span class="w"><span class="box">THE MOMENT</span></span></div><div class="sc" id="s0"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(1.133);transform-origin:50% 50%"><div class="cam" id="s0c"><div class="fx-glow s0_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#3dff8b2e 0%,#3dff8b12 40%,transparent 72%)"></div><div class="fx-pts px-far s0_p"><i class="pt" data-dx="-7.5" data-dy="66.8" data-a="0.56" data-dl="0.28" style="left:515px;top:656px;width:6px;height:6px;background:#3dff8b;box-shadow:0 0 18px #3dff8b"></i><i class="pt" data-dx="66.8" data-dy="-46.8" data-a="0.62" data-dl="0.20" style="left:717px;top:306px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-59.7" data-dy="-35.8" data-a="0.82" data-dl="0.00" style="left:428px;top:363px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-8.6" data-dy="44.8" data-a="0.49" data-dl="0.32" style="left:502px;top:626px;width:3px;height:3px;background:#3dff8b;box-shadow:0 0 9px #3dff8b"></i><i class="pt" data-dx="64.2" data-dy="-55.9" data-a="0.84" data-dl="0.08" style="left:742px;top:254px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="63.3" data-dy="39.5" data-a="0.73" data-dl="0.06" style="left:718px;top:541px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="16.3" data-dy="-78.4" data-a="0.76" data-dl="0.14" style="left:567px;top:299px;width:5px;height:5px;background:#3dff8b;box-shadow:0 0 15px #3dff8b"></i><i class="pt" data-dx="40.4" data-dy="44.1" data-a="0.82" data-dl="0.12" style="left:658px;top:559px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-35.7" data-dy="10.2" data-a="0.61" data-dl="0.18" style="left:329px;top:490px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-28.3" data-dy="14.7" data-a="0.37" data-dl="0.16" style="left:408px;top:499px;width:4px;height:4px;background:#3dff8b;box-shadow:0 0 12px #3dff8b"></i><i class="pt" data-dx="34.9" data-dy="-79.4" data-a="0.85" data-dl="0.14" style="left:622px;top:244px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="29.6" data-dy="-59.2" data-a="0.82" data-dl="0.16" style="left:588px;top:333px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="9.4" data-dy="-32.1" data-a="0.79" data-dl="0.32" style="left:572px;top:319px;width:8px;height:8px;background:#3dff8b;box-shadow:0 0 24px #3dff8b"></i><i class="pt" data-dx="94.8" data-dy="21.8" data-a="0.42" data-dl="0.13" style="left:755px;top:480px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i></div><div class="fx-halo s0_halo" style="position:absolute;left:190px;top:-40px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,#2ee6d655 0%,#2ee6d618 35%,transparent 68%)"></div><div class="s0_disc px-far" style="position:absolute;left:300px;top:70px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.22),rgba(255,255,255,.04) 45%,rgba(0,0,0,.25) 100%),linear-gradient(160deg,#1f1f27,#0c0c10);border:2px solid rgba(255,255,255,.22);box-shadow:inset 0 2px 0 rgba(255,255,255,.25),inset 0 -30px 60px rgba(0,0,0,.5),0 30px 80px rgba(0,0,0,.6),0 0 60px #2ee6d644"><div style="position:absolute;left:12%;top:6%;width:56%;height:26%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.28),transparent)"></div></div><div class="ico s0_i px-near" style="left:385px;top:155px;width:310px;height:310px;filter:drop-shadow(0 0 14px #2ee6d6)"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M12 3l2.8 5.9 6.2.9-4.5 4.4 1 6.3L12 17.6 6.5 20.5l1-6.3L3 9.8l6.2-.9z" stroke="#2ee6d6" stroke-width="1.5"/></svg></div></div></div></div></div><div class="hd  " id="h1"><span class="w">CHASING</span> <span class="w"><i>Instant</i></span> <span class="w">REWARDS</span></div><div class="sc" id="s1"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(0.966);transform-origin:50% 50%"><div class="cam" id="s1c"><div class="fx-glow s1_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#ffd23f2e 0%,#ffd23f12 40%,transparent 72%)"></div><div class="fx-pts px-far s1_p"><i class="pt" data-dx="-52.8" data-dy="40.0" data-a="0.79" data-dl="0.08" style="left:362px;top:565px;width:5px;height:5px;background:#ffd23f;box-shadow:0 0 15px #ffd23f"></i><i class="pt" data-dx="28.8" data-dy="-13.3" data-a="0.79" data-dl="0.08" style="left:783px;top:318px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="23.4" data-dy="-23.5" data-a="0.87" data-dl="0.06" style="left:679px;top:290px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="87.5" data-dy="-6.6" data-a="0.74" data-dl="0.14" style="left:776px;top:412px;width:8px;height:8px;background:#ffd23f;box-shadow:0 0 24px #ffd23f"></i><i class="pt" data-dx="-105.0" data-dy="10.8" data-a="0.66" data-dl="0.32" style="left:364px;top:448px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="37.7" data-dy="-33.7" data-a="0.81" data-dl="0.07" style="left:691px;top:295px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="103.8" data-dy="12.5" data-a="0.86" data-dl="0.32" style="left:782px;top:459px;width:6px;height:6px;background:#ffd23f;box-shadow:0 0 18px #ffd23f"></i><i class="pt" data-dx="53.6" data-dy="-9.4" data-a="0.88" data-dl="0.04" style="left:667px;top:408px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="0.5" data-dy="-25.6" data-a="0.43" data-dl="0.32" style="left:545px;top:202px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="21.3" data-dy="-17.0" data-a="0.44" data-dl="0.11" style="left:735px;top:275px;width:4px;height:4px;background:#ffd23f;box-shadow:0 0 12px #ffd23f"></i><i class="pt" data-dx="19.0" data-dy="-43.7" data-a="0.45" data-dl="0.02" style="left:630px;top:222px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="41.0" data-dy="-5.0" data-a="0.78" data-dl="0.25" style="left:836px;top:394px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="96.0" data-dy="-7.0" data-a="0.35" data-dl="0.14" style="left:737px;top:416px;width:8px;height:8px;background:#ffd23f;box-shadow:0 0 24px #ffd23f"></i><i class="pt" data-dx="8.4" data-dy="-61.5" data-a="0.85" data-dl="0.20" style="left:558px;top:298px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i></div><div class="pill red s1_root" style="left:120px;top:430px;transform:translateY(-50%);font-size:42px">Instant Gratification</div><svg class="abs" style="left:0;top:0" width="1080" height="880"><path class="ln-draw s1_p0" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d="M420 430 C 500 430, 440 345.0, 560 345.0" stroke="rgba(255,255,255,.8)" stroke-width="4"/><path class="ln-draw s1_p1" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d="M420 430 C 500 430, 440 515.0, 560 515.0" stroke="rgba(255,255,255,.8)" stroke-width="4"/></svg><div class="row s1_k0" style="left:560px;top:299px;width:440px;font-size:36px"><div class="n">01</div><div class="t">Fast Money</div></div><div class="row s1_k1" style="left:560px;top:469px;width:440px;font-size:36px"><div class="n">02</div><div class="t">Quick Attention</div></div></div></div></div></div><div class="sc" id="s2"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(1.133);transform-origin:50% 50%"><div class="cam" id="s2c"><div class="fx-glow s2_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#2ee6d62e 0%,#2ee6d612 40%,transparent 72%)"></div><div class="fx-pts px-far s2_p"><i class="pt" data-dx="-6.1" data-dy="-57.5" data-a="0.49" data-dl="0.22" style="left:526px;top:301px;width:4px;height:4px;background:#2ee6d6;box-shadow:0 0 12px #2ee6d6"></i><i class="pt" data-dx="1.8" data-dy="-39.3" data-a="0.71" data-dl="0.11" style="left:549px;top:222px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="67.1" data-dy="11.4" data-a="0.51" data-dl="0.20" style="left:718px;top:460px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="56.5" data-dy="-74.9" data-a="0.90" data-dl="0.09" style="left:615px;top:330px;width:4px;height:4px;background:#2ee6d6;box-shadow:0 0 12px #2ee6d6"></i><i class="pt" data-dx="109.6" data-dy="7.5" data-a="0.55" data-dl="0.16" style="left:667px;top:439px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="42.3" data-dy="-28.6" data-a="0.86" data-dl="0.04" style="left:718px;top:310px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-23.5" data-dy="55.2" data-a="0.44" data-dl="0.11" style="left:460px;top:619px;width:6px;height:6px;background:#2ee6d6;box-shadow:0 0 18px #2ee6d6"></i><i class="pt" data-dx="28.0" data-dy="-81.7" data-a="0.39" data-dl="0.33" style="left:580px;top:313px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="60.2" data-dy="46.7" data-a="0.68" data-dl="0.11" style="left:701px;top:555px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-66.4" data-dy="43.2" data-a="0.61" data-dl="0.26" style="left:432px;top:500px;width:5px;height:5px;background:#2ee6d6;box-shadow:0 0 15px #2ee6d6"></i><i class="pt" data-dx="-26.5" data-dy="11.6" data-a="0.82" data-dl="0.08" style="left:398px;top:492px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="75.4" data-dy="12.2" data-a="0.42" data-dl="0.14" style="left:779px;top:469px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-23.7" data-dy="-73.8" data-a="0.48" data-dl="0.20" style="left:483px;top:254px;width:4px;height:4px;background:#2ee6d6;box-shadow:0 0 12px #2ee6d6"></i><i class="pt" data-dx="-48.5" data-dy="36.8" data-a="0.38" data-dl="0.17" style="left:438px;top:507px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i></div><div class="fx-halo s2_halo" style="position:absolute;left:190px;top:-40px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,#b05cff55 0%,#b05cff18 35%,transparent 68%)"></div><div class="s2_disc px-far" style="position:absolute;left:300px;top:70px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.22),rgba(255,255,255,.04) 45%,rgba(0,0,0,.25) 100%),linear-gradient(160deg,#1f1f27,#0c0c10);border:2px solid rgba(255,255,255,.22);box-shadow:inset 0 2px 0 rgba(255,255,255,.25),inset 0 -30px 60px rgba(0,0,0,.5),0 30px 80px rgba(0,0,0,.6),0 0 60px #b05cff44"><div style="position:absolute;left:12%;top:6%;width:56%;height:26%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.28),transparent)"></div></div><div class="ico s2_i px-near" style="left:385px;top:155px;width:310px;height:310px;filter:drop-shadow(0 0 14px #b05cff)"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M12 3l2.8 5.9 6.2.9-4.5 4.4 1 6.3L12 17.6 6.5 20.5l1-6.3L3 9.8l6.2-.9z" stroke="#b05cff" stroke-width="1.5"/></svg></div></div></div></div></div><div class="hd  box" id="h3"><span class="w">THE</span> <span class="w"><span class="box">SHOUTOUT</span></span> <span class="w">TRAP</span></div><div class="sc" id="s3"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(1.164);transform-origin:50% 50%"><div class="cam" id="s3c"><div class="fx-glow s3_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#b05cff2e 0%,#b05cff12 40%,transparent 72%)"></div><div class="fx-pts px-far s3_p"><i class="pt" data-dx="11.4" data-dy="23.6" data-a="0.78" data-dl="0.01" style="left:646px;top:649px;width:4px;height:4px;background:#b05cff;box-shadow:0 0 12px #b05cff"></i><i class="pt" data-dx="-37.1" data-dy="-2.4" data-a="0.71" data-dl="0.08" style="left:294px;top:414px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="56.4" data-dy="59.4" data-a="0.77" data-dl="0.23" style="left:649px;top:544px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="50.3" data-dy="-75.6" data-a="0.51" data-dl="0.00" style="left:639px;top:282px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="-30.5" data-dy="4.2" data-a="0.43" data-dl="0.16" style="left:365px;top:454px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="50.6" data-dy="12.7" data-a="0.43" data-dl="0.25" style="left:787px;top:492px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="-4.2" data-dy="82.1" data-a="0.46" data-dl="0.09" style="left:528px;top:663px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="-89.6" data-dy="46.0" data-a="0.70" data-dl="0.31" style="left:430px;top:487px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="18.9" data-dy="-71.1" data-a="0.65" data-dl="0.32" style="left:586px;top:258px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-74.7" data-dy="-8.1" data-a="0.52" data-dl="0.08" style="left:247px;top:398px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="37.5" data-dy="76.0" data-a="0.67" data-dl="0.32" style="left:648px;top:649px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="39.3" data-dy="-15.2" data-a="0.49" data-dl="0.15" style="left:746px;top:350px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-58.0" data-dy="-2.0" data-a="0.37" data-dl="0.04" style="left:347px;top:423px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="58.4" data-dy="-17.5" data-a="0.63" data-dl="0.20" style="left:689px;top:385px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i></div><div class="bubble in s3_m0" style="left:150px;top:80px;font-size:54px;max-width:640px">Hey, can you shout me out?</div><div class="bubble out s3_m1" style="right:150px;top:290px;font-size:54px;max-width:640px">No.</div></div></div></div></div><div class="sc" id="s5"><div class="base" style="transform:scale(0.6114)"><div><div class="cam" id="s5c"><div class="fx-glow s5_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#b05cff2e 0%,#b05cff12 40%,transparent 72%)"></div><div class="fx-pts px-far s5_p"><i class="pt" data-dx="53.2" data-dy="-28.3" data-a="0.75" data-dl="0.06" style="left:659px;top:367px;width:4px;height:4px;background:#b05cff;box-shadow:0 0 12px #b05cff"></i><i class="pt" data-dx="3.2" data-dy="28.0" data-a="0.35" data-dl="0.12" style="left:562px;top:623px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="55.2" data-dy="-12.1" data-a="0.59" data-dl="0.19" style="left:790px;top:375px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-13.0" data-dy="-74.6" data-a="0.73" data-dl="0.26" style="left:504px;top:225px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="88.3" data-dy="-51.3" data-a="0.74" data-dl="0.27" style="left:698px;top:338px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="11.4" data-dy="27.5" data-a="0.54" data-dl="0.26" style="left:633px;top:653px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="52.2" data-dy="28.1" data-a="0.41" data-dl="0.23" style="left:756px;top:547px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="-12.6" data-dy="-71.2" data-a="0.89" data-dl="0.06" style="left:519px;top:314px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="4.0" data-dy="79.2" data-a="0.39" data-dl="0.11" style="left:545px;top:531px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-78.1" data-dy="-4.6" data-a="0.53" data-dl="0.07" style="left:361px;top:420px;width:5px;height:5px;background:#b05cff;box-shadow:0 0 15px #b05cff"></i><i class="pt" data-dx="51.6" data-dy="-9.6" data-a="0.73" data-dl="0.15" style="left:803px;top:381px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="77.8" data-dy="-17.4" data-a="0.63" data-dl="0.03" style="left:761px;top:381px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="86.7" data-dy="33.7" data-a="0.76" data-dl="0.07" style="left:668px;top:480px;width:4px;height:4px;background:#b05cff;box-shadow:0 0 12px #b05cff"></i><i class="pt" data-dx="16.6" data-dy="-27.9" data-a="0.65" data-dl="0.15" style="left:664px;top:222px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="18.2" data-dy="25.3" data-a="0.45" data-dl="0.05" style="left:687px;top:634px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="-8.3" data-dy="45.9" data-a="0.64" data-dl="0.18" style="left:519px;top:544px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="-66.4" data-dy="60.0" data-a="0.43" data-dl="0.25" style="left:452px;top:509px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-87.2" data-dy="-11.6" data-a="0.59" data-dl="0.33" style="left:264px;top:393px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="38.9" data-dy="-71.4" data-a="0.84" data-dl="0.24" style="left:660px;top:210px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="-106.1" data-dy="-10.6" data-a="0.67" data-dl="0.13" style="left:403px;top:416px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="98.5" data-dy="-15.5" data-a="0.81" data-dl="0.01" style="left:707px;top:404px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="17.6" data-dy="53.6" data-a="0.80" data-dl="0.20" style="left:594px;top:595px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="-27.0" data-dy="40.9" data-a="0.64" data-dl="0.11" style="left:419px;top:613px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-7.0" data-dy="56.5" data-a="0.39" data-dl="0.29" style="left:519px;top:602px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="59.3" data-dy="-67.3" data-a="0.51" data-dl="0.34" style="left:702px;top:246px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="31.4" data-dy="8.8" data-a="0.58" data-dl="0.00" style="left:659px;top:463px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="-39.9" data-dy="-32.1" data-a="0.82" data-dl="0.27" style="left:407px;top:323px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="29.4" data-dy="-61.0" data-a="0.86" data-dl="0.10" style="left:642px;top:218px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="-70.2" data-dy="-1.3" data-a="0.87" data-dl="0.08" style="left:281px;top:425px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="93.4" data-dy="30.4" data-a="0.68" data-dl="0.25" style="left:787px;top:510px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i></div><div class="fx-shine s5_sh"></div><div class="big s5_n" style="top:120px;font-size:420px;color:#fff">01</div><div class="big s5_t" style="top:600px;font-size:84px;font-weight:700;letter-spacing:-.03em">Lack of Preparation</div><div class="s5_bar" style="position:absolute;left:340px;top:560px;width:400px;height:10px;border-radius:5px;background:var(--red);transform-origin:center"></div></div></div></div></div><div class="hd  " id="h6"><span class="w">EMPTY</span> <span class="w"><i>Profile</i></span> <span class="w">PAGE</span></div><div class="sc" id="s6"><div class="base" style="transform:scale(0.6114)"><div><div class="cam" id="s6c"><div class="big s6_l" style="top:780px;font-size:70px;font-weight:700;letter-spacing:-.03em">New Visitors</div></div></div></div></div><div class="sc" id="s7"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(1.527);transform-origin:50% 50%"><div class="cam" id="s7c"><div class="fx-glow s7_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#b05cff2e 0%,#b05cff12 40%,transparent 72%)"></div><div class="fx-pts px-far s7_p"><i class="pt" data-dx="16.3" data-dy="-35.4" data-a="0.57" data-dl="0.10" style="left:613px;top:272px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="9.2" data-dy="-33.5" data-a="0.59" data-dl="0.29" style="left:590px;top:246px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="-39.8" data-dy="10.7" data-a="0.38" data-dl="0.17" style="left:387px;top:471px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="59.8" data-dy="-30.2" data-a="0.48" data-dl="0.04" style="left:748px;top:325px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="-8.2" data-dy="-29.2" data-a="0.40" data-dl="0.08" style="left:489px;top:247px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="2.8" data-dy="-68.0" data-a="0.60" data-dl="0.29" style="left:549px;top:223px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="-103.7" data-dy="-14.1" data-a="0.61" data-dl="0.14" style="left:344px;top:403px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="-82.8" data-dy="-50.7" data-a="0.49" data-dl="0.08" style="left:408px;top:349px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="2.9" data-dy="-79.5" data-a="0.86" data-dl="0.13" style="left:545px;top:280px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-59.8" data-dy="-29.5" data-a="0.48" data-dl="0.14" style="left:297px;top:310px;width:5px;height:5px;background:#b05cff;box-shadow:0 0 15px #b05cff"></i><i class="pt" data-dx="-16.7" data-dy="-20.8" data-a="0.83" data-dl="0.19" style="left:389px;top:241px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="29.4" data-dy="-7.8" data-a="0.56" data-dl="0.21" style="left:775px;top:368px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="56.1" data-dy="-41.1" data-a="0.43" data-dl="0.24" style="left:732px;top:289px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="-78.2" data-dy="16.6" data-a="0.84" data-dl="0.07" style="left:355px;top:469px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i></div><div class="big" id="s7_n" style="top:195px;font-size:210px;font-variant-numeric:tabular-nums">2 POSTS</div><div class="big serif s7_lab" style="top:465px;font-size:76px;color:var(--dim)"></div><div class="s7_bar" style="position:absolute;left:240px;top:435px;width:600px;height:8px;border-radius:4px;background:var(--red);transform-origin:left"></div></div></div></div></div><div class="hd  " id="h8"><span class="w">NO</span> <span class="w"><span class="ul">CATALOG</span></span> <span class="w">READY</span></div><div class="sc" id="s8"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(0.953);transform-origin:50% 50%"><div class="cam" id="s8c"><div class="fx-glow s8_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#b05cff2e 0%,#b05cff12 40%,transparent 72%)"></div><div class="fx-pts px-far s8_p"><i class="pt" data-dx="4.2" data-dy="-58.7" data-a="0.36" data-dl="0.23" style="left:547px;top:330px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="-59.0" data-dy="68.3" data-a="0.71" data-dl="0.35" style="left:405px;top:586px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-34.6" data-dy="-58.9" data-a="0.41" data-dl="0.00" style="left:423px;top:231px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-6.9" data-dy="61.9" data-a="0.44" data-dl="0.01" style="left:522px;top:589px;width:5px;height:5px;background:#b05cff;box-shadow:0 0 15px #b05cff"></i><i class="pt" data-dx="-16.8" data-dy="29.5" data-a="0.60" data-dl="0.13" style="left:490px;top:519px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="103.3" data-dy="8.5" data-a="0.58" data-dl="0.23" style="left:694px;top:443px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-76.6" data-dy="4.1" data-a="0.83" data-dl="0.03" style="left:261px;top:445px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="-103.8" data-dy="2.6" data-a="0.68" data-dl="0.09" style="left:326px;top:435px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="58.0" data-dy="-10.9" data-a="0.62" data-dl="0.21" style="left:724px;top:395px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-43.5" data-dy="-24.8" data-a="0.75" data-dl="0.21" style="left:349px;top:321px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="-31.0" data-dy="-41.9" data-a="0.86" data-dl="0.28" style="left:432px;top:284px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="93.0" data-dy="41.4" data-a="0.88" data-dl="0.24" style="left:715px;top:508px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="105.2" data-dy="23.3" data-a="0.65" data-dl="0.19" style="left:805px;top:489px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="40.2" data-dy="-48.8" data-a="0.79" data-dl="0.16" style="left:691px;top:247px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i></div><div class="abs" style="left:238px;top:10px;width:734px;height:1022px;transform:scale(0.822);transform-origin:0 0"><div class="thumb s8_g0" style="left:0px;top:0px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(160deg,#fd79a8,#e84393)"></div><div class="play"></div></div><div class="thumb s8_g1" style="left:252px;top:0px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(120deg,#fd79a8,#e84393)"></div><div class="play"></div></div><div class="thumb s8_g2" style="left:504px;top:0px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(200deg,#a29bfe,#6c5ce7)"></div><div class="who"></div></div><div class="thumb s8_g3" style="left:0px;top:348px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(200deg,#feca57,#ff6b6b)"></div><div class="ln" style="top:20%;width:62%"></div><div class="ln" style="top:34%;width:74%"></div><div class="ln" style="top:48%;width:74%"></div></div><div class="thumb s8_g4" style="left:252px;top:348px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(160deg,#1dd1a1,#10ac84)"></div><div class="play"></div></div><div class="thumb s8_g5" style="left:504px;top:348px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(160deg,#a29bfe,#6c5ce7)"></div><div class="ln" style="top:20%;width:74%"></div><div class="ln" style="top:34%;width:74%"></div><div class="ln" style="top:48%;width:50%"></div></div><div class="thumb s8_g6" style="left:0px;top:696px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(160deg,#feca57,#ff6b6b)"></div><div class="ln" style="top:20%;width:50%"></div><div class="ln" style="top:34%;width:50%"></div><div class="ln" style="top:48%;width:80%"></div></div><div class="thumb s8_g7" style="left:252px;top:696px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(160deg,#ff6b6b,#5f27cd)"></div><div class="who"></div></div><div class="thumb s8_g8" style="left:504px;top:696px;width:230px;height:326px"><div class="sky" style="background:linear-gradient(135deg,#a29bfe,#6c5ce7)"></div><div class="who"></div></div></div><div class="chip red s8_l" style="left:50%;top:800px;transform:translateX(-50%)">Empty Catalog</div></div></div></div></div><div class="sc" id="s9"><div class="base" style="transform:scale(0.6114)"><div><div class="cam" id="s9c"><div class="fx-glow s9_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#3dff8b2e 0%,#3dff8b12 40%,transparent 72%)"></div><div class="fx-pts px-far s9_p"><i class="pt" data-dx="23.1" data-dy="31.6" data-a="0.39" data-dl="0.07" style="left:611px;top:528px;width:3px;height:3px;background:#3dff8b;box-shadow:0 0 9px #3dff8b"></i><i class="pt" data-dx="-85.0" data-dy="10.7" data-a="0.52" data-dl="0.07" style="left:269px;top:464px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="45.9" data-dy="-27.4" data-a="0.41" data-dl="0.32" style="left:661px;top:358px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-29.7" data-dy="71.5" data-a="0.71" data-dl="0.03" style="left:457px;top:629px;width:4px;height:4px;background:#3dff8b;box-shadow:0 0 12px #3dff8b"></i><i class="pt" data-dx="7.6" data-dy="-61.3" data-a="0.52" data-dl="0.23" style="left:555px;top:311px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="5.4" data-dy="25.9" data-a="0.53" data-dl="0.34" style="left:576px;top:600px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-42.8" data-dy="65.1" data-a="0.46" data-dl="0.26" style="left:440px;top:582px;width:4px;height:4px;background:#3dff8b;box-shadow:0 0 12px #3dff8b"></i><i class="pt" data-dx="-69.5" data-dy="-32.2" data-a="0.87" data-dl="0.31" style="left:381px;top:356px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="45.7" data-dy="49.2" data-a="0.44" data-dl="0.28" style="left:712px;top:615px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-84.6" data-dy="6.9" data-a="0.56" data-dl="0.24" style="left:356px;top:445px;width:3px;height:3px;background:#3dff8b;box-shadow:0 0 9px #3dff8b"></i><i class="pt" data-dx="-59.8" data-dy="-47.3" data-a="0.84" data-dl="0.28" style="left:435px;top:347px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="67.0" data-dy="-23.0" data-a="0.61" data-dl="0.10" style="left:684px;top:380px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-3.1" data-dy="-33.7" data-a="0.46" data-dl="0.14" style="left:523px;top:244px;width:5px;height:5px;background:#3dff8b;box-shadow:0 0 15px #3dff8b"></i><i class="pt" data-dx="73.5" data-dy="23.5" data-a="0.65" data-dl="0.04" style="left:757px;top:499px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-51.0" data-dy="5.3" data-a="0.78" data-dl="0.22" style="left:285px;top:456px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="63.5" data-dy="-0.4" data-a="0.71" data-dl="0.29" style="left:729px;top:429px;width:5px;height:5px;background:#3dff8b;box-shadow:0 0 15px #3dff8b"></i><i class="pt" data-dx="24.0" data-dy="-83.7" data-a="0.85" data-dl="0.14" style="left:586px;top:268px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="19.3" data-dy="-62.6" data-a="0.78" data-dl="0.26" style="left:602px;top:231px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-45.9" data-dy="-33.8" data-a="0.78" data-dl="0.13" style="left:370px;top:305px;width:3px;height:3px;background:#3dff8b;box-shadow:0 0 9px #3dff8b"></i><i class="pt" data-dx="-0.9" data-dy="87.4" data-a="0.54" data-dl="0.09" style="left:538px;top:634px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-51.4" data-dy="38.5" data-a="0.41" data-dl="0.26" style="left:448px;top:499px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="30.5" data-dy="3.9" data-a="0.37" data-dl="0.18" style="left:666px;top:446px;width:3px;height:3px;background:#3dff8b;box-shadow:0 0 9px #3dff8b"></i><i class="pt" data-dx="31.7" data-dy="68.9" data-a="0.82" data-dl="0.12" style="left:641px;top:650px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-6.5" data-dy="30.0" data-a="0.56" data-dl="0.22" style="left:490px;top:660px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="80.2" data-dy="-41.8" data-a="0.68" data-dl="0.08" style="left:669px;top:363px;width:3px;height:3px;background:#3dff8b;box-shadow:0 0 9px #3dff8b"></i><i class="pt" data-dx="-12.3" data-dy="54.4" data-a="0.46" data-dl="0.20" style="left:515px;top:539px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="44.9" data-dy="-51.3" data-a="0.48" data-dl="0.14" style="left:615px;top:344px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="28.1" data-dy="37.4" data-a="0.44" data-dl="0.20" style="left:676px;top:610px;width:4px;height:4px;background:#3dff8b;box-shadow:0 0 12px #3dff8b"></i><i class="pt" data-dx="-52.4" data-dy="17.1" data-a="0.87" data-dl="0.01" style="left:297px;top:509px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="49.8" data-dy="-36.8" data-a="0.44" data-dl="0.01" style="left:748px;top:276px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i></div><div class="fx-shine s9_sh"></div><div class="big s9_n" style="top:120px;font-size:420px;color:#fff">02</div><div class="big s9_t" style="top:600px;font-size:84px;font-weight:700;letter-spacing:-.03em">Build The Catalog</div><div class="s9_bar" style="position:absolute;left:340px;top:560px;width:400px;height:10px;border-radius:5px;background:var(--red);transform-origin:center"></div></div></div></div></div><div class="hd lg " id="h10"><span class="w">DO</span> <span class="w"><i>Your</i></span> <span class="w">PART</span></div><div class="sc" id="s10"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(1.983);transform-origin:50% 50%"><div class="cam" id="s10c"><div class="fx-glow s10_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#2ee6d62e 0%,#2ee6d612 40%,transparent 72%)"></div><div class="fx-pts px-far s10_p"><i class="pt" data-dx="54.5" data-dy="34.3" data-a="0.62" data-dl="0.26" style="left:655px;top:503px;width:4px;height:4px;background:#2ee6d6;box-shadow:0 0 12px #2ee6d6"></i><i class="pt" data-dx="90.2" data-dy="6.2" data-a="0.53" data-dl="0.20" style="left:801px;top:448px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="10.0" data-dy="42.3" data-a="0.58" data-dl="0.24" style="left:583px;top:614px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="-28.8" data-dy="25.9" data-a="0.37" data-dl="0.21" style="left:449px;top:512px;width:6px;height:6px;background:#2ee6d6;box-shadow:0 0 18px #2ee6d6"></i><i class="pt" data-dx="-88.3" data-dy="32.4" data-a="0.37" data-dl="0.22" style="left:290px;top:522px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="23.2" data-dy="16.2" data-a="0.78" data-dl="0.15" style="left:682px;top:529px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="65.0" data-dy="46.8" data-a="0.68" data-dl="0.28" style="left:685px;top:535px;width:8px;height:8px;background:#2ee6d6;box-shadow:0 0 24px #2ee6d6"></i><i class="pt" data-dx="21.0" data-dy="-76.4" data-a="0.88" data-dl="0.17" style="left:567px;top:333px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-54.2" data-dy="45.5" data-a="0.85" data-dl="0.19" style="left:427px;top:524px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-45.1" data-dy="-6.7" data-a="0.64" data-dl="0.03" style="left:246px;top:387px;width:8px;height:8px;background:#2ee6d6;box-shadow:0 0 24px #2ee6d6"></i><i class="pt" data-dx="-28.5" data-dy="50.1" data-a="0.80" data-dl="0.11" style="left:474px;top:547px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="49.3" data-dy="-28.5" data-a="0.42" data-dl="0.31" style="left:683px;top:347px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="25.7" data-dy="-64.6" data-a="0.70" data-dl="0.13" style="left:604px;top:269px;width:6px;height:6px;background:#2ee6d6;box-shadow:0 0 18px #2ee6d6"></i><i class="pt" data-dx="51.9" data-dy="-20.5" data-a="0.86" data-dl="0.29" style="left:740px;top:351px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i></div><div class="row s10_r0" style="left:140px;top:238px;width:800px"><div class="n">01</div><div class="t" style="color:rgba(255,255,255,0);text-shadow:0 0 14px rgba(255,255,255,.55)">Keep Dropping</div></div><div class="row s10_r1" style="left:140px;top:366px;width:800px"><div class="n">02</div><div class="t" style="color:rgba(255,255,255,0);text-shadow:0 0 14px rgba(255,255,255,.55)">Be Consistent</div></div><div class="row s10_r2" style="left:140px;top:494px;width:800px"><div class="n">03</div><div class="t" style="color:rgba(255,255,255,0);text-shadow:0 0 14px rgba(255,255,255,.55)">Do Your End</div></div></div></div></div></div><div class="hd  box" id="h11"><span class="w">WHEN</span> <span class="w">THEY</span> <span class="w"><span class="box">COLLIDE</span></span></div><div class="sc gfx" id="s11"><div class="base" style="transform:scale(1)"><div class="abs" style="inset:0;transform:scale(1.078);transform-origin:50% 50%"><div class="cam" id="s11c"><div class="fx-glow s11_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#2ee6d62e 0%,#2ee6d612 40%,transparent 72%)"></div><div class="fx-pts px-far s11_p"><i class="pt" data-dx="28.8" data-dy="56.9" data-a="0.81" data-dl="0.07" style="left:602px;top:553px;width:4px;height:4px;background:#2ee6d6;box-shadow:0 0 12px #2ee6d6"></i><i class="pt" data-dx="-31.6" data-dy="-57.8" data-a="0.53" data-dl="0.21" style="left:489px;top:337px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="50.9" data-dy="0.7" data-a="0.82" data-dl="0.07" style="left:737px;top:433px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-39.6" data-dy="-53.9" data-a="0.68" data-dl="0.26" style="left:445px;top:301px;width:8px;height:8px;background:#2ee6d6;box-shadow:0 0 24px #2ee6d6"></i><i class="pt" data-dx="-72.6" data-dy="20.1" data-a="0.50" data-dl="0.23" style="left:345px;top:484px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="-49.1" data-dy="65.2" data-a="0.49" data-dl="0.33" style="left:460px;top:536px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="-13.0" data-dy="30.5" data-a="0.42" data-dl="0.07" style="left:472px;top:590px;width:8px;height:8px;background:#2ee6d6;box-shadow:0 0 24px #2ee6d6"></i><i class="pt" data-dx="-100.5" data-dy="27.9" data-a="0.48" data-dl="0.34" style="left:336px;top:487px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="-11.1" data-dy="-83.6" data-a="0.79" data-dl="0.19" style="left:525px;top:320px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-27.7" data-dy="-60.0" data-a="0.79" data-dl="0.15" style="left:489px;top:320px;width:8px;height:8px;background:#2ee6d6;box-shadow:0 0 24px #2ee6d6"></i><i class="pt" data-dx="-42.9" data-dy="0.7" data-a="0.60" data-dl="0.33" style="left:301px;top:434px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="36.6" data-dy="-58.5" data-a="0.77" data-dl="0.14" style="left:626px;top:292px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="45.7" data-dy="3.1" data-a="0.89" data-dl="0.28" style="left:707px;top:441px;width:8px;height:8px;background:#2ee6d6;box-shadow:0 0 24px #2ee6d6"></i><i class="pt" data-dx="65.5" data-dy="29.6" data-a="0.85" data-dl="0.26" style="left:772px;top:535px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i></div><svg class="abs" style="left:90px;top:40px;width:900px;height:800px;overflow:visible" viewBox="0 0 900 800"><path pathLength="1" stroke-dasharray="1" class="d" d="M120 650 L380 430" stroke="#fff" stroke-width="6" fill="none"/><path pathLength="1" stroke-dasharray="1" class="d" d="M780 650 L520 430" stroke="#fff" stroke-width="6" fill="none"/><circle class="p" cx="450" cy="380" r="42" stroke="#e8283c" stroke-width="8" fill="none"/><line class="p" x1="450" y1="290" x2="450" y2="200" stroke="#e8283c" stroke-width="6"/><line class="p" x1="450" y1="470" x2="450" y2="560" stroke="#e8283c" stroke-width="6"/><line class="p" x1="360" y1="380" x2="270" y2="380" stroke="#fff" stroke-width="6"/><line class="p" x1="540" y1="380" x2="630" y2="380" stroke="#fff" stroke-width="6"/><line class="p" x1="385" y1="315" x2="315" y2="245" stroke="#e8283c" stroke-width="6"/><line class="p" x1="515" y1="315" x2="585" y2="245" stroke="#e8283c" stroke-width="6"/><line class="p" x1="385" y1="445" x2="315" y2="515" stroke="#fff" stroke-width="6"/><line class="p" x1="515" y1="445" x2="585" y2="515" stroke="#fff" stroke-width="6"/><text x="100" y="710" fill="#fff" font-size="28" font-family="sans-serif">OPP</text><text x="710" y="710" fill="#fff" font-size="28" font-family="sans-serif">PREP</text></svg></div></div></div></div><div class="sc" id="s13"><div class="base" style="transform:scale(0.6114)"><div><div class="cam" id="s13c"><div class="fx-glow s13_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#b05cff2e 0%,#b05cff12 40%,transparent 72%)"></div><div class="fx-pts px-far s13_p"><i class="pt" data-dx="-13.0" data-dy="-28.4" data-a="0.51" data-dl="0.23" style="left:498px;top:338px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="8.0" data-dy="-66.0" data-a="0.74" data-dl="0.05" style="left:553px;top:321px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="91.5" data-dy="-8.8" data-a="0.43" data-dl="0.06" style="left:755px;top:409px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="37.6" data-dy="23.8" data-a="0.69" data-dl="0.06" style="left:767px;top:574px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="38.2" data-dy="54.5" data-a="0.48" data-dl="0.17" style="left:601px;top:517px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="0.2" data-dy="36.0" data-a="0.44" data-dl="0.27" style="left:541px;top:599px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="75.9" data-dy="29.4" data-a="0.46" data-dl="0.13" style="left:683px;top:485px;width:4px;height:4px;background:#b05cff;box-shadow:0 0 12px #b05cff"></i><i class="pt" data-dx="73.1" data-dy="35.5" data-a="0.36" data-dl="0.08" style="left:795px;top:554px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-50.5" data-dy="54.7" data-a="0.67" data-dl="0.34" style="left:417px;top:563px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="42.4" data-dy="40.0" data-a="0.61" data-dl="0.23" style="left:641px;top:526px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="-44.1" data-dy="-3.0" data-a="0.39" data-dl="0.17" style="left:298px;top:414px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-45.1" data-dy="-21.2" data-a="0.40" data-dl="0.35" style="left:372px;top:351px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="2.8" data-dy="-52.6" data-a="0.72" data-dl="0.11" style="left:549px;top:249px;width:4px;height:4px;background:#b05cff;box-shadow:0 0 12px #b05cff"></i><i class="pt" data-dx="-10.3" data-dy="42.5" data-a="0.76" data-dl="0.02" style="left:499px;top:598px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i></div><div class="big s13_n" style="top:120px;font-size:420px;color:transparent;-webkit-text-stroke:5px #fff">03</div><div class="big s13_t" style="top:600px;font-size:84px;font-weight:700;letter-spacing:-.03em">Wrong Order</div><div class="s13_bar" style="position:absolute;left:340px;top:560px;width:400px;height:10px;border-radius:5px;background:var(--red);transform-origin:center"></div></div></div></div></div><div class="hd  " id="h14"><span class="w">SKIPPING</span> <span class="w"><i>The</i></span> <span class="w">PROCESS</span></div><div class="sc" id="s14"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(1.104);transform-origin:50% 50%"><div class="cam" id="s14c"><div class="fx-glow s14_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#b05cff2e 0%,#b05cff12 40%,transparent 72%)"></div><div class="fx-pts px-far s14_p"><i class="pt" data-dx="-25.9" data-dy="-83.9" data-a="0.71" data-dl="0.07" style="left:507px;top:322px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="-12.5" data-dy="-75.9" data-a="0.58" data-dl="0.23" style="left:524px;top:333px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="62.0" data-dy="-18.8" data-a="0.62" data-dl="0.22" style="left:793px;top:353px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="9.3" data-dy="26.5" data-a="0.55" data-dl="0.00" style="left:605px;top:617px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="32.7" data-dy="-3.9" data-a="0.64" data-dl="0.05" style="left:749px;top:405px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-17.7" data-dy="57.6" data-a="0.60" data-dl="0.17" style="left:496px;top:572px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="67.1" data-dy="-20.6" data-a="0.57" data-dl="0.09" style="left:803px;top:349px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="58.0" data-dy="56.3" data-a="0.50" data-dl="0.27" style="left:720px;top:605px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="31.3" data-dy="-14.3" data-a="0.54" data-dl="0.00" style="left:691px;top:361px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="-6.9" data-dy="41.3" data-a="0.68" data-dl="0.30" style="left:516px;top:574px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="50.5" data-dy="-1.3" data-a="0.50" data-dl="0.10" style="left:690px;top:426px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="-70.7" data-dy="-45.8" data-a="0.90" data-dl="0.03" style="left:442px;top:367px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-19.6" data-dy="-22.5" data-a="0.64" data-dl="0.24" style="left:419px;top:291px;width:8px;height:8px;background:#b05cff;box-shadow:0 0 24px #b05cff"></i><i class="pt" data-dx="-28.8" data-dy="-22.0" data-a="0.49" data-dl="0.34" style="left:362px;top:294px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i></div><div class="card s14_l" style="left:70px;top:60px;width:450px;height:740px"><div style="position:absolute;left:0;right:0;top:34px;text-align:center;font-weight:900;font-size:50px">Wrong Way</div><div class="ico" style="left:155px;top:140px;width:140px;height:140px"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M5 5l14 14M19 5L5 19" stroke="var(--red)" stroke-width="2.6"/></svg></div><div style="position:absolute;left:30px;right:30px;top:330px;padding:16px 20px;border-radius:14px;background:rgba(255,255,255,.06);font-size:32px;font-weight:700">Opportunity First</div><div style="position:absolute;left:30px;right:30px;top:426px;padding:16px 20px;border-radius:14px;background:rgba(255,255,255,.06);font-size:32px;font-weight:700">Zero Prep</div></div><div class="card s14_r" style="left:560px;top:60px;width:450px;height:740px"><div style="position:absolute;left:0;right:0;top:34px;text-align:center;font-weight:900;font-size:50px">Right Way</div><div class="ico" style="left:155px;top:140px;width:140px;height:140px"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M4 12.5l5 5L20 6.5" stroke="var(--hl4)" stroke-width="2.6"/></svg></div><div style="position:absolute;left:30px;right:30px;top:330px;padding:16px 20px;border-radius:14px;background:rgba(255,255,255,.06);font-size:32px;font-weight:700">Prep First</div><div style="position:absolute;left:30px;right:30px;top:426px;padding:16px 20px;border-radius:14px;background:rgba(255,255,255,.06);font-size:32px;font-weight:700">Ready to Scale</div></div></div></div></div></div><div class="hd  box" id="h15"><span class="w">AT</span> <span class="w">YOUR</span> <span class="w"><span class="box">FRONT DOOR</span></span></div><div class="sc" id="s15"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(1.133);transform-origin:50% 50%"><div class="cam" id="s15c"><div class="fx-glow s15_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#ffd23f2e 0%,#ffd23f12 40%,transparent 72%)"></div><div class="fx-pts px-far s15_p"><i class="pt" data-dx="4.0" data-dy="30.4" data-a="0.45" data-dl="0.13" style="left:556px;top:553px;width:5px;height:5px;background:#ffd23f;box-shadow:0 0 15px #ffd23f"></i><i class="pt" data-dx="-72.3" data-dy="-26.1" data-a="0.47" data-dl="0.09" style="left:340px;top:358px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="1.5" data-dy="55.7" data-a="0.82" data-dl="0.30" style="left:545px;top:615px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-45.7" data-dy="-32.6" data-a="0.62" data-dl="0.26" style="left:365px;top:305px;width:6px;height:6px;background:#ffd23f;box-shadow:0 0 18px #ffd23f"></i><i class="pt" data-dx="63.1" data-dy="47.6" data-a="0.61" data-dl="0.07" style="left:678px;top:534px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="51.6" data-dy="36.7" data-a="0.38" data-dl="0.33" style="left:645px;top:505px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="95.1" data-dy="-4.5" data-a="0.87" data-dl="0.14" style="left:697px;top:423px;width:6px;height:6px;background:#ffd23f;box-shadow:0 0 18px #ffd23f"></i><i class="pt" data-dx="37.1" data-dy="8.2" data-a="0.81" data-dl="0.30" style="left:710px;top:467px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-12.7" data-dy="44.8" data-a="0.41" data-dl="0.32" style="left:511px;top:533px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="33.2" data-dy="-54.1" data-a="0.72" data-dl="0.12" style="left:598px;top:336px;width:4px;height:4px;background:#ffd23f;box-shadow:0 0 12px #ffd23f"></i><i class="pt" data-dx="41.1" data-dy="-13.4" data-a="0.85" data-dl="0.04" style="left:752px;top:361px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="97.2" data-dy="36.3" data-a="0.84" data-dl="0.13" style="left:751px;top:509px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="0.6" data-dy="58.3" data-a="0.52" data-dl="0.04" style="left:541px;top:551px;width:3px;height:3px;background:#ffd23f;box-shadow:0 0 9px #ffd23f"></i><i class="pt" data-dx="-19.5" data-dy="-25.3" data-a="0.59" data-dl="0.27" style="left:408px;top:260px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i></div><div class="fx-halo s15_halo" style="position:absolute;left:190px;top:-40px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,#b05cff55 0%,#b05cff18 35%,transparent 68%)"></div><div class="s15_disc px-far" style="position:absolute;left:300px;top:70px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.22),rgba(255,255,255,.04) 45%,rgba(0,0,0,.25) 100%),linear-gradient(160deg,#1f1f27,#0c0c10);border:2px solid rgba(255,255,255,.22);box-shadow:inset 0 2px 0 rgba(255,255,255,.25),inset 0 -30px 60px rgba(0,0,0,.5),0 30px 80px rgba(0,0,0,.6),0 0 60px #b05cff44"><div style="position:absolute;left:12%;top:6%;width:56%;height:26%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.28),transparent)"></div></div><div class="ico s15_i px-near" style="left:385px;top:155px;width:310px;height:310px;filter:drop-shadow(0 0 14px #b05cff)"><svg viewBox="0 0 24 24"><path class="ln-draw" pathLength="1" stroke-dasharray="1" d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4" stroke="#b05cff" stroke-width="1.5"/></svg></div><div class="big s15_l" style="top:640px;font-size:72px;font-weight:700;letter-spacing:-.03em">Can&#x27;t Handle It</div></div></div></div></div><div class="hd  " id="h17"><span class="w">SUDDEN</span> <span class="w"><span class="ul">CONTRACT</span></span> <span class="w">OFFER</span></div><div class="sc" id="s17"><div class="base" style="transform:scale(0.6114)"><div><div class="cam" id="s17c"><div class="fx-glow s17_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#b05cff2e 0%,#b05cff12 40%,transparent 72%)"></div><div class="fx-pts px-far s17_p"><i class="pt" data-dx="85.5" data-dy="-9.4" data-a="0.64" data-dl="0.35" style="left:763px;top:406px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="31.7" data-dy="78.9" data-a="0.88" data-dl="0.15" style="left:620px;top:630px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-19.1" data-dy="-80.1" data-a="0.43" data-dl="0.05" style="left:514px;top:321px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="-2.3" data-dy="71.8" data-a="0.77" data-dl="0.07" style="left:534px;top:631px;width:3px;height:3px;background:#b05cff;box-shadow:0 0 9px #b05cff"></i><i class="pt" data-dx="35.3" data-dy="-57.6" data-a="0.45" data-dl="0.04" style="left:671px;top:216px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="40.8" data-dy="-19.5" data-a="0.52" data-dl="0.32" style="left:683px;top:361px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="-45.9" data-dy="-6.7" data-a="0.85" data-dl="0.00" style="left:396px;top:409px;width:5px;height:5px;background:#b05cff;box-shadow:0 0 15px #b05cff"></i><i class="pt" data-dx="-7.7" data-dy="-51.1" data-a="0.47" data-dl="0.18" style="left:516px;top:269px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-9.6" data-dy="52.9" data-a="0.52" data-dl="0.19" style="left:500px;top:652px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-78.0" data-dy="-22.1" data-a="0.78" data-dl="0.14" style="left:353px;top:377px;width:6px;height:6px;background:#b05cff;box-shadow:0 0 18px #b05cff"></i><i class="pt" data-dx="61.3" data-dy="6.0" data-a="0.70" data-dl="0.25" style="left:773px;top:453px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="10.5" data-dy="77.8" data-a="0.70" data-dl="0.12" style="left:560px;top:575px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-34.3" data-dy="-25.2" data-a="0.72" data-dl="0.27" style="left:331px;top:277px;width:5px;height:5px;background:#b05cff;box-shadow:0 0 15px #b05cff"></i><i class="pt" data-dx="-4.3" data-dy="50.4" data-a="0.59" data-dl="0.09" style="left:521px;top:657px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i></div><div class="card" style="left:240px;top:40px;width:600px;height:760px;border-color:rgba(255,255,255,.55)"><div class="serif" style="position:absolute;left:0;right:0;top:26px;text-align:center;font-size:46px">OFFICIAL CONTRACT</div><div class="s17_r0" style="position:absolute;left:36px;top:120px;width:528px"><div style="display:flex;gap:12px;align-items:center;font-weight:700;font-size:28px"><span style="width:22px;height:22px;border-radius:4px;background:var(--hl4)"></span>Deliverables</div><div class="hlbar s17_b0" style="position:relative;margin-top:12px;width:76%;background:var(--hl4);opacity:.9"></div><div class="hlbar s17_b0" style="position:relative;margin-top:12px;width:64%;background:var(--hl4);opacity:.9"></div><div class="hlbar s17_b0" style="position:relative;margin-top:12px;width:64%;background:var(--hl4);opacity:.9"></div></div><div class="s17_r1" style="position:absolute;left:36px;top:292px;width:528px"><div style="display:flex;gap:12px;align-items:center;font-weight:700;font-size:28px"><span style="width:22px;height:22px;border-radius:4px;background:var(--hl1)"></span>Deadlines</div><div class="hlbar s17_b1" style="position:relative;margin-top:12px;width:88%;background:var(--hl1);opacity:.9"></div><div class="hlbar s17_b1" style="position:relative;margin-top:12px;width:94%;background:var(--hl1);opacity:.9"></div><div class="hlbar s17_b1" style="position:relative;margin-top:12px;width:88%;background:var(--hl1);opacity:.9"></div></div><div class="s17_r2" style="position:absolute;left:36px;top:464px;width:528px"><div style="display:flex;gap:12px;align-items:center;font-weight:700;font-size:28px"><span style="width:22px;height:22px;border-radius:4px;background:var(--hl2)"></span>Sign Right Now</div><div class="hlbar s17_b2" style="position:relative;margin-top:12px;width:94%;background:var(--hl2);opacity:.9"></div><div class="hlbar s17_b2" style="position:relative;margin-top:12px;width:76%;background:var(--hl2);opacity:.9"></div><div class="hlbar s17_b2" style="position:relative;margin-top:12px;width:94%;background:var(--hl2);opacity:.9"></div></div><div style="position:absolute;left:36px;top:636px;width:90%;height:10px;border-radius:5px;background:rgba(255,255,255,.18)"></div><div style="position:absolute;left:36px;top:666px;width:80%;height:10px;border-radius:5px;background:rgba(255,255,255,.18)"></div><div style="position:absolute;left:36px;top:696px;width:70%;height:10px;border-radius:5px;background:rgba(255,255,255,.18)"></div></div></div></div></div></div><div class="hd  box" id="h18"><span class="w">START</span> <span class="w">AT</span> <span class="w"><span class="box">STEP A</span></span></div><div class="sc" id="s18"><div class="base" style="transform:scale(0.6114)"><div class="abs" style="inset:0;transform:scale(0.966);transform-origin:50% 50%"><div class="cam" id="s18c"><div class="fx-glow s18_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,#ffd23f2e 0%,#ffd23f12 40%,transparent 72%)"></div><div class="fx-pts px-far s18_p"><i class="pt" data-dx="-89.8" data-dy="-40.4" data-a="0.79" data-dl="0.17" style="left:389px;top:362px;width:3px;height:3px;background:#ffd23f;box-shadow:0 0 9px #ffd23f"></i><i class="pt" data-dx="45.2" data-dy="-56.2" data-a="0.75" data-dl="0.30" style="left:655px;top:287px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="20.0" data-dy="31.4" data-a="0.81" data-dl="0.28" style="left:669px;top:633px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="46.7" data-dy="-3.3" data-a="0.39" data-dl="0.26" style="left:761px;top:415px;width:6px;height:6px;background:#ffd23f;box-shadow:0 0 18px #ffd23f"></i><i class="pt" data-dx="-35.5" data-dy="-26.6" data-a="0.74" data-dl="0.18" style="left:335px;top:276px;width:8px;height:8px;background:#ffffff;box-shadow:0 0 24px #ffffff"></i><i class="pt" data-dx="18.8" data-dy="-65.4" data-a="0.79" data-dl="0.09" style="left:586px;top:268px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i><i class="pt" data-dx="-63.9" data-dy="-12.3" data-a="0.49" data-dl="0.10" style="left:388px;top:401px;width:6px;height:6px;background:#ffd23f;box-shadow:0 0 18px #ffd23f"></i><i class="pt" data-dx="44.8" data-dy="47.8" data-a="0.87" data-dl="0.27" style="left:713px;top:615px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-79.0" data-dy="48.6" data-a="0.85" data-dl="0.06" style="left:394px;top:520px;width:6px;height:6px;background:#ffffff;box-shadow:0 0 18px #ffffff"></i><i class="pt" data-dx="39.0" data-dy="-67.4" data-a="0.49" data-dl="0.29" style="left:620px;top:292px;width:3px;height:3px;background:#ffd23f;box-shadow:0 0 9px #ffd23f"></i><i class="pt" data-dx="-47.6" data-dy="37.9" data-a="0.69" data-dl="0.15" style="left:360px;top:573px;width:4px;height:4px;background:#ffffff;box-shadow:0 0 12px #ffffff"></i><i class="pt" data-dx="-27.8" data-dy="60.6" data-a="0.38" data-dl="0.28" style="left:481px;top:558px;width:5px;height:5px;background:#ffffff;box-shadow:0 0 15px #ffffff"></i><i class="pt" data-dx="93.2" data-dy="15.3" data-a="0.60" data-dl="0.30" style="left:824px;top:477px;width:3px;height:3px;background:#ffd23f;box-shadow:0 0 9px #ffd23f"></i><i class="pt" data-dx="3.5" data-dy="-75.7" data-a="0.83" data-dl="0.31" style="left:545px;top:309px;width:3px;height:3px;background:#ffffff;box-shadow:0 0 9px #ffffff"></i></div><svg class="abs" style="left:0;top:0" width="1080" height="880"><path class="ln-draw s18_path" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d="M150 760 L540 450 L930 140" stroke="rgba(255,255,255,.7)" stroke-width="5" stroke-dasharray="1"/></svg><div class="s18_s0" style="position:absolute;left:124px;top:734px;width:64px;height:64px;border-radius:50%;background:#fff;box-shadow:0 0 24px rgba(255,255,255,.5)"></div><div class="pill s18_l0" style="left:200px;top:716px;font-size:46px">Step A: Build</div><div class="s18_s1" style="position:absolute;left:514px;top:424px;width:64px;height:64px;border-radius:50%;background:#fff;box-shadow:0 0 24px rgba(255,255,255,.5)"></div><div class="pill s18_l1" style="left:590px;top:406px;font-size:46px">Step M: Grow</div><div class="s18_s2" style="position:absolute;left:904px;top:114px;width:64px;height:64px;border-radius:50%;background:var(--red);box-shadow:0 0 24px rgba(255,255,255,.5)"></div><div class="pill s18_l2" style="left:700px;top:96px;font-size:46px">Step Z: Deal</div></div></div></div></div>
+</div>
+<div class="clip cap seam" id="c0" style="" data-start="0.146" data-duration="0.700" data-track-index="3">you didn&#x27;t miss</div><div class="clip cap seam" id="c1" style="" data-start="0.846" data-duration="0.600" data-track-index="3">the <i>moment</i></div><div class="clip cap seam" id="c2" style="" data-start="1.446" data-duration="0.340" data-track-index="3">And that&#x27;s what</div><div class="clip cap seam" id="c3" style="" data-start="1.786" data-duration="0.620" data-track-index="3">I keep saying</div><div class="clip cap seam" id="c4" style="" data-start="2.406" data-duration="0.600" data-track-index="3">you just don&#x27;t</div><div class="clip cap seam" id="c5" style="" data-start="3.006" data-duration="0.720" data-track-index="3">miss the moment</div><div class="clip cap seam" id="c6" style="" data-start="3.726" data-duration="1.160" data-track-index="3">And yeah</div><div class="clip cap seam" id="c7" style="" data-start="4.886" data-duration="1.660" data-track-index="3">the instant <i>gratification</i></div><div class="clip cap seam" id="c8" style="" data-start="6.546" data-duration="1.020" data-track-index="3">that everyone&#x27;s chasing</div><div class="clip cap seam" id="c9" style="" data-start="7.566" data-duration="1.160" data-track-index="3">as well</div><div class="clip cap seam" id="c10" style="" data-start="8.726" data-duration="0.680" data-track-index="3">whether it&#x27;s money</div><div class="clip cap seam" id="c11" style="" data-start="9.406" data-duration="0.987" data-track-index="3">or attention</div><div class="clip cap seam" id="c12" style="" data-start="10.393" data-duration="0.540" data-track-index="3">just want it</div><div class="clip cap seam" id="c13" style="" data-start="10.933" data-duration="0.680" data-track-index="3">now</div><div class="clip cap seam" id="c14" style="" data-start="11.613" data-duration="0.480" data-track-index="3">And when they</div><div class="clip cap seam" id="c15" style="" data-start="12.093" data-duration="0.460" data-track-index="3">don&#x27;t get it</div><div class="clip cap seam" id="c16" style="" data-start="12.553" data-duration="0.300" data-track-index="3">now</div><div class="clip cap seam" id="c17" style="" data-start="12.853" data-duration="0.700" data-track-index="3">they stop</div><div class="clip cap seam" id="c18" style="" data-start="13.553" data-duration="0.620" data-track-index="3">By the way</div><div class="clip cap seam" id="c19" style="" data-start="14.173" data-duration="0.920" data-track-index="3">people ask me</div><div class="clip cap seam" id="c20" style="" data-start="15.093" data-duration="0.420" data-track-index="3">hey</div><div class="clip cap seam" id="c21" style="" data-start="15.513" data-duration="0.440" data-track-index="3">can you shout</div><div class="clip cap seam" id="c22" style="" data-start="15.953" data-duration="0.540" data-track-index="3">me out</div><div class="clip cap seam" id="c23" style="" data-start="16.493" data-duration="0.807" data-track-index="3">I say <i>no</i></div><div class="clip cap full" id="c24" style="top:1080px" data-start="17.300" data-duration="0.440" data-track-index="3">Why</div><div class="clip cap full" id="c25" style="top:1080px" data-start="17.740" data-duration="0.720" data-track-index="3">Because it&#x27;s just</div><div class="clip cap full" id="c26" style="top:1080px" data-start="18.460" data-duration="0.320" data-track-index="3">like</div><div class="clip cap full" id="c27" style="top:1080px" data-start="18.780" data-duration="0.500" data-track-index="3">you&#x27;re not ready</div><div class="clip cap full" id="c28" style="top:1080px" data-start="19.280" data-duration="0.500" data-track-index="3">for a shout</div><div class="clip cap full" id="c29" style="top:1080px" data-start="19.780" data-duration="0.393" data-track-index="3">out</div><div class="clip cap seam" id="c30" style="" data-start="20.173" data-duration="0.320" data-track-index="3">When we talk</div><div class="clip cap seam" id="c31" style="" data-start="20.493" data-duration="0.987" data-track-index="3">about <i>preparation</i></div><div class="clip cap seam" id="c32" style="" data-start="21.480" data-duration="0.920" data-track-index="3">it&#x27;s just like</div><div class="clip cap seam" id="c33" style="" data-start="22.400" data-duration="1.000" data-track-index="3">you get a</div><div class="clip cap seam" id="c34" style="" data-start="23.400" data-duration="0.380" data-track-index="3">shout out</div><div class="clip cap seam" id="c35" style="" data-start="23.780" data-duration="0.860" data-track-index="3">and people come</div><div class="clip cap seam" id="c36" style="" data-start="24.640" data-duration="0.620" data-track-index="3">to your page</div><div class="clip cap seam" id="c37" style="" data-start="25.260" data-duration="0.486" data-track-index="3">then what</div><div class="clip cap seam" id="c38" style="" data-start="25.746" data-duration="0.600" data-track-index="3">They don&#x27;t have</div><div class="clip cap seam" id="c39" style="" data-start="26.346" data-duration="0.640" data-track-index="3">nothing to watch</div><div class="clip cap seam" id="c40" style="" data-start="26.986" data-duration="0.520" data-track-index="3">You drop like</div><div class="clip cap seam" id="c41" style="" data-start="27.506" data-duration="0.880" data-track-index="3">two things</div><div class="clip cap seam" id="c42" style="" data-start="28.386" data-duration="0.360" data-track-index="3">So it&#x27;s just</div><div class="clip cap seam" id="c43" style="" data-start="28.746" data-duration="0.340" data-track-index="3">like</div><div class="clip cap seam" id="c44" style="" data-start="29.086" data-duration="0.180" data-track-index="3">well</div><div class="clip cap seam" id="c45" style="" data-start="29.266" data-duration="0.400" data-track-index="3">why do you</div><div class="clip cap seam" id="c46" style="" data-start="29.666" data-duration="0.660" data-track-index="3">want a shout</div><div class="clip cap seam" id="c47" style="" data-start="30.326" data-duration="0.100" data-track-index="3">out</div><div class="clip cap seam" id="c48" style="" data-start="30.426" data-duration="0.840" data-track-index="3">You&#x27;re not prepared</div><div class="clip cap seam" id="c49" style="" data-start="31.266" data-duration="0.400" data-track-index="3">you don&#x27;t have</div><div class="clip cap seam" id="c50" style="" data-start="31.666" data-duration="0.760" data-track-index="3">the <i>catalog</i></div><div class="clip cap seam" id="c51" style="" data-start="32.426" data-duration="0.560" data-track-index="3">So it&#x27;s just</div><div class="clip cap seam" id="c52" style="" data-start="32.986" data-duration="0.200" data-track-index="3">like</div><div class="clip cap seam" id="c53" style="" data-start="33.186" data-duration="0.980" data-track-index="3">keep dropping</div><div class="clip cap seam" id="c54" style="" data-start="34.166" data-duration="0.780" data-track-index="3">be consistent</div><div class="clip cap seam" id="c55" style="" data-start="34.946" data-duration="0.580" data-track-index="3">do what you</div><div class="clip cap seam" id="c56" style="" data-start="35.526" data-duration="0.380" data-track-index="3">need to do</div><div class="clip cap seam" id="c57" style="" data-start="35.906" data-duration="0.740" data-track-index="3">on your end</div><div class="clip cap full" id="c58" style="top:1180px" data-start="36.646" data-duration="0.560" data-track-index="3">and then when</div><div class="clip cap full" id="c59" style="top:1180px" data-start="37.206" data-duration="1.060" data-track-index="3">the opportunity meets</div><div class="clip cap full" id="c60" style="top:1180px" data-start="38.266" data-duration="1.174" data-track-index="3">the preparation</div><div class="clip cap full" id="c61" style="top:1180px" data-start="39.440" data-duration="0.866" data-track-index="3"><i>fireworks</i> happen</div><div class="clip cap full" id="c62" style="top:1080px" data-start="40.306" data-duration="0.780" data-track-index="3">Because the opportunity</div><div class="clip cap full" id="c63" style="top:1080px" data-start="41.086" data-duration="0.927" data-track-index="3">will come</div><div class="clip cap full" id="c64" style="top:1080px" data-start="42.013" data-duration="0.380" data-track-index="3">You just gotta</div><div class="clip cap full" id="c65" style="top:1080px" data-start="42.393" data-duration="0.540" data-track-index="3">wait</div><div class="clip cap seam" id="c66" style="" data-start="42.933" data-duration="0.380" data-track-index="3">But it&#x27;s just</div><div class="clip cap seam" id="c67" style="" data-start="43.313" data-duration="0.180" data-track-index="3">like</div><div class="clip cap seam" id="c68" style="" data-start="43.493" data-duration="0.360" data-track-index="3">if you want</div><div class="clip cap seam" id="c69" style="" data-start="43.853" data-duration="1.200" data-track-index="3">the opportunity before</div><div class="clip cap seam" id="c70" style="" data-start="45.053" data-duration="2.260" data-track-index="3">the preparation comes</div><div class="clip cap seam" id="c71" style="" data-start="47.313" data-duration="0.480" data-track-index="3">in</div><div class="clip cap seam" id="c72" style="" data-start="47.793" data-duration="0.460" data-track-index="3">what are you</div><div class="clip cap seam" id="c73" style="" data-start="48.253" data-duration="0.460" data-track-index="3">gonna do with</div><div class="clip cap seam" id="c74" style="" data-start="48.713" data-duration="0.100" data-track-index="3">it</div><div class="clip cap seam" id="c75" style="" data-start="48.793" data-duration="0.500" data-track-index="3">You don&#x27;t even</div><div class="clip cap seam" id="c76" style="" data-start="49.293" data-duration="0.620" data-track-index="3">know how to</div><div class="clip cap seam" id="c77" style="" data-start="49.913" data-duration="0.880" data-track-index="3">handle that level</div><div class="clip cap seam" id="c78" style="" data-start="50.793" data-duration="2.100" data-track-index="3">of <i>opportunity</i> at</div><div class="clip cap seam" id="c79" style="" data-start="52.893" data-duration="0.660" data-track-index="3">your front door</div><div class="clip cap full" id="c80" style="top:1080px" data-start="53.553" data-duration="0.360" data-track-index="3">You don&#x27;t even</div><div class="clip cap full" id="c81" style="top:1080px" data-start="53.913" data-duration="0.420" data-track-index="3">know what to</div><div class="clip cap full" id="c82" style="top:1080px" data-start="54.333" data-duration="0.500" data-track-index="3">do when you</div><div class="clip cap full" id="c83" style="top:1080px" data-start="54.833" data-duration="0.747" data-track-index="3">gotta</div><div class="clip cap full" id="c84" style="top:1080px" data-start="55.580" data-duration="0.680" data-track-index="3">if somebody say</div><div class="clip cap seam" id="c85" style="" data-start="56.260" data-duration="0.100" data-track-index="3">hey</div><div class="clip cap seam" id="c86" style="" data-start="56.340" data-duration="0.300" data-track-index="3">I gotta</div><div class="clip cap seam" id="c87" style="" data-start="56.640" data-duration="0.240" data-track-index="3">okay</div><div class="clip cap seam" id="c88" style="" data-start="56.880" data-duration="0.360" data-track-index="3">you want it</div><div class="clip cap seam" id="c89" style="" data-start="57.240" data-duration="0.240" data-track-index="3">I got a</div><div class="clip cap seam" id="c90" style="" data-start="57.480" data-duration="0.580" data-track-index="3"><i>contract</i> for you</div><div class="clip cap seam" id="c91" style="" data-start="58.060" data-duration="0.553" data-track-index="3">right now</div><div class="clip cap seam" id="c92" style="" data-start="58.613" data-duration="0.480" data-track-index="3">So it&#x27;s just</div><div class="clip cap seam" id="c93" style="" data-start="59.093" data-duration="1.180" data-track-index="3">like you on</div><div class="clip cap seam" id="c94" style="" data-start="60.273" data-duration="2.660" data-track-index="3">step Z and</div><div class="clip cap seam" id="c95" style="" data-start="62.933" data-duration="0.700" data-track-index="3">you should be</div><div class="clip cap seam" id="c96" style="" data-start="63.633" data-duration="1.347" data-track-index="3">on step <i>A</i></div>
+<div id="flash" class="clip" data-start="0" data-duration="65.267" data-track-index="4"></div>
+<audio id="aud" class="clip" src="assets/mix.wav" data-start="0" data-duration="65.267" data-track-index="8"></audio>
+</div>
+<script>/* ============================================================================
+   kw.js — motion language for the split-motion harness (window.KW)  · v2
+   STILLNESS IS THE DEFAULT. Things arrive with a soft eased settle (tiny overshoot),
+   then HOLD. Continuous movement (slow push / parallax) only on hero beats.
+   Fluidity comes from easing + timing quality, not from constant motion.
+
+   Every helper: (tl, target, t, ...) with ABSOLUTE reel time t; deterministic.
+   KW.scene(t0) marks the start of the current scene: every tween that starts later
+   gets its FROM state applied at t0 (otherwise the element would show its FINAL state
+   until its tween starts and then snap back = the "jump" bug of round 1).
+   ============================================================================ */
+(function () {
+  const IR = { immediateRender: false };
+  let T0 = 0;
+  const q = (s) => (typeof s === 'string' ? document.querySelectorAll(s) : s);
+  // fromTo with the FROM state guarded at scene start
+  function ft(tl, el, from, to, t) {
+    if (t > T0 + 1e-3) tl.set(el, from, T0);
+    return tl.fromTo(el, from, Object.assign({}, to, IR), t);
+  }
+  // easing vocabulary: settles with a tiny overshoot, never bouncy
+  const E = { settle: 'back.out(1.15)', soft: 'expo.out', glide: 'power3.out', calm: 'sine.inOut', out: 'power2.in' };
+  const ENTER = {
+    settle:  (tl, el, t, d = .62) => ft(tl, el, { autoAlpha: 0, y: 26, scale: .975 }, { autoAlpha: 1, y: 0, scale: 1, duration: d, ease: E.settle }, t),
+    rise:    (tl, el, t, d = .6) => ft(tl, el, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: d, ease: E.glide }, t),
+    pop:     (tl, el, t, d = .52) => ft(tl, el, { autoAlpha: 0, scale: .82 }, { autoAlpha: 1, scale: 1, duration: d, ease: 'back.out(1.35)' }, t),
+    focus:   (tl, el, t, d = .7) => ft(tl, el, { autoAlpha: 0, filter: 'blur(12px)', scale: 1.025 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: d, ease: E.soft }, t),
+    bloom:   (tl, el, t, d = .8) => ft(tl, el, { autoAlpha: 0, scale: .94, filter: 'brightness(2.2) blur(6px)' }, { autoAlpha: 1, scale: 1, filter: 'brightness(1) blur(0px)', duration: d, ease: E.soft }, t),
+    iris:    (tl, el, t, d = .7) => ft(tl, el, { autoAlpha: 1, clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(75% at 50% 50%)', duration: d, ease: 'power2.inOut' }, t),
+    wipe:    (tl, el, t, d = .6) => ft(tl, el, { autoAlpha: 1, clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: d, ease: 'power3.inOut' }, t),
+    unfold:  (tl, el, t, d = .6) => ft(tl, el, { autoAlpha: 0, scaleY: .2, transformOrigin: '50% 0%' }, { autoAlpha: 1, scaleY: 1, duration: d, ease: E.soft }, t),
+    tilt3d:  (tl, el, t, d = .8) => ft(tl, el, { autoAlpha: 0, rotationX: 24, y: 30, transformPerspective: 1400 }, { autoAlpha: 1, rotationX: 0, y: 0, duration: d, ease: E.settle }, t),
+    flipY:   (tl, el, t, d = .75) => ft(tl, el, { autoAlpha: 0, rotationY: -40, transformPerspective: 1300 }, { autoAlpha: 1, rotationY: 0, duration: d, ease: E.settle }, t),
+    zoomIn:  (tl, el, t, d = .75) => ft(tl, el, { autoAlpha: 0, scale: 1.18, filter: 'blur(8px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: d, ease: E.soft }, t),
+    fall:    (tl, el, t, d = .7) => ft(tl, el, { autoAlpha: 0, y: -40 }, { autoAlpha: 1, y: 0, duration: d, ease: E.settle }, t),
+  };
+  // round-1 verbs kept as soft aliases (old plans still compile, but nothing slides across the frame)
+  Object.assign(ENTER, { slideL: ENTER.settle, slideR: ENTER.settle, drop: ENTER.fall, swing: ENTER.tilt3d });
+  const EXIT = {
+    fade:     (tl, el, t, d = .32) => tl.to(el, { autoAlpha: 0, duration: d, ease: E.calm }, t),
+    dissolve: (tl, el, t, d = .34) => tl.to(el, { autoAlpha: 0, filter: 'blur(8px)', duration: d, ease: E.out }, t),
+    recede:   (tl, el, t, d = .32) => tl.to(el, { autoAlpha: 0, scale: .955, duration: d, ease: E.out }, t),
+    lift:     (tl, el, t, d = .32) => tl.to(el, { autoAlpha: 0, y: -22, duration: d, ease: E.out }, t),
+    irisOut:  (tl, el, t, d = .34) => tl.to(el, { clipPath: 'circle(0% at 50% 50%)', duration: d, ease: 'power2.in' }, t),
+    collapse: (tl, el, t, d = .3) => tl.to(el, { autoAlpha: 0, scaleY: .3, duration: d, ease: E.out }, t),
+  };
+  Object.assign(EXIT, { blur: EXIT.dissolve, whipL: EXIT.recede, whipR: EXIT.recede, shrink: EXIT.recede,
+                        pushUp: EXIT.lift, zoomPast: EXIT.dissolve, dropOut: EXIT.fade });
+  // camera: none by default; slow continuous moves are for HERO beats only
+  const CAMERA = {
+    none:     (tl) => tl,
+    push:     (tl, el, t0, t1) => ft(tl, el, { scale: 1 }, { scale: 1.045, duration: Math.max(.3, t1 - t0), ease: E.calm }, t0),
+    pull:     (tl, el, t0, t1) => ft(tl, el, { scale: 1.045 }, { scale: 1, duration: Math.max(.3, t1 - t0), ease: E.calm }, t0),
+    parallax: (tl, el, t0, t1) => {  // layers .px-far / .px-near move at different depths
+      const d = Math.max(.3, t1 - t0);
+      ft(tl, el, { scale: 1 }, { scale: 1.03, duration: d, ease: E.calm }, t0);
+      ft(tl, el.replace(/c$/, '') + ' .px-far', { y: 10 }, { y: -10, duration: d, ease: E.calm }, t0);
+      ft(tl, el.replace(/c$/, '') + ' .px-near', { y: -14 }, { y: 18, duration: d, ease: E.calm }, t0);
+      return tl;
+    },
+    tilt:     (tl, el, t0, t1) => ft(tl, el, { rotationX: 5, rotationY: -4, transformPerspective: 1800 }, { rotationX: -2, rotationY: 4, duration: Math.max(.3, t1 - t0), ease: E.calm }, t0),
+  };
+  Object.assign(CAMERA, { driftL: CAMERA.none, driftR: CAMERA.none, rise: CAMERA.none, orbit: CAMERA.tilt });
+  window.KW = {
+    ENTER, EXIT, CAMERA, E, ft,
+    scene(t0) { T0 = t0; },
+    enter(tl, el, verb, t, d) { (ENTER[verb] || ENTER.settle)(tl, el, t, d); return tl; },
+    exit(tl, el, verb, t, d) { (EXIT[verb] || EXIT.fade)(tl, el, t, d); tl.set(el, { autoAlpha: 0 }, t + (d || .36) + .02); return tl; },
+    camera(tl, el, kind, t0, t1) { (CAMERA[kind] || CAMERA.none)(tl, el, t0, t1); return tl; },
+    show(tl, el, t) { tl.set(el, { autoAlpha: 1 }, t); return tl; },
+    hide(tl, el, t) { tl.set(el, { autoAlpha: 0 }, t); return tl; },
+    // stroke draw via the SVG ATTRIBUTE: the CSS property gets auto-rounded to whole px by GSAP, and with
+    // pathLength=1 that made every line jump 1px -> 0px in one frame (round-1 'zıplama')
+    draw(tl, el, t, d = .7) { ft(tl, el, { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: d, ease: 'power2.inOut' }, t); return tl; },
+    grow(tl, el, t, d = .6, axis = 'scaleX') { ft(tl, el, { [axis]: 0 }, { [axis]: 1, duration: d, ease: E.settle }, t); return tl; },
+    // highlight = a smooth state change (no class snapping)
+    light(tl, el, t, on = true) {
+      tl.to(el, on ? { borderColor: 'rgba(255,77,94,.95)', boxShadow: '0 0 34px rgba(232,40,60,.38)', duration: .35, ease: E.glide }
+                   : { borderColor: 'rgba(255,255,255,.14)', boxShadow: '0 0 0 rgba(0,0,0,0)', duration: .35, ease: E.calm }, t);
+      return tl;
+    },
+    unghost(tl, el, t) { ft(tl, el, { color: 'rgba(255,255,255,0)', textShadow: '0 0 14px rgba(255,255,255,.55)' },
+                                 { color: 'rgba(255,255,255,1)', textShadow: '0 0 0px rgba(255,255,255,0)', duration: .45, ease: E.glide }, t); return tl; },
+    // counters: tabular digits (no re-centering jitter); small integers do not count, they settle
+    count(tl, sel, t, d, from, to, dec = 0, pre = '', suf = '') {
+      const node = document.querySelector(sel); const p = { v: from };
+      const fmt = (v) => pre + (dec ? v.toFixed(dec) : Math.round(v).toLocaleString('en-US')) + suf;
+      if (!dec && Math.abs(to - from) <= 12) {
+        tl.set(node, { textContent: fmt(to) }, T0);
+        ft(tl, node, { autoAlpha: 0, scale: .9 }, { autoAlpha: 1, scale: 1, duration: .55, ease: 'back.out(1.3)' }, t);
+        return tl;
+      }
+      tl.set(node, { textContent: fmt(from) }, T0);
+      ft(tl, p, { v: from }, { v: to, duration: d, ease: 'power3.out', onUpdate: () => { node.textContent = fmt(p.v); } }, t);
+      return tl;
+    },
+    typeWords(tl, sel, t, step = .09) {
+      const ws = q(sel + ' .w');
+      tl.set(sel, { autoAlpha: 1 }, t);
+      ws.forEach((w, i) => tl.fromTo(w, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .42, ease: E.settle, ...IR }, t + i * step));
+      tl.set(ws, { autoAlpha: 0 }, Math.max(0, t - .001));
+      const u = document.querySelector(sel + ' .ul');
+      if (u) { tl.set(u, { '--u': 0 }, Math.max(0, t - .001)); tl.fromTo(u, { '--u': 0 }, { '--u': 1, duration: .5, ease: 'power2.out', ...IR }, t + ws.length * step); }
+      return tl;
+    },
+    cap(tl, el, t) { tl.fromTo(el, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .14, ease: 'power2.out', ...IR }, t); return tl; },
+    flash(tl, el, t, a = .45) { tl.fromTo(el, { opacity: a }, { opacity: 0, duration: .32, ease: 'power2.out', ...IR }, t); return tl; },
+    // cinematic shine: one light sweep across the hero after it settles
+    // the band travels from fully off-screen to fully off-screen and its opacity has an envelope:
+    // switching it on/off with a band in view made the whole panel flash for a frame (round-2 detector find)
+    shine(tl, el, t) {
+      // band = 38-62 % of a 300 %-wide gradient: off-screen left at 95 %, off-screen right at 5 % -> travels
+      // 1.8 panel widths (~46 px/frame). The first version crossed ~5 widths (~140 px/frame) = flicker.
+      ft(tl, el, { backgroundPosition: '95% 0%' }, { backgroundPosition: '5% 0%', duration: 1.2, ease: 'sine.inOut' }, t);
+      ft(tl, el, { opacity: 0 }, { opacity: 1, duration: .3, ease: 'sine.out' }, t);
+      tl.to(el, { opacity: 0, duration: .3, ease: 'sine.in' }, t + .9);
+      return tl;
+    },
+    // organic particles: one soft burst outward that decelerates into stillness
+    burst(tl, sel, t) {
+      q(sel).forEach((p) => {
+        const dx = +p.dataset.dx, dy = +p.dataset.dy, dl = +p.dataset.dl;
+        ft(tl, p, { x: 0, y: 0, autoAlpha: 0, scale: .4 }, { x: dx, y: dy, autoAlpha: +p.dataset.a, scale: 1, duration: 1.6, ease: 'expo.out' }, t + dl);
+      });
+      return tl;
+    },
+    glowIn(tl, el, t) { ft(tl, el, { autoAlpha: 0, scale: .7 }, { autoAlpha: 1, scale: 1, duration: 1.1, ease: E.soft }, t); return tl; },
+  };
+})();
+</script>
+<script>
+const tl = gsap.timeline({paused:true});
+gsap.set('#panel',{autoAlpha:1});
+KW.show(tl,'#panel',0.000);KW.hide(tl,'#gfx',0.000);
+KW.typeWords(tl,'#h0',0.020,0.09);
+KW.scene(0.000);
+KW.enter(tl,'#s0','pop',0.000);
+KW.camera(tl,'#s0c','none',0.000,3.673);
+KW.glowIn(tl,'#s0 .s0_g',0.000);KW.burst(tl,'#s0 .s0_p .pt',0.120);
+KW.glowIn(tl,'#s0 .s0_halo',0.000);KW.enter(tl,'#s0 .s0_disc','pop',0.050);
+KW.draw(tl,'#s0 .s0_i path',0.250,.8);
+KW.exit(tl,'#s0','fade',3.333,.32);
+KW.exit(tl,'#h0','pushUp',3.623,.2);
+KW.typeWords(tl,'#h1',3.693,0.07);
+KW.scene(3.673);
+KW.enter(tl,'#s1','unfold',3.673);
+KW.camera(tl,'#s1c','none',3.673,10.340);
+KW.glowIn(tl,'#s1 .s1_g',3.673);KW.burst(tl,'#s1 .s1_p .pt',3.793);
+KW.enter(tl,'#s1 .s1_root','slideR',3.723);
+KW.draw(tl,'#s1 .s1_p0',8.923,.35);KW.enter(tl,'#s1 .s1_k0','slideL',9.123);
+KW.draw(tl,'#s1 .s1_p1',9.540,.35);KW.enter(tl,'#s1 .s1_k1','slideL',9.74);
+KW.exit(tl,'#s1','fade',10.000,.32);
+KW.scene(10.340);
+KW.enter(tl,'#s2','focus',10.340);
+KW.camera(tl,'#s2c','none',10.340,13.500);
+KW.glowIn(tl,'#s2 .s2_g',10.340);KW.burst(tl,'#s2 .s2_p .pt',10.460);
+KW.glowIn(tl,'#s2 .s2_halo',10.340);KW.enter(tl,'#s2 .s2_disc','pop',10.390);
+KW.draw(tl,'#s2 .s2_i path',10.590,.8);
+KW.exit(tl,'#s2','fade',13.160,.32);
+KW.exit(tl,'#h1','pushUp',13.450,.2);
+KW.typeWords(tl,'#h3',13.520,0.11);
+KW.scene(13.500);
+KW.enter(tl,'#s3','settle',13.500);
+KW.camera(tl,'#s3c','none',13.500,17.247);
+KW.glowIn(tl,'#s3 .s3_g',13.500);KW.burst(tl,'#s3 .s3_p .pt',13.620);
+KW.enter(tl,'#s3 .s3_m0','slideR',15.11,.35);
+KW.enter(tl,'#s3 .s3_m1','slideL',16.647,.35);
+KW.exit(tl,'#s3','fade',16.907,.32);
+KW.hide(tl,'#panel',17.247);KW.hide(tl,'#gfx',17.247);KW.flash(tl,'#flash',17.247,.18);
+KW.hide(tl,'#h3',17.247);
+KW.show(tl,'#panel',20.120);KW.hide(tl,'#gfx',20.120);
+KW.scene(20.120);
+KW.enter(tl,'#s5','zoomIn',20.120);
+KW.camera(tl,'#s5c','push',20.120,22.347);
+KW.glowIn(tl,'#s5 .s5_g',20.120);KW.burst(tl,'#s5 .s5_p .pt',20.240);
+KW.shine(tl,'#s5 .s5_sh',20.870);
+KW.ft(tl,'#s5 .s5_n',{autoAlpha:0,scale:1.6,filter:'blur(10px)'},{autoAlpha:1,scale:1,filter:'blur(0px)',duration:.7,ease:'expo.out'},20.140);
+KW.grow(tl,'#s5 .s5_bar',20.470,.35);KW.enter(tl,'#s5 .s5_t','rise',20.520);
+tl.to('#s5 .s5_n',{scale:1.05,duration:1.73,ease:'sine.inOut'},20.540);
+KW.exit(tl,'#s5','fade',22.007,.32);
+KW.flash(tl,'#flash',20.120,.5);
+KW.exit(tl,'#h3','pushUp',22.297,.2);
+KW.typeWords(tl,'#h6',22.367,0.07);
+KW.scene(22.347);
+KW.enter(tl,'#s6','tilt3d',22.347);
+KW.camera(tl,'#s6c','none',22.347,25.693);
+KW.enter(tl,'#s6 .s6_l','rise',22.747);
+KW.exit(tl,'#s6','fade',25.353,.32);
+KW.scene(25.693);
+KW.enter(tl,'#s7','pop',25.693);
+KW.camera(tl,'#s7c','none',25.693,30.373);
+KW.glowIn(tl,'#s7 .s7_g',25.693);KW.burst(tl,'#s7 .s7_p .pt',25.813);
+KW.count(tl,'#s7_n',25.793,1.60,0,2.0,0,'',' POSTS');
+KW.grow(tl,'#s7 .s7_bar',25.793,1.60);
+KW.enter(tl,'#s7 .s7_lab','rise',27.293);
+KW.exit(tl,'#s7','fade',30.033,.32);
+KW.exit(tl,'#h6','pushUp',30.323,.2);
+KW.typeWords(tl,'#h8',30.393,0.09);
+KW.scene(30.373);
+KW.enter(tl,'#s8','iris',30.373);
+KW.camera(tl,'#s8c','none',30.373,32.373);
+KW.glowIn(tl,'#s8 .s8_g',30.373);KW.burst(tl,'#s8 .s8_p .pt',30.493);
+KW.ft(tl,'#s8 .thumb',{autoAlpha:0,scale:.92,y:10},{autoAlpha:1,scale:1,y:0,duration:.6,ease:'back.out(1.15)',stagger:{each:.06,from:'random'}},30.423);
+tl.to('#s8 .s8_g0',{scale:1.12,zIndex:5,boxShadow:'0 0 0 6px #e8283c,0 0 60px rgba(232,40,60,.6)',duration:.3,ease:'power2.out'},31.473);
+tl.to('#s8 .thumb:not(.s8_g0)',{opacity:.35,duration:.3},31.473);
+KW.enter(tl,'#s8 .s8_l','pop',31.573);
+KW.exit(tl,'#s8','collapse',32.033,.32);
+KW.scene(32.373);
+KW.enter(tl,'#s9','zoomIn',32.373);
+KW.camera(tl,'#s9c','push',32.373,33.133);
+KW.glowIn(tl,'#s9 .s9_g',32.373);KW.burst(tl,'#s9 .s9_p .pt',32.493);
+KW.shine(tl,'#s9 .s9_sh',32.873);
+KW.ft(tl,'#s9 .s9_n',{autoAlpha:0,scale:1.6,filter:'blur(10px)'},{autoAlpha:1,scale:1,filter:'blur(0px)',duration:.7,ease:'expo.out'},32.393);
+KW.grow(tl,'#s9 .s9_bar',32.723,.35);KW.enter(tl,'#s9 .s9_t','rise',32.773);
+tl.to('#s9 .s9_n',{scale:1.05,duration:0.30,ease:'sine.inOut'},32.793);
+KW.exit(tl,'#s9','fade',32.793,.32);
+KW.exit(tl,'#h8','pushUp',33.083,.2);
+KW.typeWords(tl,'#h10',33.153,0.09);
+KW.scene(33.133);
+KW.enter(tl,'#s10','rise',33.133);
+KW.camera(tl,'#s10c','none',33.133,36.593);
+KW.glowIn(tl,'#s10 .s10_g',33.133);KW.burst(tl,'#s10 .s10_p .pt',33.253);
+KW.ft(tl,'#s10 .row',{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.55,stagger:.07,ease:'back.out(1.15)'},33.183);
+KW.unghost(tl,'#s10 .s10_r0 .t',33.283);KW.light(tl,'#s10 .s10_r0',33.283,true);KW.light(tl,'#s10 .s10_r0',34.343,false);
+KW.unghost(tl,'#s10 .s10_r1 .t',34.343);KW.light(tl,'#s10 .s10_r1',34.343,true);KW.light(tl,'#s10 .s10_r1',35.993,false);
+KW.unghost(tl,'#s10 .s10_r2 .t',35.993);KW.light(tl,'#s10 .s10_r2',35.993,true);
+KW.exit(tl,'#s10','fade',36.253,.32);
+KW.show(tl,'#panel',36.593);KW.show(tl,'#gfx',36.593);
+KW.exit(tl,'#h10','pushUp',36.543,.2);
+KW.typeWords(tl,'#h11',36.613,0.11);
+KW.scene(36.593);
+KW.enter(tl,'#s11','focus',36.593);
+KW.camera(tl,'#s11c','none',36.593,40.253);
+KW.glowIn(tl,'#s11 .s11_g',36.593);KW.burst(tl,'#s11 .s11_p .pt',36.713);
+KW.ft(tl,'#s11 path',{attr:{'stroke-dashoffset':1}},{attr:{'stroke-dashoffset':0},duration:.6,stagger:.06,ease:'power2.inOut'},36.643);
+KW.ft(tl,'#s11 .p, #s11 text',{autoAlpha:0,scale:.6,transformOrigin:'50% 50%'},{autoAlpha:1,scale:1,duration:.3,stagger:.08,ease:'back.out(2)'},36.993);
+KW.exit(tl,'#s11','irisOut',39.913,.32);
+KW.hide(tl,'#panel',40.253);KW.hide(tl,'#gfx',40.253);KW.flash(tl,'#flash',40.253,.18);
+KW.hide(tl,'#h11',40.253);
+KW.show(tl,'#panel',42.880);KW.hide(tl,'#gfx',42.880);
+KW.scene(42.880);
+KW.enter(tl,'#s13','zoomIn',42.880);
+KW.camera(tl,'#s13c','none',42.880,43.480);
+KW.glowIn(tl,'#s13 .s13_g',42.880);KW.burst(tl,'#s13 .s13_p .pt',43.000);
+KW.ft(tl,'#s13 .s13_n',{autoAlpha:0,scale:1.6,filter:'blur(10px)'},{autoAlpha:1,scale:1,filter:'blur(0px)',duration:.7,ease:'expo.out'},42.900);
+KW.grow(tl,'#s13 .s13_bar',43.230,.35);KW.enter(tl,'#s13 .s13_t','rise',43.280);
+
+KW.exit(tl,'#s13','fade',43.180,.32);
+KW.exit(tl,'#h11','pushUp',43.430,.2);
+KW.typeWords(tl,'#h14',43.500,0.07);
+KW.scene(43.480);
+KW.enter(tl,'#s14','flipY',43.480);
+KW.camera(tl,'#s14c','none',43.480,48.740);
+KW.glowIn(tl,'#s14 .s14_g',43.480);KW.burst(tl,'#s14 .s14_p .pt',43.600);
+KW.enter(tl,'#s14 .s14_l','slideR',43.530);KW.draw(tl,'#s14 .s14_l path',43.780,.4);
+KW.enter(tl,'#s14 .s14_r','slideL',45.847);KW.draw(tl,'#s14 .s14_r path',46.097,.4);
+tl.to('#s14 .s14_l',{opacity:.45,scale:.95,duration:.3},46.047);
+KW.exit(tl,'#s14','fade',48.400,.32);
+KW.exit(tl,'#h14','pushUp',48.690,.2);
+KW.typeWords(tl,'#h15',48.760,0.11);
+KW.scene(48.740);
+KW.enter(tl,'#s15','settle',48.740);
+KW.camera(tl,'#s15c','none',48.740,53.500);
+KW.glowIn(tl,'#s15 .s15_g',48.740);KW.burst(tl,'#s15 .s15_p .pt',48.860);
+KW.glowIn(tl,'#s15 .s15_halo',48.740);KW.enter(tl,'#s15 .s15_disc','pop',48.790);
+KW.draw(tl,'#s15 .s15_i path',48.990,.8);
+KW.enter(tl,'#s15 .s15_l','settle',49.290);
+KW.exit(tl,'#s15','fade',53.160,.32);
+KW.hide(tl,'#panel',53.500);KW.hide(tl,'#gfx',53.500);KW.flash(tl,'#flash',53.500,.18);
+KW.hide(tl,'#h15',53.500);
+KW.show(tl,'#panel',56.207);KW.hide(tl,'#gfx',56.207);
+KW.exit(tl,'#h15','pushUp',56.157,.2);
+KW.typeWords(tl,'#h17',56.227,0.07);
+KW.scene(56.207);
+KW.enter(tl,'#s17','settle',56.207);
+KW.camera(tl,'#s17c','none',56.207,58.560);
+KW.glowIn(tl,'#s17 .s17_g',56.207);KW.burst(tl,'#s17 .s17_p .pt',56.327);
+KW.enter(tl,'#s17 .s17_r0','rise',56.957,.3);KW.grow(tl,'#s17 .s17_b0',57.037,.4);
+KW.enter(tl,'#s17 .s17_r1','rise',57.497,.3);KW.grow(tl,'#s17 .s17_b1',57.577,.4);
+KW.enter(tl,'#s17 .s17_r2','rise',57.96,.3);KW.grow(tl,'#s17 .s17_b2',58.040,.4);
+KW.exit(tl,'#s17','fade',58.220,.32);
+KW.exit(tl,'#h17','pushUp',58.510,.2);
+KW.typeWords(tl,'#h18',58.580,0.09);
+KW.scene(58.560);
+KW.enter(tl,'#s18','wipe',58.560);
+KW.camera(tl,'#s18c','none',58.560,65.267);
+KW.glowIn(tl,'#s18 .s18_g',58.560);KW.burst(tl,'#s18 .s18_p .pt',58.680);
+KW.draw(tl,'#s18 .s18_path',58.610,5.23);
+KW.enter(tl,'#s18 .s18_s0','pop',60.29);KW.enter(tl,'#s18 .s18_l0','slideL',60.340,.35);
+KW.enter(tl,'#s18 .s18_s1','pop',63.07);KW.enter(tl,'#s18 .s18_l1','slideL',63.120,.35);
+KW.enter(tl,'#s18 .s18_s2','pop',63.79);KW.enter(tl,'#s18 .s18_l2','slideL',63.840,.35);
+KW.exit(tl,'#s18','fade',64.927,.32);
+KW.flash(tl,'#flash',58.560,.5);
+KW.cap(tl,'#c0',0.146);
+KW.cap(tl,'#c1',0.846);
+KW.cap(tl,'#c2',1.446);
+KW.cap(tl,'#c3',1.786);
+KW.cap(tl,'#c4',2.406);
+KW.cap(tl,'#c5',3.006);
+KW.cap(tl,'#c6',3.726);
+KW.cap(tl,'#c7',4.886);
+KW.cap(tl,'#c8',6.546);
+KW.cap(tl,'#c9',7.566);
+KW.cap(tl,'#c10',8.726);
+KW.cap(tl,'#c11',9.406);
+KW.cap(tl,'#c12',10.393);
+KW.cap(tl,'#c13',10.933);
+KW.cap(tl,'#c14',11.613);
+KW.cap(tl,'#c15',12.093);
+KW.cap(tl,'#c16',12.553);
+KW.cap(tl,'#c17',12.853);
+KW.cap(tl,'#c18',13.553);
+KW.cap(tl,'#c19',14.173);
+KW.cap(tl,'#c20',15.093);
+KW.cap(tl,'#c21',15.513);
+KW.cap(tl,'#c22',15.953);
+KW.cap(tl,'#c23',16.493);
+KW.cap(tl,'#c24',17.300);
+KW.cap(tl,'#c25',17.740);
+KW.cap(tl,'#c26',18.460);
+KW.cap(tl,'#c27',18.780);
+KW.cap(tl,'#c28',19.280);
+KW.cap(tl,'#c29',19.780);
+KW.cap(tl,'#c30',20.173);
+KW.cap(tl,'#c31',20.493);
+KW.cap(tl,'#c32',21.480);
+KW.cap(tl,'#c33',22.400);
+KW.cap(tl,'#c34',23.400);
+KW.cap(tl,'#c35',23.780);
+KW.cap(tl,'#c36',24.640);
+KW.cap(tl,'#c37',25.260);
+KW.cap(tl,'#c38',25.746);
+KW.cap(tl,'#c39',26.346);
+KW.cap(tl,'#c40',26.986);
+KW.cap(tl,'#c41',27.506);
+KW.cap(tl,'#c42',28.386);
+KW.cap(tl,'#c43',28.746);
+KW.cap(tl,'#c44',29.086);
+KW.cap(tl,'#c45',29.266);
+KW.cap(tl,'#c46',29.666);
+KW.cap(tl,'#c47',30.326);
+KW.cap(tl,'#c48',30.426);
+KW.cap(tl,'#c49',31.266);
+KW.cap(tl,'#c50',31.666);
+KW.cap(tl,'#c51',32.426);
+KW.cap(tl,'#c52',32.986);
+KW.cap(tl,'#c53',33.186);
+KW.cap(tl,'#c54',34.166);
+KW.cap(tl,'#c55',34.946);
+KW.cap(tl,'#c56',35.526);
+KW.cap(tl,'#c57',35.906);
+KW.cap(tl,'#c58',36.646);
+KW.cap(tl,'#c59',37.206);
+KW.cap(tl,'#c60',38.266);
+KW.cap(tl,'#c61',39.440);
+KW.cap(tl,'#c62',40.306);
+KW.cap(tl,'#c63',41.086);
+KW.cap(tl,'#c64',42.013);
+KW.cap(tl,'#c65',42.393);
+KW.cap(tl,'#c66',42.933);
+KW.cap(tl,'#c67',43.313);
+KW.cap(tl,'#c68',43.493);
+KW.cap(tl,'#c69',43.853);
+KW.cap(tl,'#c70',45.053);
+KW.cap(tl,'#c71',47.313);
+KW.cap(tl,'#c72',47.793);
+KW.cap(tl,'#c73',48.253);
+KW.cap(tl,'#c74',48.713);
+KW.cap(tl,'#c75',48.793);
+KW.cap(tl,'#c76',49.293);
+KW.cap(tl,'#c77',49.913);
+KW.cap(tl,'#c78',50.793);
+KW.cap(tl,'#c79',52.893);
+KW.cap(tl,'#c80',53.553);
+KW.cap(tl,'#c81',53.913);
+KW.cap(tl,'#c82',54.333);
+KW.cap(tl,'#c83',54.833);
+KW.cap(tl,'#c84',55.580);
+KW.cap(tl,'#c85',56.260);
+KW.cap(tl,'#c86',56.340);
+KW.cap(tl,'#c87',56.640);
+KW.cap(tl,'#c88',56.880);
+KW.cap(tl,'#c89',57.240);
+KW.cap(tl,'#c90',57.480);
+KW.cap(tl,'#c91',58.060);
+KW.cap(tl,'#c92',58.613);
+KW.cap(tl,'#c93',59.093);
+KW.cap(tl,'#c94',60.273);
+KW.cap(tl,'#c95',62.933);
+KW.cap(tl,'#c96',63.633);
+const P3={t:0};tl.fromTo(P3,{t:0},{t:65.267,duration:65.267,ease:'none',immediateRender:false,onUpdate:()=>{if(window.__kw3d)window.__kw3d(P3.t)}},0);
+KW.show(tl,'#gl3d',22.347);KW.hide(tl,'#gl3d',25.693);
+tl.set({},{},65.267);
+window.__timelines=window.__timelines||{};window.__timelines['main']=tl;
+</script>
+
+<script type="importmap">{ "imports": { "three": "./assets/vendor/three/build/three.module.min.js", "three/addons/": "./assets/vendor/three/addons/" } }</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+const W = 1080, Hh = 958, BEATS = [{"t0": 22.347, "t1": 25.693, "preset": "phone", "spin": 2.28955477142381}];
+const canvas = document.getElementById('gl3d');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, alpha: true });
+renderer.setPixelRatio(1); renderer.setSize(W, Hh, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene();
+{ const bc = document.createElement('canvas'); bc.width = W; bc.height = Hh; const b = bc.getContext('2d');
+  b.fillStyle = getComputedStyle(document.body).classList ? '#0a0a0c' : '#0a0a0c';
+  b.fillStyle = document.body.classList.contains('kw-light') ? '#e9e9ec' : '#0a0a0c'; b.fillRect(0, 0, W, Hh);
+  b.strokeStyle = document.body.classList.contains('kw-light') ? 'rgba(0,0,0,.07)' : 'rgba(255,255,255,.055)'; b.lineWidth = 2;
+  for (let x = -80 % 90 + 90; x < W; x += 90) { b.beginPath(); b.moveTo(x, 0); b.lineTo(x, Hh); b.stroke(); }
+  for (let y = -80 % 90 + 90; y < Hh; y += 90) { b.beginPath(); b.moveTo(0, y); b.lineTo(W, y); b.stroke(); }
+  const vg = b.createRadialGradient(W / 2, Hh * .48, Hh * .2, W / 2, Hh * .48, Hh * .7); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.5)');
+  b.fillStyle = vg; b.fillRect(0, 0, W, Hh);
+  const bt = new THREE.CanvasTexture(bc); bt.colorSpace = THREE.SRGBColorSpace; scene.background = bt; }
+const pm = new THREE.PMREMGenerator(renderer);
+scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; scene.environmentIntensity = .6;
+const cam = new THREE.PerspectiveCamera(36, W / Hh, .05, 100);
+scene.add(new THREE.DirectionalLight(0xffffff, 1.2).translateX(3).translateY(5).translateZ(6));
+const red = new THREE.PointLight(0xe8283c, 16, 14, 2); red.position.set(-3, 2, 3); scene.add(red);
+const glassM = (c, o) => new THREE.MeshPhysicalMaterial({ color: c, roughness: .06, clearcoat: 1, clearcoatRoughness: .03, transparent: true, opacity: o, envMapIntensity: 1.3, depthWrite: false });
+const metal = (c) => new THREE.MeshPhysicalMaterial({ color: c, metalness: 1, roughness: .22, clearcoat: .6, envMapIntensity: 1.3 });
+const neon = (r, g, b) => new THREE.MeshBasicMaterial({ color: new THREE.Color(r, g, b), toneMapped: false });
+const P = {};
+// phone
+P.phone = new THREE.Group();
+P.phone.add(new THREE.Mesh(new RoundedBoxGeometry(1.5, 3.0, .2, 8, .2), new THREE.MeshPhysicalMaterial({ color: 0x050507, metalness: .7, roughness: .2, clearcoat: 1, envMapIntensity: .7 })));
+const sc = document.createElement('canvas'); sc.width = 512; sc.height = 1024; const g = sc.getContext('2d');
+g.fillStyle = '#0b0b10'; g.fillRect(0, 0, 512, 1024);
+g.fillStyle = '#e8283c'; g.font = '900 92px PS, sans-serif'; g.textAlign = 'center'; g.fillText('@you', 256, 210);
+g.fillStyle = '#ffffff'; g.font = '700 44px PS, sans-serif'; g.fillText('your page', 256, 280);
+const cols = ['#ff6b6b', '#48dbfb', '#feca57', '#a29bfe', '#1dd1a1', '#fd79a8'];
+for (let k = 0; k < 6; k++) { g.fillStyle = cols[k]; g.globalAlpha = .55; g.fillRect(40 + (k % 2) * 222, 340 + Math.floor(k / 2) * 215, 210, 200); }
+g.globalAlpha = 1;
+const st = new THREE.CanvasTexture(sc); st.colorSpace = THREE.SRGBColorSpace;
+const scr = new THREE.Mesh(new THREE.PlaneGeometry(1.34, 2.7), new THREE.MeshBasicMaterial({ map: st, color: new THREE.Color(.95, .95, .95), toneMapped: false }));
+scr.position.z = .102; P.phone.add(scr);
+const halo = new THREE.Mesh(new RoundedBoxGeometry(1.56, 3.06, .05, 8, .22), neon(.55, .07, .12)); halo.position.z = -.09; P.phone.add(halo);
+// coins
+P.coins = new THREE.Group();
+for (let k = 0; k < 7; k++) { const c = new THREE.Mesh(new THREE.CylinderGeometry(.55, .55, .12, 64), metal(0xffc53d)); c.position.y = -1 + k * .14; c.rotation.y = k * .3; P.coins.add(c); }
+const top = new THREE.Mesh(new THREE.CylinderGeometry(.55, .55, .12, 64), metal(0xffd76a)); top.position.set(.9, .6, 0); top.rotation.x = 1.2; P.coins.add(top);
+// ring
+P.ring = new THREE.Group();
+P.ring.add(new THREE.Mesh(new THREE.TorusGeometry(1.1, .28, 48, 200), glassM(0xd8102c, .32)));
+P.ring.add(new THREE.Mesh(new THREE.TorusGeometry(1.1, .085, 24, 200), neon(2.4, .06, .16)));
+// cube
+P.cube = new THREE.Group();
+P.cube.add(new THREE.Mesh(new RoundedBoxGeometry(1.7, 1.7, 1.7, 6, .16), glassM(0xffffff, .22)));
+P.cube.add(new THREE.Mesh(new RoundedBoxGeometry(.8, .8, .8, 4, .1), neon(2.2, .1, .2)));
+// bars
+P.bars = new THREE.Group();
+[.5, .9, 1.4, 2.1].forEach((h, k) => { const b = new THREE.Mesh(new RoundedBoxGeometry(.5, h, .5, 4, .06), k === 3 ? neon(2.2, .1, .2) : glassM(0xffffff, .5)); b.position.set(-1.05 + k * .7, -1.1 + h / 2, 0); P.bars.add(b); });
+Object.values(P).forEach(g => { g.visible = false; scene.add(g); });
+const composer = new EffectComposer(renderer); composer.setPixelRatio(1); composer.setSize(W, Hh);
+composer.addPass(new RenderPass(scene, cam));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(W / 2, Hh / 2), .32, .25, .97));
+composer.addPass(new OutputPass());
+const cl = (x) => Math.min(1, Math.max(0, x));
+const back = (x) => { x = cl(x); const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+let lastOn = false;
+window.__kw3d = function (t) {
+  let on = null;
+  for (const b of BEATS) if (t >= b.t0 && t < b.t1) on = b;
+  Object.values(P).forEach(g => g.visible = false);
+  if (!on) { if (lastOn) { renderer.clear(); } lastOn = false; return; }
+  lastOn = true;
+  const g = P[on.preset] || P.cube; g.visible = true;
+  const u = t - on.t0, k = back(u / .6), out = cl((on.t1 - t) / .3);
+  g.scale.setScalar(Math.max(.001, (.3 + .7 * k) * (.6 + .4 * out)));
+  g.rotation.set(.18 + .12 * Math.sin(u * .9), -1.0 * (1 - k) + .55 * Math.sin(u * .8 + on.spin), .04 * Math.sin(u));
+  g.position.set(0, .35, 0);
+  cam.position.set(.25 * Math.sin(u * .5), .2, 9.6 - .6 * cl(u / (on.t1 - on.t0)));
+  cam.lookAt(0, .3, 0);
+  composer.render();
+};
+window.__kw3dReady = true;
+</script>
+
+</body></html>

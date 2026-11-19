@@ -105,9 +105,13 @@ def main(argv):
     words, segs = W["words"], W["segments"]
     t2 = time.time()
     shots_hint = json.load(open(os.path.join(work, "shots.json"))) if cached else {"shots": []}
+    cut_from = opt("--cut-from")  # reuse an existing cut (edl.json + words.json): plan indices = cut words, no re-cut
+    cut_words = json.load(open(os.path.join(cut_from, "words.json"))) if cut_from else None
     if opt("--plan"):
         plan = json.load(open(opt("--plan")))
-        plan, fixes = planner.validate(plan, words)
+        if cut_words:
+            plan["keep"] = [[0, len(cut_words) - 1]]  # keep all words of the given cut
+        plan, fixes = planner.validate(plan, cut_words or words)
         plan["seed"] = seed
         pmeta = dict(adapter="reuse", fixes=fixes)
     else:
@@ -123,15 +127,21 @@ def main(argv):
     en = np.load(os.path.join(work, "energy.npy"))
     t = time.time()
     reel_id = os.path.basename(reel) + ":" + os.path.basename(out)
-    plan, nov = novelty.apply(plan, mem, seed, reel_id)
+    plan, nov = novelty.apply(plan, mem, seed, reel_id) if "--no-novelty" not in a else (plan, ["skipped (--no-novelty)"])
     json.dump(plan, open(os.path.join(reel, "data", "plan.json"), "w"), indent=1, ensure_ascii=False)
     clk.step("2b novelty pass", time.time() - t, changes=nov)
 
     # 3 cut (fast, no video)
     t = time.time()
-    E, total_speech = cut.edl(plan, words, en)
-    cw = cut.remap_words(words, E)
-    srcmap = {w["src"]: k for k, w in enumerate(cw)}
+    if cut_words:
+        ed = json.load(open(os.path.join(cut_from, "edl.json")))
+        E, cw = ed["segments"], cut_words
+        total_speech = round(ed["total"] - .8, 4)
+        srcmap = {k: k for k in range(len(cw))}  # plan already indexes the cut words
+    else:
+        E, total_speech = cut.edl(plan, words, en)
+        cw = cut.remap_words(words, E)
+        srcmap = {w["src"]: k for k, w in enumerate(cw)}
     for b in plan["beats"]:  # word indices -> cut timeline indices
         b["w0"] = srcmap.get(b["w0"], min(srcmap.values(), key=lambda k: abs(cw[k]["src"] - b["w0"])))
         sc = b.get("scene") or {}
@@ -158,7 +168,9 @@ def main(argv):
         if b.get("layout") == "speaker" and faceless_share(a_, b_) > .3:
             ws = [w["w"] for w in cw if a_ <= w["t"] < b_][:5]
             b["layout"] = "split"
-            b["scene"] = {"type": "quote", "text": " ".join(ws[:-1]) + (f" *{ws[-1]}*" if ws else ""), "enter": "focus", "exit": "blur", "camera": "push"}
+            txt = " ".join(ws).lower()
+            ic = next((ic for pat, ic in planner.KEYICON if __import__("re").search(pat, txt)), "star")
+            b["scene"] = {"type": "icon", "icon": ic, "label": "", "enter": "focus", "exit": "fade", "camera": "none"}
             swapped.append(round(a_, 2))
     lays = [(x, y, b.get("layout", "split")) for (x, y), b in zip(bt, plan["beats"])]
     json.dump(dict(segments=E, total=total), open(os.path.join(reel, "data", "edl.json"), "w"), indent=1)
@@ -176,12 +188,15 @@ def main(argv):
 
     # 4 build (parallel)
     t = time.time()
-    ctx = dict(seed=seed, face_cap_y=face_cap_y, audio="assets/mix.wav")
+    G = scenes.geometry(float(opt("--speaker-h", "940")))
+    cut.set_geometry(G)
+    qc.set_geometry(G)
+    ctx = dict(seed=seed, face_cap_y=face_cap_y, audio="assets/mix.wav", geom=G)
     timing = {}
 
     def job_video():
         a0 = time.time()
-        n = cut.base_video(raw, E, shots, lays, os.path.join(reel, "assets", "video.mp4"), plan.get("theme", theme), tail=tail)
+        n = cut.base_video(raw, E, shots, lays, os.path.join(reel, "assets", "video.mp4"), plan.get("theme", theme), tail=tail, geom=G)
         timing["base_video"] = (round(time.time() - a0, 1), n)
 
     def job_audio():
@@ -196,12 +211,23 @@ def main(argv):
         html, cues, mb, caps = scenes.compile_reel(plan, cw, total, ctx)
         ip = os.path.join(reel, "index.html")
         open(ip, "w").write(html)
-        fit, notes = qc.dom_fit(ip, mb, work)
-        if fit:
-            ctx["fit"] = fit
+        notes_all, rounds = [], 0
+        ctx["screen_fit"] = {}
+        for rounds in range(1, 4):  # fit stage + device-overflow auto-fix loop until the DOM QC is clean
+            fit, notes, dev = qc.dom_fit(ip, mb, work, screen_fit=ctx["screen_fit"])
+            notes_all += [f"r{rounds}: {x}" for x in notes]
+            changed = bool(dev) or (fit and fit != ctx.get("fit"))
+            if fit:
+                ctx["fit"] = dict(ctx.get("fit") or {}, **fit) if rounds > 1 else fit
+            ctx["screen_fit"].update(dev)
+            if not changed:
+                break
             html, cues, mb, caps = scenes.compile_reel(plan, cw, total, ctx)
             open(ip, "w").write(html)
-        timing["html"] = (round(time.time() - a0, 1), len(fit), notes[:12])
+            if not dev and rounds >= 1:
+                break
+        timing["html"] = (round(time.time() - a0, 1), dict(rounds=rounds, fitted=len(ctx.get("fit") or {}),
+                                                           device_fixes=ctx["screen_fit"], dup_text=plan.get("_dup_text_flags", [])[:6]), notes_all[:14])
         return cues, mb, caps
 
     with ThreadPoolExecutor(3) as ex:
@@ -234,16 +260,46 @@ def main(argv):
     t = time.time()
     rctx = dict(ctx, video_mode="speaker_only")
     split_iv = [(b["t0"], b["t1"]) for b in mb if b["layout"] == "split"]
-    rr = render.render(reel, lambda off, dur: scenes.compile_reel(plan, cw, total, rctx, chunk=(off, dur))[0],
-                       total, os.path.join(reel, "assets", "mix.wav"), out, n=nchunks, workers=int(opt("--workers", "1")),
-                       card_from=os.path.join(reel, "assets", "video.mp4"), split_iv=split_iv,
-                       cost=lambda t: next((5.0 if b["type"] == "hero3d" else (1.6 if b["layout"] == "speaker" else 1.0)
-                                            for b in mb if b["t0"] <= t < b["t1"]), 1.0))
-    clk.step("5 render (chunked, parallel)", time.time() - t, **rr)
+    cost = lambda t: next((5.0 if b["type"] == "hero3d" else (1.6 if b["layout"] == "speaker" else 1.0)  # noqa: E731
+                           for b in mb if b["t0"] <= t < b["t1"]), 1.0)
+    mk = lambda off, dur: scenes.compile_reel(plan, cw, total, rctx, chunk=(off, dur))[0]  # noqa: E731
+    rargs = dict(n=nchunks, workers=int(opt("--workers", "1")), card_from=os.path.join(reel, "assets", "video.mp4"),
+                 split_iv=split_iv, band_y=G["panel_h"], keep=True)
+    rr = render.render(reel, mk, total, os.path.join(reel, "assets", "mix.wav"), out, cost=cost, **rargs)
+    clk.step("5 render (chunked, parallel)", time.time() - t, **{k: v for k, v in rr.items() if k != "chunk_plan"})
+
+    # 5b jump / stutter QC on the rendered frames; loop: re-render only the chunks with render-side
+    #    defects (repeats, seam glitches, pops) until clean (max 2 extra passes)
+    t = time.time()
+    import jumps
+    jr = jumps.analyse(out, mb, rr["seams"], G["panel_h"], G["cap_top"], rr["chunk_plan"])
+    cr = jumps.card_repeats(out, G["card_y"], mb)
+    history = [dict(flagged=jr["flagged"], by_kind=jr["by_kind"], card_repeats=cr["card_repeats"])]
+    for loop in range(2):
+        bad = sorted({x["chunk"] for x in jr["issues"] if x["kind"] in ("repeat", "seam", "pop")})
+        if not bad:
+            break
+        before = {(x["kind"], x["frame"]) for x in jr["issues"]}
+        render.render(reel, mk, total, os.path.join(reel, "assets", "mix.wav"), out, chunks=rr["chunk_plan"], only=bad, **rargs)
+        jr = jumps.analyse(out, mb, rr["seams"], G["panel_h"], G["cap_top"], rr["chunk_plan"])
+        history.append(dict(rerendered=bad, flagged=jr["flagged"], by_kind=jr["by_kind"]))
+        if {(x["kind"], x["frame"]) for x in jr["issues"]} == before:  # identical again = deterministic = composition
+            history[-1]["verdict"] = "deterministic: composition defect, not a render glitch (stop re-rendering)"
+            break
+    render.cleanup(reel)
+    json.dump(dict(jumps=jr, card=cr, loops=history), open(os.path.join(work, "jumps.json"), "w"), indent=1)
+    clk.step("5b jump QC (+re-render loop)", time.time() - t, loops=history, ambient_motion_share=jr["ambient_motion_share"],
+             issues=jr["issues"][:10])
 
     # 6 qc
     t = time.time()
-    rep = qc.final(out, mb, None, os.path.join(reel, "renders"))
+    rep = qc.final(out, mb, None, os.path.join(reel, "renders"), panel_h=G["panel_h"])
+    rep["jumps_flagged"] = jr["flagged"]
+    rep["ambient_motion_share"] = jr["ambient_motion_share"]
+    if jr["flagged"]:
+        rep["issues"].append(f"{jr['flagged']} jump/stutter frames ({jr['by_kind']})")
+    if jr["ambient_motion_share"] > .25:
+        rep["issues"].append(f"motion budget exceeded: ambient motion in {jr['ambient_motion_share']:.0%} of hold frames (max 25 %)")
     if any(i.startswith(("true peak", "loudness")) for i in rep["issues"]) and lib:
         # auto-fix: re-mix (the mixer lowers its limiter ceiling until TP <= -1) and re-mux, video copied
         subprocess.run([sys.executable, "-I", os.path.join(KIT, "sfx_mix.py"), "mix", mp, lib, os.path.join(work, "speech.wav"),
@@ -260,7 +316,8 @@ def main(argv):
     clk.step("6 qc", time.time() - t, **rep)
 
     # 7 memory
-    novelty.record(MEMORY, plan, os.path.basename(reel) + ":" + os.path.basename(out), evs, time.strftime("%Y-%m-%d"))
+    if "--no-novelty" not in a:
+        novelty.record(MEMORY, plan, os.path.basename(reel) + ":" + os.path.basename(out), evs, time.strftime("%Y-%m-%d"))
     clk.step("7 memory", 0.0, reel=os.path.basename(out))
     print(f"DONE {out}  total {time.time() - clk.t0:.1f}s")
 

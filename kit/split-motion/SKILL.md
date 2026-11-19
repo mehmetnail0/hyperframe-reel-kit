@@ -45,15 +45,22 @@ and the model; ~4 min). You are the editor, not a template filler.
 
 ## 2. Grammar (measured on Kallaway's 20 latest reels — research/kallaway-20.md)
 
+**House rules from the owner (round 2) override the reference where they differ:** stillness is the
+default — soft eased settles with a tiny overshoot, then hold; continuous camera (push / pull /
+parallax / tilt) only on 2–4 hero beats; nothing slides across the frame. Scenes never echo the caption
+words: the visual carries meaning (lit objects, drawings, 3D, numbers, light, particles, one shine);
+text only for a header, a number or one key word. The speaker card is tall (`--speaker-h`, default
+940 px of 1920).
+
 | element | spec |
 | --- | --- |
-| layout | split **~71 %**: panel y 0–1370 (near-black #0a0a0c + faint 90 px grid, or light grid paper), wide speaker card y 1372–1900 (inset 24, r 38, ~1.95:1 crop, speaker waist-up) |
+| layout | split **~71 %**: motion panel y 0–958 (near-black #0a0a0c + faint 90 px grid, or light grid paper), tall speaker card y 960–1900 (inset 24, r 38; `--speaker-h` sets the ratio — Kallaway's own is ~528) |
 | speaker punches | full-screen 9:16 speaker **~29 %**, runs 1.5–4 s (median 3), one every 7–14 s, on opinion/punch lines; caption below the chin |
 | graphic | full-screen graphic ≤ 1 beat per reel (rare in the reference) |
 | header | y 150–330, ≤ 2 lines, bold sans + ONE *serif-italic* word, a phrase in a **red box** or a red underline; types on word by word; lives for its section |
-| seam caption | 1–3 words, white bold ~58 px, y 1222–1300, x 90–990; quoted/key words in serif italic |
+| seam caption | 1–3 words, white bold ~58 px, just above the card (y 854 at the default geometry), x 90–990; quoted/key words in serif italic |
 | hero | one per beat (1.5–3.5 s), literal to the words; sub-events on the spoken word (`at`); grows to fill the stage (QC fit) |
-| cadence | the panel changes about once a second (~58/min); nothing static > 3 s |
+| cadence | one hero per 1.5–3.5 s beat, sub-events on the spoken word, holds in between; ambient-motion share of hold frames ≤ 25 % (QC); no dead panel > 5 s |
 | hook | first sentence ≤ 4 s, header types with it; SFX densest here |
 | CTA | "Comment 'WORD' to get …" 5–8 s before the end (only if the speaker says it) — stacked pages |
 | music | a bed in every reel, **−17 dB under the voice**, ducked by speech |
@@ -97,10 +104,11 @@ deep whoosh). The planner may add a rare `flash` / `reveal` / `ding` hint.
 
 * **Vocabulary** (`harness/vocab.json`, all compiled by `scenes.py`): scene types `orbit,
   doc, list, phone, grid, tree, radar, network, counter, compare, quote, bars, browser,
-  chapter, cta, steps, icon, chat, hero3d, custom_svg`; enter verbs `rise, pop, slideL/R,
-  drop, flipY, tilt3d, iris, wipe, unfold, zoomIn, swing, focus`; exits `fade, blur, whipL/R,
-  shrink, pushUp, zoomPast, collapse, irisOut, dropOut`; cameras `push, pull, driftL/R, rise,
-  tilt, orbit`; header styles `box, underline, serif, plain`.
+  chapter, cta, steps, icon, chat, hero3d, custom_svg`; enter verbs (soft settles) `settle, pop,
+  focus, bloom, iris, wipe, unfold, tilt3d, flipY, zoomIn, fall, rise`; quiet exits `fade, dissolve,
+  recede, lift, collapse, irisOut`; cameras `none` (default) and, on hero beats only, `push, pull,
+  parallax, tilt`; header styles `box, underline, serif, plain`. Every scene also gets light,
+  a decelerating particle burst and (every 3rd scene + heroes) one light sweep.
 * **New designs every reel**: the model writes a fresh beat plan for *this* script and at
   least one **`custom_svg`** scene (a new line-art drawing for a concept the library lacks);
   every generator is **seeded per reel+beat** (layouts, radii, colours, stagger patterns,
@@ -133,7 +141,8 @@ on CPU (SwiftShader): ~3× a flat frame — the render scheduler weights chunks 
 ## 7. Review (at least one look-and-fix round)
 
 * `FINAL-sheet.jpg` (2 fps) next to a Kallaway sheet; `build/timings.json` has the QC block:
-  loudness, true peak, longest static run, major panel changes/min, near-empty seconds.
+  loudness, true peak, jump/stutter frames (`build/jumps.json`, must be 0), ambient-motion share
+  (≤ 25 %), card repeats, near-empty seconds; DOM QC fails content leaving a phone/browser.
 * Weak spots to fix in `data/plan.json`: a hero that is not literal to the words, a beat
   > 3.5 s without a sub-event, a punch-in on a soft line, two similar scenes in a row, a
   header that stays too long, a missing CTA scene.

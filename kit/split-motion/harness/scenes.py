@@ -59,7 +59,12 @@ def item_times(spec, t0, t1, n, wt):
         else:
             ts.append(None)
     fill = stagger(t0, t1, n)
-    return [ts[k] if ts[k] is not None else fill[k] for k in range(n)]
+    out = [ts[k] if ts[k] is not None else fill[k] for k in range(n)]
+    last = max(t0 + .2, t1 - .6)  # every item visible for >= 0.6 s, in order
+    for k in range(n):
+        lo = (out[k - 1] + .15) if k else t0 + .15
+        out[k] = round(min(max(out[k], lo), last), 3)
+    return out
 
 
 SKY = [("#ff6b6b", "#5f27cd"), ("#feca57", "#ff6b6b"), ("#48dbfb", "#0abde3"), ("#1dd1a1", "#10ac84"), ("#a29bfe", "#6c5ce7"),
@@ -142,7 +147,8 @@ def gen_orbit(sid, sp, t0, t1, R, wt):
     lab = sp.get("center") or sp.get("label") or ""
     h.append(f'<div class="pill red {sid}_c" style="left:540px;top:{cy}px;transform:translate(-50%,-50%);font-size:44px">{mark(lab)}</div>')
     js.insert(0, f"KW.enter(tl,'#{sid} .{sid}_c','pop',{t0 + .1:.3f});")
-    js.append(f"tl.fromTo('#{sid} svg circle',{{rotation:0,transformOrigin:'{cx}px {cy}px'}},{{rotation:{R.choice([-25, 25])},duration:{t1 - t0:.2f},ease:'none',immediateRender:false}},{t0:.3f});")
+    if sp.get("hero"):  # continuous motion is a hero privilege
+        js.append(f"tl.fromTo('#{sid} svg circle',{{rotation:0,transformOrigin:'{cx}px {cy}px'}},{{rotation:{R.choice([-12, 12])},duration:{t1 - t0:.2f},ease:'sine.inOut',immediateRender:false}},{t0:.3f});")
     return "".join(h), js, [("glow", t0 + .1)] + [("counter", t) for t in ts[:3]]
 
 
@@ -187,11 +193,11 @@ def gen_list(sid, sp, t0, t1, R, wt):
     ts = item_times(sp, t0, t1, n, wt)
     h, js = [], []
     for k, it in enumerate(items):
-        h.append(f'<div class="row ghost {sid}_r{k}" style="left:{(1080 - W) // 2}px;top:{y0 + k * gap}px;width:{W}px">'
-                 f'<div class="n">{k + 1:02d}</div><div class="t">{mark(it)}</div></div>')
-        js.append(f"tl.set('#{sid} .{sid}_r{k}',{{className:'row on {sid}_r{k}'}},{ts[k]});KW.pulse(tl,'#{sid} .{sid}_r{k}',{ts[k]});"
-                  + (f"tl.set('#{sid} .{sid}_r{k}',{{className:'row {sid}_r{k}'}},{ts[k + 1] if k + 1 < n else t1 - .05});"))
-    js.insert(0, f"tl.fromTo('#{sid} .row',{{autoAlpha:0,x:-60}},{{autoAlpha:1,x:0,duration:.3,stagger:.06,ease:'power3.out',immediateRender:false}},{t0 + .05:.3f});")
+        h.append(f'<div class="row {sid}_r{k}" style="left:{(1080 - W) // 2}px;top:{y0 + k * gap}px;width:{W}px">'
+                 f'<div class="n">{k + 1:02d}</div><div class="t" style="color:rgba(255,255,255,0);text-shadow:0 0 14px rgba(255,255,255,.55)">{mark(it)}</div></div>')
+        js.append(f"KW.unghost(tl,'#{sid} .{sid}_r{k} .t',{ts[k]});KW.light(tl,'#{sid} .{sid}_r{k}',{ts[k]},true);"
+                  + (f"KW.light(tl,'#{sid} .{sid}_r{k}',{ts[k + 1]},false);" if k + 1 < n else ""))
+    js.insert(0, f"tl.fromTo('#{sid} .row',{{autoAlpha:0,y:18}},{{autoAlpha:1,y:0,duration:.55,stagger:.07,ease:'back.out(1.15)',immediateRender:false}},{t0 + .05:.3f});")
     return "".join(h), js, [("counter", t) for t in ts]
 
 
@@ -200,19 +206,23 @@ def gen_phone(sid, sp, t0, t1, R, wt):
     sub = sp.get("sub") or ""
     rows = (sp.get("rows") or [])[:4]
     x, y, w, hh = 300, 10, 480, 860
-    h = [f'<div class="card {sid}_ph" style="left:{x}px;top:{y}px;width:{w}px;height:{hh}px;border-radius:64px;border:5px solid rgba(255,255,255,.85);background:#0d0d10">'
-         f'<div style="position:absolute;left:170px;top:18px;width:130px;height:34px;border-radius:20px;background:#000"></div>'
-         f'<div style="position:absolute;left:0;right:0;top:120px;text-align:center;font-weight:900;font-size:64px;color:var(--red2);letter-spacing:-.03em">{mark(head)}</div>'
-         f'<div style="position:absolute;left:0;right:0;top:200px;text-align:center;font-size:34px;font-weight:700">{mark(sub)}</div>']
+    sf = (sp.get("_screen_fit") or 1)
+    h = [f'<div class="card {sid}_ph" style="left:{x}px;top:{y}px;width:{w}px;height:{hh}px;border-radius:64px;border:5px solid rgba(255,255,255,.85);background:#0d0d10;overflow:hidden">'
+         f'<div class="screen" data-device="{sid}" style="position:absolute;inset:14px;border-radius:50px;overflow:hidden;background:#0b0b0f">'
+         f'<div class="scr-in" style="position:absolute;inset:0;transform:scale({sf});transform-origin:50% 0">'
+         f'<div style="position:absolute;left:156px;top:6px;width:130px;height:34px;border-radius:20px;background:#000"></div>'
+         f'<div style="position:absolute;left:20px;right:20px;top:100px;text-align:center;font-weight:900;font-size:60px;color:var(--red2);letter-spacing:-.03em;line-height:1">{mark(head)}</div>'
+         f'<div style="position:absolute;left:20px;right:20px;top:182px;text-align:center;font-size:32px;font-weight:700">{mark(sub)}</div>']
     ts = item_times(sp, t0, t1, len(rows), wt)
     js = []
     for k, r in enumerate(rows):
-        h.append(f'<div class="chip {sid}_c{k}" style="left:50%;transform:translateX(-50%);top:{300 + k * 100}px;font-size:30px">{mark(r)}</div>')
+        h.append(f'<div class="{sid}_c{k}" style="position:absolute;left:0;right:0;top:{286 + k * 96}px;text-align:center">'
+                 f'<span class="chip" style="position:relative;display:inline-block;max-width:380px;overflow:hidden;text-overflow:ellipsis;font-size:28px">{mark(r)}</span></div>')
         js.append(f"KW.enter(tl,'#{sid} .{sid}_c{k}','pop',{ts[k]});")
     for j in range(6):
-        h.append(f'<div style="position:absolute;left:{40 + (j % 2) * 205}px;top:{300 + len(rows) * 100 + (j // 2) * 150}px;width:190px;height:136px;border-radius:14px;'
+        h.append(f'<div style="position:absolute;left:{26 + (j % 2) * 200}px;top:{286 + len(rows) * 96 + (j // 2) * 146}px;width:186px;height:132px;border-radius:14px;'
                  f'background:linear-gradient(135deg,{R.choice(SKY)[0]},{R.choice(SKY)[1]});opacity:.35"></div>')
-    h.append("</div>")
+    h.append("</div></div></div>")
     return "".join(h), js, [("tick", t) for t in ts[:2]]
 
 
@@ -233,7 +243,7 @@ def gen_grid(sid, sp, t0, t1, R, wt):
     h.append("</div>")
     order = list(range(n))
     R.shuffle(order)
-    js = [f"tl.fromTo('#{sid} .thumb',{{autoAlpha:0,scale:.7}},{{autoAlpha:1,scale:1,duration:.32,ease:'back.out(1.7)',stagger:{{each:.05,from:'{R.choice(['start', 'center', 'edges', 'random'])}'}},immediateRender:false}},{t0 + .05:.3f});"]
+    js = [f"tl.fromTo('#{sid} .thumb',{{autoAlpha:0,scale:.92,y:10}},{{autoAlpha:1,scale:1,y:0,duration:.6,ease:'back.out(1.15)',stagger:{{each:.06,from:'{R.choice(['start', 'center', 'edges', 'random'])}'}},immediateRender:false}},{t0 + .05:.3f});"]
     th_t = round(t0 + min(1.6, (t1 - t0) * .55), 3)
     js.append(f"tl.to('#{sid} .{sid}_g{hi}',{{scale:1.12,zIndex:5,boxShadow:'0 0 0 6px #e8283c,0 0 60px rgba(232,40,60,.6)',duration:.3,ease:'power2.out'}},{th_t});")
     js.append(f"tl.to('#{sid} .thumb:not(.{sid}_g{hi})',{{opacity:.35,duration:.3}},{th_t});")
@@ -326,7 +336,7 @@ def gen_counter(sid, sp, t0, t1, R, wt):
     dec = 1 if v != int(v) and v < 100 else 0
     lab = sp.get("label") or ""
     font = 300 if len(f"{pre}{int(v):,}{suf}") <= 5 else 210
-    h = [f'<div class="big" id="{sid}_n" style="top:{300 - font // 2}px;font-size:{font}px">{esc(pre)}0{esc(suf)}</div>',
+    h = [f'<div class="big" id="{sid}_n" style="top:{300 - font // 2}px;font-size:{font}px;font-variant-numeric:tabular-nums">{esc(pre)}{esc(int(v) if v == int(v) else v)}{esc(suf)}</div>',
          f'<div class="big serif {sid}_lab" style="top:{360 + font // 2}px;font-size:76px;color:var(--dim)">{mark(lab)}</div>',
          f'<div class="{sid}_bar" style="position:absolute;left:240px;top:{330 + font // 2}px;width:600px;height:8px;border-radius:4px;background:var(--red);transform-origin:left"></div>']
     dur = max(.6, min(1.6, (t1 - t0) * .5))
@@ -361,7 +371,7 @@ def gen_quote(sid, sp, t0, t1, R, wt):
     size = 112 if len(text) < 18 else 88
     h = [f'<div class="big {sid}_q" style="top:300px;font-size:{size}px;font-weight:700;padding:0 80px;letter-spacing:-.03em">{words_markup(text)}</div>',
          f'<div class="{sid}_u" style="position:absolute;left:300px;top:{330 + int(size * 2.2)}px;width:480px;height:10px;border-radius:5px;background:var(--red);transform-origin:left"></div>']
-    js = [f"tl.fromTo('#{sid} .{sid}_q .w',{{autoAlpha:0,y:40,filter:'blur(6px)'}},{{autoAlpha:1,y:0,filter:'blur(0px)',duration:.35,stagger:.1,ease:'power3.out',immediateRender:false}},{t0 + .05:.3f});",
+    js = [f"tl.fromTo('#{sid} .{sid}_q .w',{{autoAlpha:0,y:16,filter:'blur(6px)'}},{{autoAlpha:1,y:0,filter:'blur(0px)',duration:.6,stagger:.09,ease:'back.out(1.15)',immediateRender:false}},{t0 + .05:.3f});",
           f"KW.grow(tl,'#{sid} .{sid}_u',{t0 + .5:.3f},.45);"]
     return "".join(h), js, [("draw", t0 + .5)]
 
@@ -386,7 +396,7 @@ def gen_bars(sid, sp, t0, t1, R, wt):
 def gen_browser(sid, sp, t0, t1, R, wt):
     title = sp.get("title") or "search"
     rows = (sp.get("rows") or ["", "", ""])[:5]
-    h = [f'<div class="card {sid}_w" style="left:90px;top:60px;width:900px;height:720px;border-radius:22px">'
+    h = [f'<div class="card {sid}_w" data-device="{sid}" style="left:90px;top:60px;width:900px;height:720px;border-radius:22px;overflow:hidden">'
          '<div style="position:absolute;left:0;right:0;top:0;height:64px;border-bottom:2px solid var(--stroke);display:flex;gap:12px;align-items:center;padding-left:24px">'
          '<span style="width:18px;height:18px;border-radius:50%;background:#ff5f57"></span><span style="width:18px;height:18px;border-radius:50%;background:#febc2e"></span>'
          '<span style="width:18px;height:18px;border-radius:50%;background:#28c840"></span>'
@@ -419,9 +429,9 @@ def gen_chapter(sid, sp, t0, t1, R, wt):
          f'<div class="big {sid}_t" style="top:600px;font-size:84px;font-weight:700;letter-spacing:-.03em">{mark(title)}</div>',
          f'<div class="{sid}_bar" style="position:absolute;left:340px;top:560px;width:400px;height:10px;border-radius:5px;background:var(--red);transform-origin:center"></div>']
     hit = round(t0 + .35, 3)
-    js = [f"tl.fromTo('#{sid} .{sid}_n',{{autoAlpha:0,scale:3.2}},{{autoAlpha:1,scale:1,duration:.4,ease:'expo.out',immediateRender:false}},{t0 + .02:.3f});",
+    js = [f"tl.fromTo('#{sid} .{sid}_n',{{autoAlpha:0,scale:1.6,filter:'blur(10px)'}},{{autoAlpha:1,scale:1,filter:'blur(0px)',duration:.7,ease:'expo.out',immediateRender:false}},{t0 + .02:.3f});",
           f"KW.grow(tl,'#{sid} .{sid}_bar',{hit:.3f},.35);KW.enter(tl,'#{sid} .{sid}_t','rise',{hit + .05:.3f});",
-          f"tl.to('#{sid} .{sid}_n',{{scale:1.08,duration:{max(.3, t1 - t0 - .5):.2f},ease:'none'}},{t0 + .42:.3f});"]
+          (f"tl.to('#{sid} .{sid}_n',{{scale:1.05,duration:{max(.3, t1 - t0 - .5):.2f},ease:'sine.inOut'}},{t0 + .42:.3f});" if sp.get("hero") else "")]
     return "".join(h), js, [("chapter", hit)]
 
 
@@ -456,14 +466,24 @@ def gen_steps(sid, sp, t0, t1, R, wt):
 
 
 def gen_icon(sid, sp, t0, t1, R, wt):
+    """an illustrated GLASS OBJECT, not a pictogram: glow, disc with rim light + highlight, drawn icon"""
     name = sp.get("icon") or "star"
     lab = sp.get("label") or ""
-    col = R.choice(["#fff", "#ff4d5e", "#ffd23f"])
-    h = [f'<div class="ico {sid}_i glowW" style="left:290px;top:60px;width:500px;height:500px">{icon_svg(name, col, 1.3)}</div>',
-         f'<div class="big {sid}_l" style="top:640px;font-size:80px;font-weight:700;letter-spacing:-.03em">{mark(lab)}</div>',
-         f'<div class="{sid}_halo" style="position:absolute;left:240px;top:10px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)"></div>']
-    js = [f"KW.draw(tl,'#{sid} .{sid}_i path',{t0 + .05:.3f},.7);KW.enter(tl,'#{sid} .{sid}_halo','focus',{t0:.3f});",
-          f"KW.enter(tl,'#{sid} .{sid}_l','rise',{t0 + .45:.3f});"]
+    acc = R.choice(["#ff4d5e", "#ffd23f", "#2ee6d6", "#b05cff"])
+    h = [f'<div class="fx-halo {sid}_halo" style="position:absolute;left:190px;top:-40px;width:700px;height:700px;border-radius:50%;'
+         f'background:radial-gradient(circle,{acc}55 0%,{acc}18 35%,transparent 68%)"></div>',
+         f'<div class="{sid}_disc px-far" style="position:absolute;left:300px;top:70px;width:480px;height:480px;border-radius:50%;'
+         f'background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.22),rgba(255,255,255,.04) 45%,rgba(0,0,0,.25) 100%),'
+         f'linear-gradient(160deg,#1f1f27,#0c0c10);border:2px solid rgba(255,255,255,.22);'
+         f'box-shadow:inset 0 2px 0 rgba(255,255,255,.25),inset 0 -30px 60px rgba(0,0,0,.5),0 30px 80px rgba(0,0,0,.6),0 0 60px {acc}44">'
+         f'<div style="position:absolute;left:12%;top:6%;width:56%;height:26%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.28),transparent)"></div></div>',
+         f'<div class="ico {sid}_i px-near" style="left:385px;top:155px;width:310px;height:310px;filter:drop-shadow(0 0 14px {acc})">{icon_svg(name, acc, 1.5)}</div>']
+    if lab:
+        h.append(f'<div class="big {sid}_l" style="top:640px;font-size:72px;font-weight:700;letter-spacing:-.03em">{mark(lab)}</div>')
+    js = [f"KW.glowIn(tl,'#{sid} .{sid}_halo',{t0:.3f});KW.enter(tl,'#{sid} .{sid}_disc','pop',{t0 + .05:.3f});",
+          f"KW.draw(tl,'#{sid} .{sid}_i path',{t0 + .25:.3f},.8);"]
+    if lab:
+        js.append(f"KW.enter(tl,'#{sid} .{sid}_l','settle',{t0 + .55:.3f});")
     return "".join(h), js, [("glow", t0 + .3)]
 
 
@@ -491,7 +511,7 @@ def gen_custom_svg(sid, sp, t0, t1, R, wt):
     svg = re.sub(r"<svg", '<svg class="abs" style="left:90px;top:40px;width:900px;height:800px;overflow:visible"', svg, count=1)
     # every stroked path draws; class p pops
     svg = re.sub(r"<path(?![^>]*pathLength)", '<path pathLength="1" stroke-dasharray="1"', svg)
-    js = [f"tl.fromTo('#{sid} path',{{strokeDashoffset:1}},{{strokeDashoffset:0,duration:.6,stagger:.06,ease:'power2.inOut',immediateRender:false}},{t0 + .05:.3f});",
+    js = [f"tl.fromTo('#{sid} path',{{attr:{{'stroke-dashoffset':1}}}},{{attr:{{'stroke-dashoffset':0}},duration:.6,stagger:.06,ease:'power2.inOut',immediateRender:false}},{t0 + .05:.3f});",
           f"tl.fromTo('#{sid} .p, #{sid} text',{{autoAlpha:0,scale:.6,transformOrigin:'50% 50%'}},{{autoAlpha:1,scale:1,duration:.3,stagger:.08,ease:'back.out(2)',immediateRender:false}},{t0 + .4:.3f});"]
     lab = sp.get("label")
     h = svg + (f'<div class="big {sid}_l" style="top:800px;font-size:60px;font-weight:700">{mark(lab)}</div>' if lab else "")
@@ -646,6 +666,45 @@ def captions(words, layout_at, emph, total, chunk_words=3, maxch=16):
     return out
 
 
+def geometry(speaker_h=940):
+    """layout as a function of the speaker card height (px of 1920). Round 1 = 528 (Kallaway);
+    round 2 default 940: card y 960-1900, motion panel 0-958, seam caption just above the card."""
+    speaker_h = int(max(500, min(1100, speaker_h)))
+    card_y = 1900 - speaker_h
+    panel_h = card_y - 2
+    cap_top = panel_h - 104
+    stage_top = 312 if panel_h >= 1100 else 300
+    stage_h = cap_top - 16 - stage_top
+    return dict(speaker_h=speaker_h, card_y=card_y, panel_h=panel_h, cap_top=cap_top, stage_top=stage_top, stage_h=stage_h)
+
+
+ACC = ["#ff4d5e", "#ffd23f", "#2ee6d6", "#b05cff", "#3dff8b"]
+
+
+def fx_layers(sid, t0, t1, R, hero, every_shine):
+    """substance instead of text: light, particles and one cinematic shine — all settle to stillness."""
+    acc = R.choice(ACC)
+    n = 30 if hero else 14
+    parts = []
+    for k in range(n):
+        ang = R.uniform(0, 6.283)
+        r0 = R.uniform(120, 300)
+        x, y = 540 + r0 * math.cos(ang), 430 + r0 * .8 * math.sin(ang)
+        sz = R.choice([3, 4, 5, 6, 8])
+        col = acc if k % 3 == 0 else "#ffffff"
+        dist = R.uniform(30, 110)
+        parts.append(f'<i class="pt" data-dx="{dist * math.cos(ang):.1f}" data-dy="{dist * .8 * math.sin(ang):.1f}" '
+                     f'data-a="{R.uniform(.35, .9):.2f}" data-dl="{R.uniform(0, .35):.2f}" '
+                     f'style="left:{x:.0f}px;top:{y:.0f}px;width:{sz}px;height:{sz}px;background:{col};box-shadow:0 0 {sz * 3}px {col}"></i>')
+    html = (f'<div class="fx-glow {sid}_g" style="background:radial-gradient(ellipse 52% 46% at 50% 49%,{acc}2e 0%,{acc}12 40%,transparent 72%)"></div>'
+            f'<div class="fx-pts px-far {sid}_p">{"".join(parts)}</div>')
+    js = [f"KW.glowIn(tl,'#{sid} .{sid}_g',{t0:.3f});KW.burst(tl,'#{sid} .{sid}_p .pt',{t0 + .12:.3f});"]
+    if hero:  # the cinematic shine is a hero privilege (motion budget: <= 25 % ambient motion in holds)
+        html += f'<div class="fx-shine {sid}_sh"></div>'
+        js.append(f"KW.shine(tl,'#{sid} .{sid}_sh',{max(t0 + .5, min(t1 - 1.35, t0 + .75)):.3f});")
+    return html, js
+
+
 def compile_reel(plan, words, total, ctx, chunk=None):
     """ctx: {seed, fonts_ok, theme, face_y (speaker caption y), has3d, audio}"""
     seed = int(plan.get("seed", ctx.get("seed", 1)))
@@ -662,8 +721,11 @@ def compile_reel(plan, words, total, ctx, chunk=None):
                 return l
         return lay[-1][2]
 
+    G = ctx.get("geom") or geometry(ctx.get("speaker_h", 940))
+    base_k = round(G["stage_h"] / 880, 4)  # generators draw in a 1080x880 frame
     body, js, cues, beats3d = [], [], [], []
     heads = []
+    n_scene = 0
     prev_layout = None
     for k, (b, (t0, t1)) in enumerate(zip(beats, bt)):
         R = random.Random(seed * 1000 + k)
@@ -680,8 +742,7 @@ def compile_reel(plan, words, total, ctx, chunk=None):
                 js.append(f"KW.show(tl,'#panel',{t0:.3f});KW.show(tl,'#gfx',{t0:.3f});")
                 cues.append(dict(t=t0, role="swap" if prev_layout == "split" else "back", why=f"beat {k} -> graphic"))
             else:
-                js.append(f"KW.show(tl,'#panel',{t0:.3f});KW.hide(tl,'#gfx',{t0:.3f});"
-                          f"tl.fromTo('#panel',{{y:-30}},{{y:0,duration:.28,ease:'power3.out',immediateRender:false}},{t0:.3f});")
+                js.append(f"KW.show(tl,'#panel',{t0:.3f});KW.hide(tl,'#gfx',{t0:.3f});")  # no panel slide: stillness
                 if prev_layout is not None:
                     cues.append(dict(t=t0, role="back", why=f"beat {k} -> split"))
         prev_layout = L
@@ -703,17 +764,27 @@ def compile_reel(plan, words, total, ctx, chunk=None):
             heads.pop()
         if typ:
             gen = GEN.get(typ, GEN["icon"])
+            hero = bool(b.get("hero") or sp.get("hero"))
+            sp = dict(sp, hero=hero, _screen_fit=(ctx.get("screen_fit") or {}).get(sid))
             if typ == "hero3d":
                 beats3d.append(dict(t0=t0, t1=t1, preset=sp.get("preset", "cube"), spin=R.uniform(0, 3)))
             h, j, cue = gen(sid, sp, t0, t1, R, wt)
-            enter, exit_, camv = sp.get("enter", "rise"), sp.get("exit", "blur"), sp.get("camera", "push")
+            # every generator tween goes through KW.ft (FROM state guarded at scene start)
+            j = [x.replace("tl.fromTo(", "KW.ft(tl,").replace(",immediateRender:false", "") for x in j]
+            enter, exit_ = sp.get("enter", "settle"), sp.get("exit", "fade")
+            camv = sp.get("camera", "none") if hero else "none"   # continuous motion = hero only
+            fxh, fxj = fx_layers(sid, t0, t1, R, hero, n_scene % 3 == 1) if typ not in ("hero3d",) else ("", [])
+            n_scene += 1
             fs = (ctx.get("fit") or {}).get(sid)
             wrap = f'<div class="abs" style="inset:0;transform:scale({fs});transform-origin:50% 50%">' if fs else "<div>"
-            body.append(f'<div class="sc{" gfx" if L == "graphic" else ""}" id="{sid}">{wrap}<div class="cam" id="{sid}c">{h}</div></div></div>')
+            body.append(f'<div class="sc{" gfx" if L == "graphic" else ""}" id="{sid}"><div class="base" style="transform:scale({base_k if L != "graphic" else 1})">'
+                        f'{wrap}<div class="cam" id="{sid}c">{fxh}{h}</div></div></div></div>')
+            js.append(f"KW.scene({t0:.3f});")
             js.append(f"KW.enter(tl,'#{sid}','{enter}',{t0:.3f});")
             js.append(f"KW.camera(tl,'#{sid}c','{camv}',{t0:.3f},{t1:.3f});")
+            js += fxj
             js += j
-            js.append(f"KW.exit(tl,'#{sid}','{exit_}',{max(t0 + .3, t1 - .28):.3f},.26);")
+            js.append(f"KW.exit(tl,'#{sid}','{exit_}',{max(t0 + .3, t1 - .34):.3f},.32);")
             for role, t in cue:
                 cues.append(dict(t=round(t, 3), role=role, why=f"beat {k} {typ}", run=f"r{k}" if role == "counter" else None))
         for extra in b.get("sfx", []) or []:
@@ -739,7 +810,7 @@ def compile_reel(plan, words, total, ctx, chunk=None):
             du = min(b - (chunk[0]), chunk[1]) - st2
             st = st2
         cap_html.append(f'<div class="clip {cls}" id="c{i}" style="{top}" data-start="{st:.3f}" data-duration="{max(.04, du):.3f}" data-track-index="3">{txt}</div>')
-        js.append(f"KW.cap(tl,'#c{i}',{a:.3f},'{'slam' if L != 'split' and i % 3 == 0 else 'pop'}');")
+        js.append(f"KW.cap(tl,'#c{i}',{a:.3f});")
 
     off, dur = (chunk if chunk else (0.0, total))
     # <video> costs ~40 ms/frame in the renderer. In "speaker_only" mode the page carries video ONLY
@@ -782,7 +853,7 @@ def compile_reel(plan, words, total, ctx, chunk=None):
 <title>{esc(plan.get('title', 'split-motion reel'))}</title>
 <script src="assets/vendor/gsap.min.js"></script>
 <style>{css}
-:root {{ --acc2: {acc2}; }}
+:root {{ --acc2: {acc2}; --panel-h: {G["panel_h"]}px; --cap-top: {G["cap_top"]}px; --stage-top: {G["stage_top"]}px; --stage-h: {G["stage_h"]}px; }}
 </style></head>
 <body class="{'kw-light' if theme == 'light' else ''}">
 <div id="root" data-composition-id="main" data-start="0" data-duration="{dur:.3f}" data-width="1080" data-height="2040">
@@ -790,7 +861,7 @@ def compile_reel(plan, words, total, ctx, chunk=None):
 <div id="panel" class="clip" data-start="0" data-duration="{dur:.3f}" data-track-index="2" data-layout-allow-overflow>
  <div id="panelbg"><div class="grid"></div><div class="vig"></div></div>
  <div id="gfx"><div class="grid"></div></div>
- {'<canvas id="gl3d" width="1080" height="1370"></canvas>' if has3d else ''}
+ {f'<canvas id="gl3d" width="1080" height="{G["panel_h"]}"></canvas>' if has3d else ''}
  {''.join(body)}
 </div>
 {''.join(cap_html)}
@@ -805,9 +876,15 @@ gsap.set('#panel',{{autoAlpha:{1 if lay[0][2] != 'speaker' else 0}}});
 tl.set({{}},{{}},{total:.3f});
 {reg}
 </script>
-{THREE_MODULE.replace('__BEATS__', json.dumps(beats3d)) if has3d else ''}
+{THREE_MODULE.replace('__BEATS__', json.dumps(beats3d)).replace('Hh = 1370', 'Hh = ' + str(G["panel_h"])) if has3d else ''}
 </body></html>"""
-    meta_beats = [dict(sid=(f"s{k}" if beats[k].get("layout", "split") != "speaker" else None), t0=a, t1=b,
+    meta_beats = [dict(hero=bool(beats[k].get("hero") or (beats[k].get("scene") or {}).get("hero")), sid=(f"s{k}" if beats[k].get("layout", "split") != "speaker" else None), t0=a, t1=b,
                        layout=beats[k].get("layout", "split"), type=(beats[k].get("scene") or {}).get("type"))
                   for k, (a, b) in enumerate(bt)]
     return html, cues, meta_beats, caps
+
+
+def beat_words(plan, words):
+    """word index ranges per beat (for the duplicate-text validator)"""
+    ws = [b.get("w0", 0) for b in plan["beats"]] + [len(words)]
+    return [(ws[k], ws[k + 1]) for k in range(len(plan["beats"]))]

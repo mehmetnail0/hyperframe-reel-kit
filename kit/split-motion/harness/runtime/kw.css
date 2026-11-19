@@ -25,7 +25,7 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
 
 /* ---- panel ---- */
 #panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
-#panelbg { position: absolute; left: 0; top: 0; width: 1080px; height: 1370px; overflow: hidden; background: var(--bg); }
+#panelbg { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; background: var(--bg); }
 #panelbg .grid { position: absolute; inset: -80px; background-image:
   linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px);
   background-size: 90px 90px; }
@@ -50,7 +50,7 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
 /* ---- captions ---- */
 .cap { position: absolute; left: 90px; width: 900px; text-align: center; font-weight: 700; font-size: 58px; line-height: 1.02;
   letter-spacing: -.02em; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.55); }
-.cap.seam { top: 1222px; }
+.cap.seam { top: var(--cap-top, 854px); }
 .kw-light .cap.seam { color: #111; text-shadow: none; }
 .cap.full { font-size: 72px; text-shadow: 0 3px 18px rgba(0,0,0,.7); }
 .cap i { font-family: "IS", serif; font-style: italic; font-weight: 400; font-size: 1.12em; }
@@ -58,8 +58,16 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
 .cap .y { color: var(--acc2); }
 
 /* ---- scene stage ---- */
-.sc { position: absolute; left: 0; top: 330px; width: 1080px; height: 880px; opacity: 0; perspective: 1400px; }
+.sc { position: absolute; left: 0; top: var(--stage-top, 300px); width: 1080px; height: var(--stage-h, 538px); opacity: 0; perspective: 1400px; }
 .sc.gfx { top: 330px; height: 1300px; }
+.sc .base { position: absolute; left: 0; top: 0; width: 1080px; height: 880px; transform-origin: 50% 0; }
+/* substance layers: light, particles, one shine — they settle into stillness */
+.fx-glow { position: absolute; left: -60px; top: -60px; width: 1200px; height: 1000px; opacity: 0; pointer-events: none; }
+.fx-pts { position: absolute; inset: 0; pointer-events: none; }
+.fx-pts .pt { position: absolute; border-radius: 50%; opacity: 0; }
+.fx-shine { position: absolute; inset: 0; opacity: 0; visibility: visible; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.16) 48%, rgba(255,255,255,.05) 53%, transparent 62%);
+  background-size: 300% 100%; background-repeat: no-repeat; }
 .cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
 .card { position: absolute; background: var(--card); border: 2px solid var(--stroke); border-radius: 26px;
   box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 18px 60px rgba(0,0,0,.55), 0 0 40px rgba(255,255,255,.06); }
@@ -101,4 +109,5 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
 .bubble.in { background: #26262e; color: #fff; border-bottom-left-radius: 8px; }
 .bubble.out { background: var(--red); color: #fff; border-bottom-right-radius: 8px; }
 #flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff; opacity: 0; pointer-events: none; }
-#gl3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1370px; opacity: 0; }
+#gl3d { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); opacity: 0; }
+.big, .chip, .pill, .row { font-variant-numeric: tabular-nums; }

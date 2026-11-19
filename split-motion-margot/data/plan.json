@@ -1,12 +1,8 @@
 {
- "title": "The Magazine That Couldn't Favor",
+ "title": "The Pamphlet That Wasn't",
  "theme": "dark",
- "accent2": "#2ee6d6",
+ "accent2": "#ffd23f",
  "keep": [
-  [
-   55,
-   75
-  ],
   [
    76,
    83
@@ -17,14 +13,10 @@
   ],
   [
    114,
-   142
+   157
   ],
   [
    158,
-   166
-  ],
-  [
-   167,
    188
   ],
   [
@@ -36,15 +28,15 @@
    220
   ],
   [
-   257,
+   221,
+   245
+  ],
+  [
+   246,
    280
   ],
   [
    281,
-   295
-  ],
-  [
-   296,
    301
   ],
   [
@@ -53,8 +45,9 @@
   ]
  ],
  "emph": [
-  73,
-  109,
+  104,
+  110,
+  133,
   218,
   278,
   300,
@@ -62,68 +55,39 @@
  ],
  "beats": [
   {
-   "w0": 55,
+   "w0": 76,
    "layout": "split",
    "header": {
-    "text": "Be the *editor*?",
-    "style": "serif"
+    "text": "The [Beagle] *Bros* deal",
+    "style": "box"
    },
+   "hero": true,
    "scene": {
-    "type": "custom_svg",
-    "enter": "unfold",
-    "exit": "blur",
-    "camera": "push",
-    "svg": "<rect class=\"p\" x=\"230\" y=\"130\" width=\"440\" height=\"540\" rx=\"18\" stroke=\"#fff\" stroke-width=\"6\" fill=\"none\"/><rect class=\"p\" x=\"270\" y=\"170\" width=\"360\" height=\"160\" stroke=\"#e8283c\" stroke-width=\"6\" fill=\"none\"/><path class=\"d\" d=\"M270 380 H630\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/><path class=\"d\" d=\"M270 430 H630\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/><path class=\"d\" d=\"M270 480 H540\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/><path class=\"d\" d=\"M270 560 H450\" stroke=\"#e8283c\" stroke-width=\"6\" fill=\"none\"/><circle class=\"p\" cx=\"560\" cy=\"580\" r=\"36\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/>",
-    "at": [
-     55
-    ]
+    "type": "icon",
+    "icon": "doc",
+    "label": "",
+    "enter": "fall",
+    "exit": "dissolve",
+    "camera": "push"
    },
    "sfx": [
     "reveal"
    ]
   },
   {
-   "w0": 67,
-   "layout": "speaker"
-  },
-  {
-   "w0": 76,
+   "w0": 95,
    "layout": "split",
    "scene": {
     "type": "counter",
-    "enter": "pop",
-    "exit": "shrink",
-    "camera": "none",
-    "value": 1,
+    "value": 5,
     "prefix": "",
-    "suffix": " issue",
-    "label": "Put out",
+    "suffix": " yrs",
+    "label": "",
+    "enter": "settle",
+    "exit": "recede",
+    "camera": "none",
     "at": [
-     82
-    ]
-   }
-  },
-  {
-   "w0": 95,
-   "layout": "split",
-   "header": {
-    "text": "One issue. *Five* years.",
-    "style": "box"
-   },
-   "scene": {
-    "type": "list",
-    "enter": "slideR",
-    "exit": "whipL",
-    "camera": "driftL",
-    "items": [
-     "One issue",
-     "Five years",
-     "Five bucks"
-    ],
-    "at": [
-     99,
-     104,
-     109
+     104
     ]
    }
   },
@@ -132,20 +96,17 @@
    "layout": "split",
    "scene": {
     "type": "counter",
-    "enter": "drop",
-    "exit": "collapse",
-    "camera": "pull",
     "value": 5,
     "prefix": "$",
     "suffix": "",
-    "label": "Per copy",
+    "label": "",
+    "enter": "pop",
+    "exit": "dissolve",
+    "camera": "none",
     "at": [
-     110
+     109
     ]
-   },
-   "sfx": [
-    "ding"
-   ]
+   }
   },
   {
    "w0": 114,
@@ -156,56 +117,65 @@
    "layout": "split",
    "scene": {
     "type": "icon",
-    "enter": "zoomIn",
-    "exit": "pushUp",
-    "camera": "rise",
     "icon": "bulb",
-    "label": "I have an idea",
-    "at": [
-     132
-    ]
-   },
-   "sfx": [
-    "reveal"
-   ]
+    "label": "",
+    "enter": "fall",
+    "exit": "lift",
+    "camera": "none"
+   }
   },
   {
    "w0": 134,
    "layout": "split",
    "scene": {
-    "type": "tree",
-    "enter": "iris",
-    "exit": "irisOut",
-    "camera": "tilt",
-    "root": "Interested?",
-    "children": [
-     "Go home",
-     "Think",
-     "Ask partner"
+    "type": "chat",
+    "messages": [
+     {
+      "from": "out",
+      "text": "Let me think..."
+     },
+     {
+      "from": "in",
+      "text": "Go on."
+     }
     ],
+    "enter": "unfold",
+    "exit": "fade",
+    "camera": "none",
     "at": [
-     145,
-     150,
-     156
+     134,
+     143
     ]
    }
   },
   {
+   "w0": 143,
+   "layout": "speaker"
+  },
+  {
    "w0": 158,
    "layout": "split",
-   "header": {
-    "text": "The little *pamphlet*",
-    "style": "underline"
-   },
    "scene": {
-    "type": "icon",
-    "enter": "flipY",
-    "exit": "zoomPast",
-    "camera": "driftR",
-    "icon": "doc",
-    "label": "Pamphlet",
+    "type": "doc",
+    "title": "",
+    "rows": [
+     {
+      "label": "Ads"
+     },
+     {
+      "label": "Offers"
+     },
+     {
+      "label": "Deals"
+     }
+    ],
+    "enter": "tilt3d",
+    "exit": "dissolve",
+    "camera": "none",
     "at": [
-     165
+     164,
+     170,
+     177
     ]
    }
   },
@@ -214,9 +184,6 @@
    "layout": "split",
    "scene": {
     "type": "bars",
-    "enter": "wipe",
-    "exit": "fade",
-    "camera": "push",
     "values": [
      25,
      45,
@@ -224,118 +191,123 @@
      95
     ],
     "labels": [
-     "Now",
-     "Sales",
-     "More",
-     "Most"
+     "",
+     "",
+     "",
+     ""
     ],
+    "enter": "wipe",
+    "exit": "collapse",
+    "camera": "none",
     "at": [
-     168,
      177,
+     179,
      181,
-     181
+     182
     ]
    }
   },
   {
    "w0": 183,
-   "layout": "split",
-   "scene": {
-    "type": "radar",
-    "enter": "focus",
-    "exit": "shrink",
-    "camera": "orbit",
-    "label": "Other people",
-    "n": 9,
-    "at": [
-     185
-    ]
-   }
+   "layout": "speaker"
   },
   {
    "w0": 189,
-   "layout": "speaker"
+   "layout": "split",
+   "scene": {
+    "type": "icon",
+    "icon": "cross",
+    "label": "",
+    "enter": "flipY",
+    "exit": "fade",
+    "camera": "none"
+   }
   },
   {
    "w0": 201,
    "layout": "split",
    "header": {
-    "text": "Money in. Three-way *partners*",
-    "style": "box"
+    "text": "A *three-way* [deal]",
+    "style": "serif"
    },
    "scene": {
-    "type": "icon",
-    "enter": "swing",
-    "exit": "dropOut",
-    "camera": "pull",
-    "icon": "money",
-    "label": "Their money",
-    "at": [
-     212
-    ]
+    "type": "hero3d",
+    "preset": "coins",
+    "label": "",
+    "enter": "zoomIn",
+    "exit": "recede",
+    "camera": "none"
    }
   },
   {
    "w0": 210,
    "layout": "split",
+   "hero": true,
    "scene": {
-    "type": "counter",
-    "enter": "tilt3d",
-    "exit": "whipR",
-    "camera": "push",
-    "value": 3,
-    "prefix": "",
-    "suffix": "-way",
-    "label": "Partners",
+    "type": "tree",
+    "root": "Deal",
+    "children": [
+     "Me",
+     "Al",
+     "Them"
+    ],
+    "enter": "iris",
+    "exit": "collapse",
+    "camera": "pull",
     "at": [
-     218
+     217,
+     218,
+     219
     ]
-   },
-   "sfx": [
-    "ding"
-   ]
+   }
+  },
+  {
+   "w0": 221,
+   "layout": "speaker"
+  },
+  {
+   "w0": 232,
+   "layout": "split",
+   "scene": {
+    "type": "icon",
+    "icon": "brain",
+    "label": "",
+    "enter": "focus",
+    "exit": "recede",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 246,
+   "layout": "split",
+   "scene": {
+    "type": "grid",
+    "n": 9,
+    "highlight": 4,
+    "label": "",
+    "enter": "settle",
+    "exit": "fade",
+    "camera": "none"
+   }
   },
   {
    "w0": 257,
-   "layout": "split",
-   "header": {
-    "text": "The one *rule*",
-    "style": "serif"
-   },
-   "scene": {
-    "type": "icon",
-    "enter": "rise",
-    "exit": "blur",
-    "camera": "none",
-    "icon": "warning",
-    "label": "Important",
-    "at": [
-     263
-    ]
-   },
-   "sfx": [
-    "flash"
-   ]
+   "layout": "speaker"
   },
   {
-   "w0": 265,
+   "w0": 262,
    "layout": "split",
+   "header": {
+    "text": "One [rule]",
+    "style": "underline"
+   },
+   "hero": true,
    "scene": {
-    "type": "browser",
-    "enter": "slideL",
-    "exit": "collapse",
-    "camera": "driftL",
-    "title": "The magazine",
-    "rows": [
-     "Their company",
-     "Our company",
-     "Neutral"
-    ],
-    "at": [
-     274,
-     274,
-     278
-    ]
+    "type": "custom_svg",
+    "svg": "<svg viewBox='0 0 900 800' xmlns='http://www.w3.org/2000/svg'><line class='d' x1='450' y1='200' x2='450' y2='640' stroke='#fff' stroke-width='6'/><line class='d' x1='300' y1='640' x2='600' y2='640' stroke='#fff' stroke-width='6'/><line class='d' x1='180' y1='260' x2='720' y2='260' stroke='#fff' stroke-width='6'/><path class='d' d='M180 260 L110 440 H250 Z' fill='none' stroke='#fff' stroke-width='5'/><path class='d' d='M720 260 L650 440 H790 Z' fill='none' stroke='#fff' stroke-width='5'/><circle class='p' cx='450' cy='170' r='34' fill='none' stroke='#e8283c' stroke-width='7'/><circle class='p' cx='180' cy='500' r='24' fill='none' stroke='#e8283c' stroke-width='5'/><circle class='p' cx='720' cy='500' r='24' fill='none' stroke='#e8283c' stroke-width='5'/></svg>",
+    "enter": "bloom",
+    "exit": "irisOut",
+    "camera": "parallax"
    }
   },
   {
@@ -343,36 +315,37 @@
    "layout": "split",
    "scene": {
     "type": "icon",
-    "enter": "pop",
-    "exit": "fade",
-    "camera": "rise",
-    "icon": "cross",
-    "label": "No favoring",
-    "at": [
-     278
-    ]
-   },
-   "sfx": [
-    "reveal"
-   ]
+    "icon": "lock",
+    "label": "",
+    "enter": "focus",
+    "exit": "lift",
+    "camera": "none"
+   }
   },
   {
    "w0": 281,
+   "layout": "speaker"
+  },
+  {
+   "w0": 290,
    "layout": "split",
    "scene": {
-    "type": "phone",
-    "enter": "unfold",
-    "exit": "pushUp",
-    "camera": "tilt",
-    "headline": "A column",
-    "sub": "each writes one",
+    "type": "doc",
+    "title": "",
     "rows": [
-     "Them",
-     "Us"
+     {
+      "label": "Him"
+     },
+     {
+      "label": "Us"
+     }
     ],
+    "enter": "wipe",
+    "exit": "dissolve",
+    "camera": "none",
     "at": [
      291,
-     291
+     293
     ]
    }
   },
@@ -385,18 +358,20 @@
    "layout": "split",
    "scene": {
     "type": "quote",
-    "enter": "zoomIn",
-    "exit": "irisOut",
-    "camera": "pull",
-    "text": "Beagle *Brothers*",
-    "at": [
-     302
-    ]
+    "text": "*Beagle* Bros",
+    "enter": "pop",
+    "exit": "fade",
+    "camera": "none"
    },
    "sfx": [
-    "flash"
+    "ding"
    ]
+  },
+  {
+   "w0": 305,
+   "layout": "speaker"
   }
  ],
- "seed": 58
+ "_dup_text_flags": [],
+ "seed": 59
 }

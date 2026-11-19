@@ -1,5 +1,20 @@
 # split-motion-dai
 
+## v4 — round 2 (owner feedback), `renders/FINAL-v4.mp4`
+
+Feedback applied: stillness by default (soft settles + holds, camera moves only on hero beats),
+scenes no longer echo the captions (lit glass objects, 3D coins, drawings, numbers, light,
+particles, one shine), a **tall speaker card** (940 px of 1920), phone content clipped to its
+screen, and the hitch root causes fixed (final-state flash before tweens, auto-rounded line
+draws, counter jitter, class snapping, duplicated frames). Fresh run, nothing cached, one Claude
+planning call: **300.0 s (5.0 min)** including render; QC: 0 jump/stutter frames, ambient
+motion 12 % of hold frames in the final render (round 1: 58 %), −14.2 LUFS / −1.5 dBTP. Look-and-fix re-renders from
+the same plan (halo excluded from the fit, shine envelope) are what `FINAL-v4.mp4` is.
+Sheet: `renders/FINAL-v4-sheet.jpg`. Planner-trial renders of three models' plans on the same cut:
+`renders/planner-trial/` (see `kit/split-motion/HARNESS.md`).
+
+---
+
 ## v3 — built by the harness (Kallaway grammar), `renders/FINAL-v3.mp4`
 
 Fresh end-to-end run of `kit/split-motion/harness/run.py` on the raw 86 s 4K60 VP9 multicam

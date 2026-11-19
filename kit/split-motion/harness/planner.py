@@ -67,14 +67,30 @@ JSON SCHEMA:
  "beats": [                                                 // cover the KEPT words in order; beat = 1.5-3.5 s
    {{"w0": first_word_index_of_beat, "layout": "split|speaker|graphic",
      "header": {{"text": "2-6 words", "style": "box|underline|serif|plain"}},   // only when a section starts
-     "scene": {{"type": "...", "enter": "...", "exit": "...", "camera": "...", ...type fields..., "at": [word_index per item]}},
+     "hero": true,                                           // only 2-4 beats per reel: the strongest moments
+     "scene": {{"type": "...", "enter": "...", "exit": "...", "camera": "none|push|pull|parallax|tilt (hero beats only)", ...type fields..., "at": [word_index per item]}},
      "sfx": ["flash"|"reveal"|"ding"]                       // optional, rare
    }}
  ]
 }}
 Rules for beats: first beat w0 = first kept word; split ~70 % of the time; speaker beats (no scene) 1.5-4 s every 4-8 s
 on punchlines; graphic <= 1 beat; chapters (type chapter) when the speaker enumerates; 1-2 hero3d only on the strongest
-concrete object; list/steps/counter items reveal on the word that says them ("at"); every scene literal to the words.
+concrete object; list/steps/counter items reveal on the word that says them ("at").
+
+MOTION LANGUAGE (round-2 feedback from the owner — obey it):
+- Stillness is the default. An object arrives with a soft eased settle (tiny overshoot), then HOLDS. No sliding, no
+  constant drifting. Fluidity comes from the quality of easing and timing, not from movement.
+- camera must be "none" except on the 2-4 "hero": true beats, where ONE slow push / pull / parallax / tilt is allowed.
+- Vary enter verbs per scene (settle, pop, focus, bloom, iris, wipe, unfold, tilt3d, flipY, zoomIn, fall); exits are quiet
+  (fade, dissolve, recede, lift, collapse, irisOut).
+
+LESS LITERAL TEXT (round-2 feedback — obey it):
+- The captions already show every spoken word. A scene must NOT repeat the caption words as on-screen text.
+- Give the visual SUBSTANCE: an illustrative object (icon = a lit glass object, custom_svg drawing, 3D, phone, doc,
+  grid of thumbnails, chart), light, depth, a number. The compiler adds glow, particles and a cinematic shine itself.
+- Text only where it adds: the section header, a number (counter), or ONE key word that is not being said right then.
+  Leave "label" empty unless it adds something the voice does not say. Items in list/steps/tree may be 1-2 words.
+- The motion panel is now shorter (the speaker card is taller): fewer, bigger elements per scene.
 """
 
 
@@ -121,7 +137,48 @@ def call_gemini(prompt, cfg):
     return j["candidates"][0]["content"]["parts"][0]["text"], {"usage": j.get("usageMetadata")}
 
 
-ADAPTERS = {"claude": call_claude, "anthropic": call_anthropic, "openai": call_openai, "gemini": call_gemini}
+def call_openrouter(prompt, cfg):
+    """OpenRouter (any model id). Key read from ~/.config/tigno/openrouter.key at call time only (never in git/env dumps).
+    No response_format=json_object (gemini-4-carbon failed with it + max_tokens 16000); plain call, max_tokens 32000."""
+    key = open(os.path.expanduser(cfg.get("key_file", "~/.config/tigno/openrouter.key"))).read().strip()
+    body = {"model": cfg["model"], "messages": [{"role": "user", "content": prompt}], "max_tokens": cfg.get("max_tokens", 32000)}
+    j = _post("https://openrouter.ai/api/v1/chat/completions", body, {"authorization": "Bearer " + key}, cfg.get("timeout", 600))
+    return j["choices"][0]["message"]["content"], {"usage": j.get("usage"), "model": j.get("model")}
+
+
+ADAPTERS = {"claude": call_claude, "anthropic": call_anthropic, "openai": call_openai, "gemini": call_gemini,
+            "openrouter": call_openrouter}
+
+
+def repair_json(text):
+    """cheap local repair: code fences, trailing commas, comments, unbalanced closers (truncation)."""
+    t = re.sub(r"^```(json)?|```$", "", text.strip(), flags=re.M)
+    t = re.sub(r"//[^\n\"]*$", "", t, flags=re.M)
+    t = re.sub(r",\s*([}\]])", r"\1", t)
+    m = re.search(r"\{.*", t, re.S)
+    t = m.group(0) if m else t
+    try:
+        return json.loads(t[:t.rindex("}") + 1])
+    except Exception:
+        pass
+    stack, out, ins, esc_ = [], [], False, False
+    for ch in t:
+        out.append(ch)
+        if ins:
+            esc_ = (ch == "\\" and not esc_)
+            if ch == '"' and not esc_:
+                ins = False
+            continue
+        if ch == '"':
+            ins = True
+        elif ch in "{[":
+            stack.append("}" if ch == "{" else "]")
+        elif ch in "}]" and stack:
+            stack.pop()
+    s2 = "".join(out).rstrip().rstrip(",")
+    if ins:
+        s2 += '"'
+    return json.loads(re.sub(r",\s*([}\]])", r"\1", s2 + "".join(reversed(stack))))
 
 
 # ------------------------------------------------------------------ local heuristic planner
@@ -207,6 +264,49 @@ def local_plan(words, segs, shots, memory, opts):
 
 
 # ------------------------------------------------------------------ validate / repair
+STOPW = set("the a an and or but so to of in on at for with is are was were be been it this that i you he she we they my your "
+            "me him her them our their just like really very do does did have has had not no yes if then than there here what "
+            "when who how why all can will would could should gonna got get going know mean thing things it's that's don't".split())
+TEXT_FIELDS = ("label", "text", "center", "title", "headline", "sub", "root")
+LIST_FIELDS = ("items", "rows", "children")
+
+
+def _toks(x):
+    return [t for t in re.findall(r"[a-z0-9$%']+", str(x).lower().replace("*", "").replace("[", "").replace("]", ""))
+            if t not in STOPW and len(t) > 2 and not t.isdigit()]
+
+
+def dup_text(plan, words):
+    """flag scene text that echoes the caption words of its beat (+-1 beat); strip echoing labels."""
+    bs = plan["beats"]
+    ws = [b["w0"] for b in bs] + [len(words)]
+    flags = []
+    for k, b in enumerate(bs):
+        sc = b.get("scene")
+        if not sc:
+            continue
+        lo, hi = ws[max(0, k - 1)], ws[min(len(bs), k + 2)]
+        cap = {t for w in words[lo:hi] for t in _toks(w["w"])}
+        for f in TEXT_FIELDS + LIST_FIELDS:
+            v = sc.get(f)
+            vals = v if isinstance(v, list) else [v]
+            for x in vals:
+                x = x.get("label", "") if isinstance(x, dict) else x
+                tk = _toks(x or "")
+                if len(tk) >= 1 and sum(t in cap for t in tk) / len(tk) >= .6 and (len(tk) >= 2 or f in TEXT_FIELDS):
+                    flags.append(dict(beat=k, field=f, text=str(x)[:40]))
+        # auto-fix: echoing labels / subtitles go (lists stay: they are structure, 1-2 words each)
+        for f in ("label", "sub", "title", "center"):
+            if any(fl["beat"] == k and fl["field"] == f for fl in flags):
+                sc[f] = ""
+        if sc.get("type") == "quote" and any(fl["beat"] == k and fl["field"] == "text" for fl in flags):
+            sc.update(type="icon", icon=sc.get("icon", "star"), label="")
+            for fl in flags:
+                if fl["beat"] == k and fl["field"] == "text":
+                    fl["fix"] = "quote -> glass object"
+    return flags
+
+
 def validate(plan, words):
     fixes = []
     nW = len(words)
@@ -249,6 +349,28 @@ def validate(plan, words):
         uniq[0]["w0"] = kept[0]
     plan["beats"] = uniq
     plan["emph"] = [int(i) for i in plan.get("emph", []) if int(i) in ks]
+    # motion budget: continuous camera only on hero beats, at most ~1 per 6 beats (2-4 per reel)
+    heroes = [b for b in uniq if b.get("hero") or (b.get("scene") or {}).get("hero")]
+    cap = max(2, min(4, round(len(uniq) / 6)))
+    if len(heroes) > cap:
+        for b in heroes[cap:]:
+            b["hero"] = False
+            (b.get("scene") or {}).pop("hero", None)
+        fixes.append(f"hero beats capped {len(heroes)}->{cap}")
+    if not heroes:  # pick the strongest-looking scenes: 3D / chapter / counter / custom_svg first
+        rank = {"hero3d": 0, "chapter": 1, "counter": 2, "custom_svg": 3, "network": 4, "orbit": 5}
+        cand = sorted([b for b in uniq if b.get("scene")], key=lambda b: rank.get(b["scene"]["type"], 9))[:cap]
+        for b in cand:
+            b["hero"] = True
+    for b in uniq:
+        sc = b.get("scene")
+        if sc and not (b.get("hero") or sc.get("hero")) and sc.get("camera", "none") != "none":
+            sc["camera"] = "none"
+    flags = dup_text(plan, words)
+    if flags:
+        fixes.append(f"duplicate-caption text in {len({f['beat'] for f in flags})} beat(s): " +
+                     "; ".join(f"b{f['beat']}.{f['field']}='{f['text']}'" for f in flags[:8]))
+    plan["_dup_text_flags"] = flags
     return plan, fixes
 
 
@@ -270,8 +392,19 @@ def make_plan(words, segs, shots, memory, opts, adapter=None):
         try:
             plan = _json_from(text)
         except Exception as ex:
-            meta["error"] = f"bad JSON from model ({ex}); fell back to local"
-            plan = local_plan(words, segs, shots, memory, opts)
+            try:
+                plan = repair_json(text)
+                meta["json_repair"] = "local"
+            except Exception:
+                try:  # one retry: send the broken JSON back to the same model to fix
+                    fix_prompt = ("Your previous answer was not valid JSON (" + str(ex)[:200] + "). Return ONLY the corrected JSON "
+                                  "object, nothing else:\n" + text[:60000])
+                    text2, info2 = ADAPTERS[name](fix_prompt, a)
+                    plan = repair_json(text2)
+                    meta["json_repair"] = "model retry"
+                except Exception as ex2:
+                    meta["error"] = f"bad JSON from model ({ex2}); fell back to local"
+                    plan = local_plan(words, segs, shots, memory, opts)
     plan, fixes = validate(plan, words)
     plan["seed"] = opts["seed"]
     meta.update(s=round(time.time() - t0, 1), fixes=fixes)

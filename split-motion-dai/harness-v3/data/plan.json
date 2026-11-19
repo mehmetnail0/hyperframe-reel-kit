@@ -1,7 +1,7 @@
 {
- "title": "Preparation Before Opportunity",
+ "title": "Prepare Before The Shout-Out",
  "theme": "dark",
- "accent2": "#2ee6d6",
+ "accent2": "#ffd23f",
  "keep": [
   [
    0,
@@ -13,11 +13,7 @@
   ],
   [
    45,
-   58
-  ],
-  [
-   59,
-   237
+   252
   ],
   [
    268,
@@ -26,108 +22,97 @@
  ],
  "emph": [
   27,
-  56,
+  81,
   90,
-  133,
-  143,
+  137,
   160,
   164,
-  275
+  275,
+  282
  ],
  "beats": [
   {
    "w0": 0,
    "layout": "split",
    "header": {
-    "text": "Don't miss the [moment]",
+    "text": "[Ready] before *lucky*",
     "style": "box"
    },
    "scene": {
     "type": "icon",
-    "enter": "pop",
-    "exit": "blur",
-    "camera": "push",
-    "icon": "hourglass",
-    "label": "The moment"
-   },
-   "sfx": [
-    "reveal"
-   ]
+    "icon": "clock",
+    "label": "",
+    "enter": "bloom",
+    "exit": "fade",
+    "camera": "none"
+   }
   },
   {
    "w0": 23,
    "layout": "split",
    "scene": {
     "type": "icon",
-    "enter": "flipY",
-    "exit": "whipL",
-    "camera": "driftL",
-    "icon": "clock",
-    "label": "Instant gratification"
+    "icon": "hourglass",
+    "label": "",
+    "enter": "focus",
+    "exit": "dissolve",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 29,
+   "layout": "split",
+   "scene": {
+    "type": "icon",
+    "icon": "target",
+    "label": "",
+    "enter": "pop",
+    "exit": "recede",
+    "camera": "none"
    }
   },
   {
    "w0": 33,
    "layout": "split",
+   "hero": true,
    "scene": {
-    "type": "orbit",
-    "enter": "unfold",
-    "exit": "shrink",
-    "camera": "orbit",
-    "center": "Chasing",
-    "items": [
-     "Money",
-     "Attention",
-     "Followers"
-    ],
-    "at": [
-     35,
-     37,
-     37
-    ]
-   }
+    "type": "hero3d",
+    "preset": "coins",
+    "label": "",
+    "enter": "zoomIn",
+    "exit": "fade",
+    "camera": "push"
+   },
+   "sfx": [
+    "reveal"
+   ]
   },
   {
    "w0": 45,
-   "layout": "split",
-   "scene": {
-    "type": "quote",
-    "enter": "zoomIn",
-    "exit": "pushUp",
-    "camera": "pull",
-    "text": "Want it *now*"
-   }
-  },
-  {
-   "w0": 50,
    "layout": "speaker"
   },
   {
    "w0": 59,
    "layout": "split",
    "header": {
-    "text": "The *shout-out* trap",
+    "text": "The *Shout-Out* trap",
     "style": "serif"
    },
    "scene": {
     "type": "chat",
-    "enter": "slideR",
-    "exit": "fade",
-    "camera": "driftR",
     "messages": [
      {
       "from": "in",
-      "text": "Can you shout me out?"
+      "text": "Shout me out?"
      },
      {
       "from": "out",
       "text": "No."
      }
     ],
-    "at": [
-     66,
-     72
-    ]
+    "enter": "settle",
+    "exit": "lift",
+    "camera": "none"
    }
   },
   {
@@ -137,32 +122,26 @@
   {
    "w0": 86,
    "layout": "split",
-   "header": {
-    "text": "[Preparation] first",
-    "style": "underline"
-   },
    "scene": {
-    "type": "icon",
-    "enter": "swing",
-    "exit": "whipR",
-    "camera": "rise",
-    "icon": "megaphone",
-    "label": "Shout out"
-   },
-   "sfx": [
-    "ding"
-   ]
+    "type": "chapter",
+    "n": 1,
+    "title": "",
+    "enter": "iris",
+    "exit": "irisOut",
+    "camera": "none"
+   }
   },
   {
-   "w0": 99,
+   "w0": 93,
    "layout": "split",
    "scene": {
-    "type": "hero3d",
+    "type": "phone",
+    "headline": "0 posts",
+    "sub": "empty profile",
+    "rows": [],
     "enter": "tilt3d",
-    "exit": "zoomPast",
-    "camera": "orbit",
-    "preset": "phone",
-    "label": "Your page"
+    "exit": "dissolve",
+    "camera": "none"
    }
   },
   {
@@ -170,76 +149,76 @@
    "layout": "split",
    "scene": {
     "type": "grid",
-    "enter": "iris",
-    "exit": "irisOut",
-    "camera": "tilt",
     "n": 6,
-    "highlight": 0,
-    "label": "Two videos"
+    "highlight": 1,
+    "label": "2",
+    "enter": "unfold",
+    "exit": "fade",
+    "camera": "none"
    }
   },
   {
    "w0": 118,
-   "layout": "split",
-   "scene": {
-    "type": "compare",
-    "enter": "wipe",
-    "exit": "collapse",
-    "camera": "push",
-    "left": {
-     "title": "Shout out",
-     "items": [
-      "Visitors"
-     ]
-    },
-    "right": {
-     "title": "Catalog",
-     "items": [
-      "Nothing to watch"
-     ]
-    }
-   }
+   "layout": "speaker"
   },
   {
    "w0": 130,
-   "layout": "speaker"
+   "layout": "split",
+   "scene": {
+    "type": "orbit",
+    "center": "Vault",
+    "items": [
+     "Reel",
+     "Clip",
+     "Short"
+    ],
+    "at": [
+     131,
+     133,
+     136
+    ],
+    "enter": "bloom",
+    "exit": "recede",
+    "camera": "none"
+   }
   },
   {
    "w0": 138,
    "layout": "split",
-   "header": {
-    "text": "Keep *dropping*",
-    "style": "box"
-   },
    "scene": {
-    "type": "icon",
-    "enter": "drop",
-    "exit": "dropOut",
-    "camera": "driftL",
-    "icon": "calendar",
-    "label": "Be consistent"
+    "type": "chapter",
+    "n": 2,
+    "title": "Rhythm",
+    "enter": "wipe",
+    "exit": "fade",
+    "camera": "none"
    }
   },
   {
    "w0": 146,
-   "layout": "speaker"
+   "layout": "split",
+   "scene": {
+    "type": "icon",
+    "icon": "check",
+    "label": "",
+    "enter": "pop",
+    "exit": "dissolve",
+    "camera": "none"
+   }
   },
   {
    "w0": 155,
    "layout": "split",
-   "header": {
-    "text": "Opportunity meets [preparation]",
-    "style": "serif"
-   },
+   "hero": true,
    "scene": {
     "type": "custom_svg",
-    "enter": "unfold",
+    "svg": "<circle class=\"p\" cx=\"320\" cy=\"400\" r=\"170\" stroke=\"#fff\" stroke-width=\"6\" fill=\"none\"/><circle class=\"p\" cx=\"580\" cy=\"400\" r=\"170\" stroke=\"#e8283c\" stroke-width=\"6\" fill=\"none\"/><path class=\"d\" d=\"M450 330 L450 470 M380 400 L520 400 M400 350 L500 450 M500 350 L400 450\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/><circle class=\"p\" cx=\"450\" cy=\"400\" r=\"16\" stroke=\"#e8283c\" stroke-width=\"6\" fill=\"none\"/><path class=\"d\" d=\"M450 130 V190 M330 170 L360 215 M570 170 L540 215\" stroke=\"#fff\" stroke-width=\"5\" fill=\"none\"/>",
+    "enter": "focus",
     "exit": "fade",
-    "camera": "pull",
-    "svg": "<svg viewBox='0 0 900 800'><path class='d' d='M80 640 Q300 640 450 400' stroke='#fff' stroke-width='6' fill='none'/><path class='d' d='M820 640 Q600 640 450 400' stroke='#e8283c' stroke-width='6' fill='none'/><circle class='p' cx='450' cy='400' r='34' stroke='#fff' stroke-width='6' fill='none'/><line class='d' x1='450' y1='320' x2='450' y2='220' stroke='#fff' stroke-width='6'/><line class='d' x1='380' y1='340' x2='320' y2='260' stroke='#e8283c' stroke-width='6'/><line class='d' x1='520' y1='340' x2='580' y2='260' stroke='#e8283c' stroke-width='6'/><line class='d' x1='350' y1='400' x2='250' y2='400' stroke='#fff' stroke-width='6'/><line class='d' x1='550' y1='400' x2='650' y2='400' stroke='#fff' stroke-width='6'/></svg>"
+    "camera": "pull"
    },
    "sfx": [
-    "flash"
+    "reveal"
    ]
   },
   {
@@ -247,162 +226,143 @@
    "layout": "split",
    "scene": {
     "type": "icon",
-    "enter": "pop",
-    "exit": "blur",
-    "camera": "push",
     "icon": "star",
-    "label": "Fireworks"
+    "label": "",
+    "enter": "bloom",
+    "exit": "dissolve",
+    "camera": "none"
    },
    "sfx": [
-    "ding"
+    "flash"
    ]
   },
   {
    "w0": 170,
-   "layout": "split",
-   "scene": {
-    "type": "quote",
-    "enter": "focus",
-    "exit": "fade",
-    "camera": "none",
-    "text": "You gotta *wait*"
-   }
-  },
-  {
-   "w0": 174,
-   "layout": "split",
-   "scene": {
-    "type": "quote",
-    "enter": "slideL",
-    "exit": "whipR",
-    "camera": "driftR",
-    "text": "Opportunity *first?*"
-   }
+   "layout": "speaker"
   },
   {
    "w0": 183,
    "layout": "split",
+   "header": {
+    "text": "_Opportunity_ without prep",
+    "style": "underline"
+   },
    "scene": {
-    "type": "compare",
-    "enter": "flipY",
-    "exit": "shrink",
-    "camera": "tilt",
-    "left": {
-     "title": "Prepared",
-     "items": [
-      "Ready"
-     ]
-    },
-    "right": {
-     "title": "Opportunity first",
-     "items": [
-      "Not ready"
-     ]
-    }
+    "type": "icon",
+    "icon": "key",
+    "label": "",
+    "enter": "tilt3d",
+    "exit": "lift",
+    "camera": "none"
    }
   },
   {
    "w0": 188,
-   "layout": "speaker"
-  },
-  {
-   "w0": 200,
    "layout": "split",
    "scene": {
     "type": "icon",
-    "enter": "rise",
-    "exit": "pushUp",
-    "camera": "pull",
-    "icon": "lock",
-    "label": "Your front door"
+    "icon": "warning",
+    "label": "",
+    "enter": "fall",
+    "exit": "fade",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 203,
+   "layout": "split",
+   "scene": {
+    "type": "bars",
+    "values": [
+     15,
+     35,
+     60,
+     92
+    ],
+    "labels": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "enter": "unfold",
+    "exit": "collapse",
+    "camera": "none"
    }
   },
   {
    "w0": 210,
+   "layout": "speaker"
+  },
+  {
+   "w0": 222,
    "layout": "split",
-   "header": {
-    "text": "No [plan]?",
-    "style": "box"
-   },
    "scene": {
     "type": "chat",
-    "enter": "slideR",
-    "exit": "whipL",
-    "camera": "driftL",
     "messages": [
      {
       "from": "in",
-      "text": "You want it?"
+      "text": "Got a contract for you."
      },
      {
-      "from": "in",
-      "text": "Got a contract for you."
+      "from": "out",
+      "text": "Uh…"
      }
     ],
-    "at": [
-     222,
-     225
-    ]
+    "enter": "settle",
+    "exit": "recede",
+    "camera": "none"
    }
   },
   {
-   "w0": 227,
+   "w0": 238,
    "layout": "split",
    "scene": {
     "type": "doc",
-    "enter": "unfold",
-    "exit": "collapse",
-    "camera": "push",
-    "title": "Contract",
+    "title": "",
     "rows": [
      {
-      "label": "Terms"
+      "label": "Clause"
+     },
+     {
+      "label": "Term"
+     },
+     {
+      "label": "Fee"
      },
      {
       "label": "Rights"
-     },
-     {
-      "label": "Pay"
      }
     ],
     "at": [
-     229,
-     233,
-     236
-    ]
+     240,
+     243,
+     246,
+     249
+    ],
+    "enter": "flipY",
+    "exit": "collapse",
+    "camera": "none"
    }
   },
   {
    "w0": 268,
    "layout": "split",
-   "header": {
-    "text": "Step Z, not step A",
-    "style": "underline"
-   },
+   "hero": true,
    "scene": {
-    "type": "steps",
+    "type": "icon",
+    "icon": "mountain",
+    "label": "",
     "enter": "rise",
-    "exit": "zoomPast",
-    "camera": "rise",
-    "items": [
-     "Step A",
-     "Step B",
-     "Step Z"
-    ],
-    "at": [
-     268,
-     272,
-     275
-    ]
-   },
-   "sfx": [
-    "reveal"
-   ]
+    "exit": "fade",
+    "camera": "tilt"
+   }
   },
   {
-   "w0": 277,
+   "w0": 278,
    "layout": "speaker"
   }
  ],
- "seed": 31
+ "_dup_text_flags": [],
+ "seed": 41
 }

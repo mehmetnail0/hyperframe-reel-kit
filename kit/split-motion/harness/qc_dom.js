@@ -14,7 +14,7 @@ const fs = require('fs');
   const res = [];
   for (const b of beats) {
     if (!b.sid) continue;
-    const t = b.t0 + Math.min(1.6, (b.t1 - b.t0) * 0.7);
+    const t = Math.max(b.t0 + 0.9, b.t1 - 0.45);  // everything revealed, before the exit
     const r = await page.evaluate(([sid, t]) => {
       const tl = window.__timelines.main; tl.seek(t, false);
       const root = document.getElementById(sid);
@@ -26,13 +26,30 @@ const fs = require('fs');
         const cs = getComputedStyle(el);
         if (cs.visibility === 'hidden' || +cs.opacity === 0 || cs.display === 'none') return;
         if (el.closest('svg') && el.tagName !== 'svg') return;               // the svg box covers its children
+        if (el.closest('.fx-glow,.fx-pts,.fx-shine,.fx-halo')) return;                // light/particles may bleed
         const boxy = el.tagName === 'svg' || cs.backgroundColor !== 'rgba(0, 0, 0, 0)' || cs.backgroundImage !== 'none' || cs.borderTopWidth !== '0px';
         if (boxy) { add(el.getBoundingClientRect()); return; }
         // text: the tight box of the glyphs, not the (often full-width) block
         for (const c of el.childNodes) if (c.nodeType === 3 && c.textContent.trim()) {
           const r = document.createRange(); r.selectNodeContents(c); add(r.getBoundingClientRect()); }
       });
-      return n ? { x0, y0, x1, y1, n } : null;
+      // device mockups: every visible child must stay inside its device (screen) rect
+      const dev = [];
+      root.querySelectorAll('[data-device]').forEach((d) => {
+        const R = d.getBoundingClientRect(); let worst = 0, bad = 0;
+        d.querySelectorAll('*').forEach((el) => {
+          const cs = getComputedStyle(el);
+          if (cs.visibility === 'hidden' || +cs.opacity === 0) return;
+          const boxes = [];
+          for (const c of el.childNodes) if (c.nodeType === 3 && c.textContent.trim()) { const r = document.createRange(); r.selectNodeContents(c); boxes.push(r.getBoundingClientRect()); }
+          if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' || cs.backgroundImage !== 'none') boxes.push(el.getBoundingClientRect());
+          boxes.forEach((q) => { if (q.width < 1) return;
+            const o = Math.max(R.left - q.left, q.right - R.right, R.top - q.top, q.bottom - R.bottom);
+            if (o > 2) { bad++; worst = Math.max(worst, o / Math.max(1, R.width)); } });
+        });
+        dev.push({ bad, worst: Math.round(worst * 1000) / 1000 });
+      });
+      return n ? { x0, y0, x1, y1, n, dev } : null;
     }, [b.sid, t]);
     res.push({ sid: b.sid, t, layout: b.layout, box: r });
   }

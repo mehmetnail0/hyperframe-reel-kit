@@ -1,5 +1,16 @@
 # split-motion-margot — harness proof #2 (different source, different motions)
 
+## v2 — round 2 (owner feedback), `renders/FINAL-v2.mp4`
+
+Same source, re-planned fresh with the round-2 rules (stillness by default, no caption echo,
+tall speaker card, device clipping, hitch fixes). Fresh run: **279.7 s (4.7 min)** including render.
+Jump detector: round-1 render 6 flagged frames (4 snaps, 1 pop, 1 repeat) + 5 duplicated frames in
+its base video → round 2: **0** flagged, **0** card repeats; ambient motion 15.5 % of hold frames in the final render
+(round 1: 54 %). `FINAL-v2.mp4` is the look-and-fix re-render from the same plan (shine envelope fix).
+Sheet: `renders/FINAL-v2-sheet.jpg`. Round 1 below is kept for comparison (`renders/FINAL.mp4`).
+
+## v1 — round 1
+
 Second end-to-end run of `kit/split-motion/harness/run.py`, on a **different** CC-BY
 talking head than proof v3: a single-camera 1080p H.264 interview (Margot Comstock,
 co-founder of *Softalk* magazine, Apple II Reunion 2015) instead of the 4K multicam podcast.

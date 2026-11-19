@@ -349,6 +349,332 @@
      "Flash Sound Effects  (1)/Flash 2 (1).wav"
     ]
    }
+  },
+  {
+   "reel": "harness-v3:FINAL-v4.mp4",
+   "date": "2026-11-19",
+   "types": [
+    "bars",
+    "chapter",
+    "chat",
+    "custom_svg",
+    "doc",
+    "grid",
+    "hero3d",
+    "icon",
+    "orbit",
+    "phone"
+   ],
+   "enter": [
+    "bloom",
+    "fall",
+    "flipY",
+    "focus",
+    "iris",
+    "pop",
+    "rise",
+    "settle",
+    "tilt3d",
+    "unfold",
+    "wipe",
+    "zoomIn"
+   ],
+   "exit": [
+    "collapse",
+    "dissolve",
+    "fade",
+    "irisOut",
+    "lift",
+    "recede"
+   ],
+   "camera": [
+    "none",
+    "pull",
+    "push",
+    "tilt"
+   ],
+   "headers": [
+    "box",
+    "serif",
+    "underline"
+   ],
+   "combos": [
+    [
+     "bars",
+     "unfold",
+     "collapse"
+    ],
+    [
+     "chapter",
+     "iris",
+     "irisOut"
+    ],
+    [
+     "chapter",
+     "wipe",
+     "fade"
+    ],
+    [
+     "chat",
+     "settle",
+     "lift"
+    ],
+    [
+     "chat",
+     "settle",
+     "recede"
+    ],
+    [
+     "custom_svg",
+     "focus",
+     "fade"
+    ],
+    [
+     "doc",
+     "flipY",
+     "collapse"
+    ],
+    [
+     "grid",
+     "unfold",
+     "fade"
+    ],
+    [
+     "hero3d",
+     "zoomIn",
+     "fade"
+    ],
+    [
+     "icon",
+     "bloom",
+     "dissolve"
+    ],
+    [
+     "icon",
+     "bloom",
+     "fade"
+    ],
+    [
+     "icon",
+     "fall",
+     "fade"
+    ],
+    [
+     "icon",
+     "focus",
+     "dissolve"
+    ],
+    [
+     "icon",
+     "focus",
+     "fade"
+    ],
+    [
+     "icon",
+     "pop",
+     "dissolve"
+    ],
+    [
+     "icon",
+     "pop",
+     "recede"
+    ],
+    [
+     "icon",
+     "rise",
+     "fade"
+    ],
+    [
+     "icon",
+     "tilt3d",
+     "lift"
+    ],
+    [
+     "orbit",
+     "bloom",
+     "recede"
+    ],
+    [
+     "phone",
+     "tilt3d",
+     "dissolve"
+    ]
+   ],
+   "sfx_first": {
+    "riser_cine": [
+     "cinematic-whoosh-reverse-3-235601 (1).mp3",
+     "Hologram Appearing (1).wav"
+    ],
+    "whoosh_deep": [
+     "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 4 (1).wav",
+     "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 3 (1).wav"
+    ],
+    "riser_short": [
+     "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav",
+     "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav"
+    ],
+    "whoosh_soft": [
+     "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 13 (1).wav",
+     "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh 14 (1).wav"
+    ],
+    "tick_soft": [
+     "Infographic Jan 8 2025 (1)/Infographic 08 Bloop (1).wav",
+     "UI Draw Sound Effects (1)/UI Button 3 (1).wav"
+    ],
+    "flash": [
+     "Flash Sound Effects  (1)/Flash 1 (1).wav"
+    ]
+   }
+  },
+  {
+   "reel": "split-motion-margot:FINAL-v2.mp4",
+   "date": "2026-11-19",
+   "types": [
+    "bars",
+    "chat",
+    "counter",
+    "custom_svg",
+    "doc",
+    "grid",
+    "hero3d",
+    "icon",
+    "quote",
+    "tree"
+   ],
+   "enter": [
+    "bloom",
+    "fall",
+    "flipY",
+    "focus",
+    "iris",
+    "pop",
+    "settle",
+    "tilt3d",
+    "unfold",
+    "wipe",
+    "zoomIn"
+   ],
+   "exit": [
+    "collapse",
+    "dissolve",
+    "fade",
+    "irisOut",
+    "lift",
+    "recede"
+   ],
+   "camera": [
+    "none",
+    "parallax",
+    "pull",
+    "push"
+   ],
+   "headers": [
+    "box",
+    "serif",
+    "underline"
+   ],
+   "combos": [
+    [
+     "bars",
+     "wipe",
+     "collapse"
+    ],
+    [
+     "chat",
+     "unfold",
+     "fade"
+    ],
+    [
+     "counter",
+     "pop",
+     "dissolve"
+    ],
+    [
+     "counter",
+     "settle",
+     "recede"
+    ],
+    [
+     "custom_svg",
+     "bloom",
+     "irisOut"
+    ],
+    [
+     "doc",
+     "tilt3d",
+     "dissolve"
+    ],
+    [
+     "doc",
+     "wipe",
+     "dissolve"
+    ],
+    [
+     "grid",
+     "settle",
+     "fade"
+    ],
+    [
+     "hero3d",
+     "zoomIn",
+     "recede"
+    ],
+    [
+     "icon",
+     "fall",
+     "dissolve"
+    ],
+    [
+     "icon",
+     "fall",
+     "lift"
+    ],
+    [
+     "icon",
+     "flipY",
+     "fade"
+    ],
+    [
+     "icon",
+     "focus",
+     "lift"
+    ],
+    [
+     "icon",
+     "focus",
+     "recede"
+    ],
+    [
+     "quote",
+     "pop",
+     "fade"
+    ],
+    [
+     "tree",
+     "iris",
+     "collapse"
+    ]
+   ],
+   "sfx_first": {
+    "riser_short": [
+     "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav",
+     "Designed_Whoosh_Whoosh_Two_Low_Deep_and_One_High_Wispy_Woosh_SDGWATT_33568 (1).wav"
+    ],
+    "riser_cine": [
+     "Whoosh Sound Effects Jan 15 2025 (1)/Whoosh Logo 03 (1).wav"
+    ],
+    "whoosh_deep": [
+     "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 3 (1).wav",
+     "Mountain Audio - Whooshes (1)/Mountain Audio - Whoosh 1 (1).wav"
+    ],
+    "tick_soft": [
+     "start-13691 (1).mp3",
+     "casual-click-pop-ui-1-262118 (1).mp3"
+    ],
+    "ding": [
+     "Successes (1)/Success 3 (1).wav"
+    ]
+   }
   }
  ]
 }

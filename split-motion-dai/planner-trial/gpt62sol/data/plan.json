@@ -1,0 +1,429 @@
+{
+ "title": "You Didn't Miss It",
+ "theme": "dark",
+ "accent2": "#2ee6d6",
+ "keep": [
+  [
+   0,
+   238
+  ]
+ ],
+ "emph": [
+  4,
+  21,
+  35,
+  44,
+  67,
+  123,
+  131,
+  148,
+  149,
+  238
+ ],
+ "beats": [
+  {
+   "w0": 0,
+   "layout": "split",
+   "header": {
+    "text": "You [Didn't] Miss It",
+    "style": "box"
+   },
+   "scene": {
+    "type": "icon",
+    "text": "You didn't miss the *moment*",
+    "enter": "focus",
+    "exit": "fade",
+    "camera": "none",
+    "icon": "star",
+    "label": ""
+   },
+   "sfx": [
+    "reveal",
+    "ding"
+   ]
+  },
+  {
+   "w0": 7,
+   "layout": "split",
+   "scene": {
+    "type": "icon",
+    "icon": "clock",
+    "label": "",
+    "enter": "iris",
+    "exit": "irisOut",
+    "camera": "none"
+   },
+   "sfx": [
+    "flash"
+   ]
+  },
+  {
+   "w0": 17,
+   "layout": "split",
+   "header": {
+    "text": "The *Instant* Gratification Trap",
+    "style": "serif"
+   },
+   "scene": {
+    "type": "icon",
+    "icon": "hourglass",
+    "label": "",
+    "enter": "flipY",
+    "exit": "fade",
+    "camera": "none"
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 27,
+   "layout": "split",
+   "scene": {
+    "type": "tree",
+    "root": "Want it now",
+    "children": [
+     "Money",
+     "Attention"
+    ],
+    "enter": "unfold",
+    "exit": "collapse",
+    "camera": "none",
+    "at": [
+     29,
+     31
+    ]
+   },
+   "sfx": [
+    "ding"
+   ]
+  },
+  {
+   "w0": 32,
+   "layout": "speaker"
+  },
+  {
+   "w0": 45,
+   "layout": "split",
+   "scene": {
+    "type": "chat",
+    "messages": [
+     {
+      "from": "in",
+      "text": "Hey"
+     },
+     {
+      "from": "in",
+      "text": "Can you shout me out?"
+     }
+    ],
+    "enter": "settle",
+    "exit": "fade",
+    "camera": "none",
+    "at": [
+     51,
+     52
+    ]
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 57,
+   "layout": "speaker"
+  },
+  {
+   "w0": 72,
+   "layout": "split",
+   "header": {
+    "text": "01 Build the *Catalog*",
+    "style": "underline"
+   },
+   "scene": {
+    "type": "icon",
+    "icon": "megaphone",
+    "label": "",
+    "enter": "settle",
+    "exit": "fade",
+    "camera": "none",
+    "at": [
+     83
+    ]
+   },
+   "sfx": [
+    "ding"
+   ]
+  },
+  {
+   "w0": 85,
+   "layout": "split",
+   "scene": {
+    "type": "hero3d",
+    "preset": "phone",
+    "label": "",
+    "enter": "tilt3d",
+    "exit": "fade",
+    "camera": "none"
+   },
+   "sfx": [
+    "reveal"
+   ],
+   "hero": true
+  },
+  {
+   "w0": 99,
+   "layout": "split",
+   "scene": {
+    "type": "counter",
+    "value": 2,
+    "prefix": "",
+    "suffix": "",
+    "label": "Posts on the page",
+    "enter": "pop",
+    "exit": "fade",
+    "camera": "pull",
+    "at": [
+     102
+    ]
+   },
+   "sfx": [
+    "ding"
+   ],
+   "hero": true
+  },
+  {
+   "w0": 110,
+   "layout": "speaker"
+  },
+  {
+   "w0": 124,
+   "layout": "split",
+   "header": {
+    "text": "02 Keep _Showing Up_",
+    "style": "underline"
+   },
+   "scene": {
+    "type": "icon",
+    "icon": "calendar",
+    "label": "Post consistently",
+    "enter": "wipe",
+    "exit": "fade",
+    "camera": "none",
+    "at": [
+     131
+    ]
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 132,
+   "layout": "split",
+   "scene": {
+    "type": "quote",
+    "text": "Do *your* part",
+    "enter": "rise",
+    "exit": "fade",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 143,
+   "layout": "split",
+   "scene": {
+    "type": "custom_svg",
+    "enter": "unfold",
+    "exit": "irisOut",
+    "camera": "push",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 900 800\"><path class=\"d\" d=\"M105 563 C235 563 345 492 450 365 M795 563 C665 563 555 492 450 365\" fill=\"none\" stroke=\"#fff\" stroke-width=\"6\"/><path class=\"d\" d=\"M267 510 l42 -5 -20 36 M633 510 l-42 -5 20 36\" fill=\"none\" stroke=\"#fff\" stroke-width=\"5\"/><circle class=\"p\" cx=\"450\" cy=\"365\" r=\"18\" fill=\"none\" stroke=\"#e8283c\" stroke-width=\"8\"/><path class=\"p\" d=\"M450 326 V218 M420 335 L354 269 M480 335 L546 269 M411 365 H316 M489 365 H584 M426 395 L386 442 M474 395 L514 442\" fill=\"none\" stroke=\"#e8283c\" stroke-width=\"6\" stroke-linecap=\"round\"/><path class=\"p\" d=\"M450 182 v-18 M330 242 l-12 -12 M570 242 l12 -12 M288 365 h-18 M612 365 h18\" fill=\"none\" stroke=\"#fff\" stroke-width=\"5\" stroke-linecap=\"round\"/></svg>",
+    "at": [
+     145,
+     148,
+     149
+    ]
+   },
+   "sfx": [
+    "flash"
+   ],
+   "hero": true
+  },
+  {
+   "w0": 151,
+   "layout": "speaker"
+  },
+  {
+   "w0": 160,
+   "layout": "split",
+   "header": {
+    "text": "03 Be *Ready* for It",
+    "style": "serif"
+   },
+   "scene": {
+    "type": "tree",
+    "root": "Wrong order",
+    "children": [
+     "Opportunity arrives",
+     "Preparation comes later"
+    ],
+    "enter": "settle",
+    "exit": "fade",
+    "camera": "none",
+    "at": [
+     168,
+     171
+    ]
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 172,
+   "layout": "split",
+   "scene": {
+    "type": "quote",
+    "text": "What will you *do*?",
+    "enter": "focus",
+    "exit": "fade",
+    "camera": "none"
+   },
+   "sfx": [
+    "ding"
+   ]
+  },
+  {
+   "w0": 181,
+   "layout": "speaker"
+  },
+  {
+   "w0": 193,
+   "layout": "split",
+   "scene": {
+    "type": "custom_svg",
+    "enter": "iris",
+    "exit": "collapse",
+    "camera": "none",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 900 800\"><path class=\"d\" d=\"M288 651 V155 Q288 132 311 132 H589 Q612 132 612 155 V651 M253 651 H647\" fill=\"none\" stroke=\"#fff\" stroke-width=\"6\"/><path class=\"d\" d=\"M316 651 V161 H584 V651 M347 198 H552 V377 H347 Z M347 434 H552 V614 H347 Z\" fill=\"none\" stroke=\"#fff\" stroke-width=\"4\"/><circle class=\"d\" cx=\"543\" cy=\"405\" r=\"9\" fill=\"none\" stroke=\"#fff\" stroke-width=\"5\"/><path class=\"p\" d=\"M564 400 l22 -22 M576 423 h33 M570 445 l22 22\" fill=\"none\" stroke=\"#e8283c\" stroke-width=\"7\" stroke-linecap=\"round\"/><path class=\"d\" d=\"M337 651 l-42 49 H605 l-42 -49\" fill=\"none\" stroke=\"#fff\" stroke-width=\"4\"/></svg>",
+    "at": [
+     195
+    ]
+   },
+   "sfx": [
+    "reveal"
+   ],
+   "hero": true
+  },
+  {
+   "w0": 202,
+   "layout": "split",
+   "scene": {
+    "type": "icon",
+    "icon": "chat",
+    "label": "Someone makes an offer",
+    "enter": "settle",
+    "exit": "fade",
+    "camera": "none",
+    "at": [
+     209
+    ]
+   }
+  },
+  {
+   "w0": 213,
+   "layout": "split",
+   "scene": {
+    "type": "doc",
+    "title": "Contract offer",
+    "rows": [
+     {
+      "label": "You want it?"
+     },
+     {
+      "label": "I've got a contract"
+     },
+     {
+      "label": "Right now"
+     }
+    ],
+    "enter": "unfold",
+    "exit": "fade",
+    "camera": "none",
+    "at": [
+     215,
+     219,
+     222
+    ]
+   },
+   "sfx": [
+    "ding"
+   ]
+  },
+  {
+   "w0": 224,
+   "layout": "split",
+   "scene": {
+    "type": "quote",
+    "text": "You're on step *Z*",
+    "enter": "zoomIn",
+    "exit": "fade",
+    "camera": "none",
+    "at": [
+     231
+    ]
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 232,
+   "layout": "speaker"
+  }
+ ],
+ "_dup_text_flags": [
+  {
+   "beat": 0,
+   "field": "text",
+   "text": "You didn't miss the *moment*",
+   "fix": "quote -> glass object"
+  },
+  {
+   "beat": 1,
+   "field": "label",
+   "text": "The moment"
+  },
+  {
+   "beat": 2,
+   "field": "label",
+   "text": "Instant gratification"
+  },
+  {
+   "beat": 3,
+   "field": "root",
+   "text": "Want it now"
+  },
+  {
+   "beat": 7,
+   "field": "label",
+   "text": "You get a shout-out"
+  },
+  {
+   "beat": 8,
+   "field": "label",
+   "text": "Your page"
+  },
+  {
+   "beat": 15,
+   "field": "children",
+   "text": "Preparation comes later"
+  },
+  {
+   "beat": 20,
+   "field": "rows",
+   "text": "Right now"
+  }
+ ],
+ "seed": 41
+}

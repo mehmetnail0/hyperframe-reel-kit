@@ -18,7 +18,15 @@ from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 
 FPS = 30
-CARD = (24, 1372, 1032, 528)   # x, y, w, h of the speaker card on the 1080x2040 canvas
+CARD = (24, 960, 1032, 940)    # x, y, w, h of the speaker card on the 1080x2040 canvas (set_geometry)
+PANEL_H = 958
+
+
+def set_geometry(G):
+    """G = scenes.geometry(speaker_h): the card follows the speaker-height parameter."""
+    global CARD, PANEL_H
+    CARD = (24, G["card_y"], 1032, G["speaker_h"])
+    PANEL_H = G["panel_h"]
 BG = {"dark": "0x0a0a0c", "light": "0xe9e9ec"}
 
 
@@ -116,7 +124,7 @@ def mask_png(path, theme="dark"):
     for cx, cy in ((x + r, y + r), (x + w - r, y + r), (x + r, y + h - r), (x + w - r, y + h - r)):
         cv2.circle(hole, (cx, cy), r, 255, -1, lineType=cv2.LINE_AA)
     m[..., 3] = 255 - hole
-    m[:1370, :, 3] = 0       # the HTML panel owns the top
+    m[:PANEL_H, :, 3] = 0    # the HTML panel owns the top
     m[1920:, :, 3] = 255     # sacrificial band
     cv2.imwrite(path, m)
 
@@ -177,7 +185,9 @@ def plan_subsegments(E, shots, lays):
     return subs
 
 
-def base_video(raw, E, shots, lays, out, theme="dark", tail=0.0, jobs=None):
+def base_video(raw, E, shots, lays, out, theme="dark", tail=0.0, jobs=None, geom=None):
+    if geom:
+        set_geometry(geom)
     src = shots["src"]
     subs = plan_subsegments(E, shots, lays)
     tail_frames = int(round(tail * FPS)) if subs else 0
@@ -190,6 +200,10 @@ def base_video(raw, E, shots, lays, out, theme="dark", tail=0.0, jobs=None):
     bg = BG.get(theme, BG["dark"])
 
     proxy = shots.get("proxy")
+    # ~30 fps sources (29.97 etc.): renumber frames 1:1 per sub-segment (drift <= 0.1 % of a few seconds,
+    # reset at every segment). The fps filter would DUPLICATE a frame every ~33 s and at segment starts
+    # (round-1 hitch). 60 fps sources are decimated with fps=30 (no duplicates).
+    near30 = abs(src["fps"] - FPS) / FPS < .01
 
     def one(k):
         sb = subs[k]
@@ -200,16 +214,19 @@ def base_video(raw, E, shots, lays, out, theme="dark", tail=0.0, jobs=None):
             w, h, x, y = (int(v * f) // 2 * 2 for v in (w, h, x, y))
             inp = proxy["path"]
         hold = f",tpad=stop_mode=clone:stop_duration={sb['tail']:.3f}" if sb.get("tail") else ""
+        # the 30 fps mezzanine and ~30 fps sources: renumber 1:1; only true 60 fps input is decimated
+        retime = f"setpts=N/({FPS}*TB)" if (inp != raw or near30) else f"fps={FPS}"
         if sb["layout"] == "speaker":
-            vf = (f"[0:v]crop={w}:{h}:{x}:{y},scale=1080:1920:flags=lanczos,pad=1080:2040:0:0:black,fps={FPS}{hold}[v]")
+            vf = (f"[0:v]crop={w}:{h}:{x}:{y},scale=1080:1920:flags=lanczos,pad=1080:2040:0:0:black,{retime}{hold}[v]")
         else:
             cx, cy, cw, ch = CARD
-            vf = (f"[0:v]crop={w}:{h}:{x}:{y},scale={cw}:{ch}:flags=lanczos,pad=1080:2040:{cx}:{cy}:{bg},fps={FPS}{hold}[c];"
+            vf = (f"[0:v]crop={w}:{h}:{x}:{y},scale={cw}:{ch}:flags=lanczos,pad=1080:2040:{cx}:{cy}:{bg},{retime}{hold}[c];"
                   f"[c][1:v]overlay=0:0:shortest=1[v]")
         p = os.path.join(td, f"{k:04d}.mp4")
         dur = sb["frames"] / FPS - sb.get("tail", 0)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{sb['i']:.4f}", "-t", f"{dur + .2:.4f}", "-i", inp,
-                        "-loop", "1", "-t", f"{sb['frames'] / FPS + .5:.3f}", "-i", mpng, "-filter_complex", vf, "-map", "[v]", "-frames:v", str(sb["frames"]),
+                        "-framerate", str(FPS), "-loop", "1", "-t", f"{sb['frames'] / FPS + .5:.3f}", "-i", mpng, "-filter_complex", vf, "-map", "[v]",
+                        "-r", str(FPS), "-frames:v", str(sb["frames"]),
                         "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "17", "-pix_fmt", "yuvj420p",
                         "-color_range", "pc", "-g", "30", "-threads", "2", p], check=True)
         return p

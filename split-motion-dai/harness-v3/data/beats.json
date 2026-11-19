@@ -1,6 +1,7 @@
 {
  "beats": [
   {
+   "hero": false,
    "sid": "s0",
    "t0": 0.0,
    "t1": 3.673,
@@ -8,34 +9,39 @@
    "type": "icon"
   },
   {
+   "hero": false,
    "sid": "s1",
    "t0": 3.673,
+   "t1": 6.773,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "hero": false,
+   "sid": "s2",
+   "t0": 6.773,
    "t1": 8.673,
    "layout": "split",
    "type": "icon"
   },
   {
-   "sid": "s2",
+   "hero": true,
+   "sid": "s3",
    "t0": 8.673,
    "t1": 10.34,
    "layout": "split",
-   "type": "orbit"
+   "type": "hero3d"
   },
   {
-   "sid": "s3",
-   "t0": 10.34,
-   "t1": 11.56,
-   "layout": "split",
-   "type": "quote"
-  },
-  {
+   "hero": false,
    "sid": "s4",
-   "t0": 11.56,
+   "t0": 10.34,
    "t1": 13.5,
    "layout": "split",
-   "type": "quote"
+   "type": "icon"
   },
   {
+   "hero": false,
    "sid": "s5",
    "t0": 13.5,
    "t1": 16.44,
@@ -43,6 +49,7 @@
    "type": "chat"
   },
   {
+   "hero": false,
    "sid": null,
    "t0": 16.44,
    "t1": 20.12,
@@ -50,20 +57,23 @@
    "type": null
   },
   {
+   "hero": false,
    "sid": "s7",
    "t0": 20.12,
-   "t1": 23.727,
+   "t1": 21.847,
    "layout": "split",
-   "type": "icon"
+   "type": "chapter"
   },
   {
+   "hero": false,
    "sid": "s8",
-   "t0": 23.727,
+   "t0": 21.847,
    "t1": 25.693,
    "layout": "split",
-   "type": "hero3d"
+   "type": "phone"
   },
   {
+   "hero": false,
    "sid": "s9",
    "t0": 25.693,
    "t1": 28.333,
@@ -71,34 +81,39 @@
    "type": "grid"
   },
   {
-   "sid": "s10",
+   "hero": false,
+   "sid": null,
    "t0": 28.333,
    "t1": 30.373,
-   "layout": "split",
-   "type": "compare"
-  },
-  {
-   "sid": null,
-   "t0": 30.373,
-   "t1": 32.373,
    "layout": "speaker",
    "type": null
   },
   {
+   "hero": false,
+   "sid": "s11",
+   "t0": 30.373,
+   "t1": 32.373,
+   "layout": "split",
+   "type": "orbit"
+  },
+  {
+   "hero": false,
    "sid": "s12",
    "t0": 32.373,
    "t1": 34.893,
    "layout": "split",
+   "type": "chapter"
+  },
+  {
+   "hero": false,
+   "sid": "s13",
+   "t0": 34.893,
+   "t1": 36.593,
+   "layout": "split",
    "type": "icon"
   },
   {
-   "sid": null,
-   "t0": 34.893,
-   "t1": 36.593,
-   "layout": "speaker",
-   "type": null
-  },
-  {
+   "hero": true,
    "sid": "s14",
    "t0": 36.593,
    "t1": 39.387,
@@ -106,6 +121,7 @@
    "type": "custom_svg"
   },
   {
+   "hero": false,
    "sid": "s15",
    "t0": 39.387,
    "t1": 41.96,
@@ -113,65 +129,74 @@
    "type": "icon"
   },
   {
-   "sid": "s16",
-   "t0": 41.96,
-   "t1": 42.88,
-   "layout": "split",
-   "type": "quote"
-  },
-  {
-   "sid": "s17",
-   "t0": 42.88,
-   "t1": 44.46,
-   "layout": "split",
-   "type": "quote"
-  },
-  {
-   "sid": "s18",
-   "t0": 44.46,
-   "t1": 47.74,
-   "layout": "split",
-   "type": "compare"
-  },
-  {
+   "hero": false,
    "sid": null,
-   "t0": 47.74,
-   "t1": 49.7,
+   "t0": 41.96,
+   "t1": 44.46,
    "layout": "speaker",
    "type": null
   },
   {
-   "sid": "s20",
-   "t0": 49.7,
-   "t1": 53.5,
+   "hero": false,
+   "sid": "s17",
+   "t0": 44.46,
+   "t1": 47.74,
    "layout": "split",
    "type": "icon"
   },
   {
-   "sid": "s21",
+   "hero": false,
+   "sid": "s18",
+   "t0": 47.74,
+   "t1": 50.38,
+   "layout": "split",
+   "type": "icon"
+  },
+  {
+   "hero": false,
+   "sid": "s19",
+   "t0": 50.38,
+   "t1": 53.5,
+   "layout": "split",
+   "type": "bars"
+  },
+  {
+   "hero": false,
+   "sid": null,
    "t0": 53.5,
-   "t1": 56.827,
+   "t1": 55.887,
+   "layout": "speaker",
+   "type": null
+  },
+  {
+   "hero": false,
+   "sid": "s21",
+   "t0": 55.887,
+   "t1": 58.693,
    "layout": "split",
    "type": "chat"
   },
   {
+   "hero": false,
    "sid": "s22",
-   "t0": 56.827,
-   "t1": 58.56,
+   "t0": 58.693,
+   "t1": 62.427,
    "layout": "split",
    "type": "doc"
   },
   {
+   "hero": true,
    "sid": "s23",
-   "t0": 58.56,
-   "t1": 62.88,
+   "t0": 62.427,
+   "t1": 66.867,
    "layout": "split",
-   "type": "steps"
+   "type": "icon"
   },
   {
+   "hero": false,
    "sid": null,
-   "t0": 62.88,
-   "t1": 65.267,
+   "t0": 66.867,
+   "t1": 69.133,
    "layout": "speaker",
    "type": null
   }
@@ -276,7 +301,7 @@
   [
    12.553,
    12.853,
-   "<i>now</i>",
+   "now",
    "split"
   ],
   [
@@ -342,7 +367,7 @@
   [
    18.78,
    19.28,
-   "you&#x27;re not ready",
+   "you&#x27;re not <i>ready</i>",
    "speaker"
   ],
   [
@@ -433,55 +458,55 @@
    28.386,
    28.746,
    "So it&#x27;s just",
-   "split"
+   "speaker"
   ],
   [
    28.746,
    29.086,
    "like",
-   "split"
+   "speaker"
   ],
   [
    29.086,
    29.266,
    "well",
-   "split"
+   "speaker"
   ],
   [
    29.266,
    29.666,
    "why do you",
-   "split"
+   "speaker"
   ],
   [
    29.666,
    30.326,
    "want a shout",
-   "split"
+   "speaker"
   ],
   [
    30.326,
    30.426,
    "out",
-   "speaker"
+   "split"
   ],
   [
    30.426,
    31.266,
    "You&#x27;re not prepared",
-   "speaker"
+   "split"
   ],
   [
    31.266,
    31.666,
-   "<i>you</i> don&#x27;t have",
-   "speaker"
+   "you don&#x27;t have",
+   "split"
   ],
   [
    31.666,
    32.426,
-   "the catalog",
-   "speaker"
+   "the <i>catalog</i>",
+   "split"
   ],
   [
    32.426,
@@ -498,7 +523,7 @@
   [
    33.186,
    34.166,
-   "keep <i>dropping</i>",
+   "keep dropping",
    "split"
   ],
   [
@@ -511,19 +536,19 @@
    34.946,
    35.526,
    "do what you",
-   "speaker"
+   "split"
   ],
   [
    35.526,
    35.906,
    "need to do",
-   "speaker"
+   "split"
   ],
   [
    35.906,
    36.646,
    "on your end",
-   "speaker"
+   "split"
   ],
   [
    36.646,
@@ -565,37 +590,37 @@
    42.013,
    42.393,
    "You just gotta",
-   "split"
+   "speaker"
   ],
   [
    42.393,
    42.933,
    "wait",
-   "split"
+   "speaker"
   ],
   [
    42.933,
    43.313,
    "But it&#x27;s just",
-   "split"
+   "speaker"
   ],
   [
    43.313,
    43.493,
    "like",
-   "split"
+   "speaker"
   ],
   [
    43.493,
    43.853,
    "if you want",
-   "split"
+   "speaker"
   ],
   [
    43.853,
    45.053,
    "the opportunity before",
-   "split"
+   "speaker"
   ],
   [
    45.053,
@@ -613,31 +638,31 @@
    47.793,
    48.253,
    "what are you",
-   "speaker"
+   "split"
   ],
   [
    48.253,
    48.713,
    "gonna do with",
-   "speaker"
+   "split"
   ],
   [
    48.713,
    48.813,
    "it",
-   "speaker"
+   "split"
   ],
   [
    48.793,
    49.293,
    "You don&#x27;t even",
-   "speaker"
+   "split"
   ],
   [
    49.293,
    49.913,
    "know how to",
-   "speaker"
+   "split"
   ],
   [
    49.913,
@@ -661,25 +686,25 @@
    53.553,
    53.913,
    "You don&#x27;t even",
-   "split"
+   "speaker"
   ],
   [
    53.913,
    54.333,
    "know what to",
-   "split"
+   "speaker"
   ],
   [
    54.333,
    54.833,
    "do when you",
-   "split"
+   "speaker"
   ],
   [
    54.833,
    55.58,
    "gotta",
-   "split"
+   "speaker"
   ],
   [
    55.58,
@@ -725,38 +750,74 @@
   ],
   [
    58.06,
-   58.613,
+   58.746,
    "right now",
    "split"
   ],
   [
-   58.613,
-   59.093,
+   58.746,
+   59.206,
+   "You don&#x27;t even",
+   "split"
+  ],
+  [
+   59.206,
+   60.066,
+   "know who to",
+   "split"
+  ],
+  [
+   60.066,
+   60.626,
+   "look at with",
+   "split"
+  ],
+  [
+   60.626,
+   61.166,
+   "this paper",
+   "split"
+  ],
+  [
+   61.166,
+   61.806,
+   "what these words",
+   "split"
+  ],
+  [
+   61.806,
+   62.48,
+   "mean",
+   "split"
+  ],
+  [
+   62.48,
+   62.96,
    "So it&#x27;s just",
    "split"
   ],
   [
-   59.093,
-   60.273,
+   62.96,
+   64.14,
    "like you on",
    "split"
   ],
   [
-   60.273,
-   62.933,
+   64.14,
+   66.8,
    "step <i>Z</i> and",
    "split"
   ],
   [
-   62.933,
-   63.633,
+   66.8,
+   67.5,
    "you should be",
    "speaker"
   ],
   [
-   63.633,
-   64.98,
-   "on step A",
+   67.5,
+   68.847,
+   "on step <i>A</i>",
    "speaker"
   ]
  ]

@@ -2,17 +2,68 @@
  "_comment": "Model slot per harness step. 'tier' says how strong a model the step needs. Only the planner calls a model; everything else is deterministic code. Paid third-party adapters stay disabled until a human flips 'enabled' (we trial them later, never by default).",
  "default": "claude",
  "steps": {
-  "plan":     {"tier": "strongest", "why": "story cut + beat/scene design + custom SVG drawing: taste, literal mapping words->objects, novelty vs memory"},
-  "repair":   {"tier": "cheap (or none)", "why": "JSON schema repair is done in code (planner.validate); a cheap model is only a fallback"},
-  "transcribe": {"tier": "local", "why": "faster-whisper small.en int8 (CPU)"},
-  "vision":   {"tier": "local", "why": "OpenCV Haar faces + histogram shot cuts"},
-  "qc":       {"tier": "local (optional cheap VLM later)", "why": "frame metrics, danger zones, loudness are measured in code"}
+  "plan": {
+   "tier": "strongest",
+   "why": "story cut + beat/scene design + custom SVG drawing: taste, literal mapping words->objects, novelty vs memory"
+  },
+  "repair": {
+   "tier": "cheap (or none)",
+   "why": "JSON schema repair is done in code (planner.validate); a cheap model is only a fallback"
+  },
+  "transcribe": {
+   "tier": "local",
+   "why": "faster-whisper small.en int8 (CPU)"
+  },
+  "vision": {
+   "tier": "local",
+   "why": "OpenCV Haar faces + histogram shot cuts"
+  },
+  "qc": {
+   "tier": "local (optional cheap VLM later)",
+   "why": "frame metrics, danger zones, loudness are measured in code"
+  }
  },
  "adapters": {
-  "claude":    {"model": "", "timeout": 900, "note": "Claude Code CLI `claude -p` (empty model = the CLI default). Set e.g. a faster model id here to trade taste for speed."},
-  "anthropic": {"enabled": false, "model": "claude-opus-5-5", "timeout": 900, "env": "ANTHROPIC_API_KEY"},
-  "openai":    {"enabled": false, "model": "gpt-5", "timeout": 900, "env": "OPENAI_API_KEY"},
-  "gemini":    {"enabled": false, "model": "gemini-2.5-pro", "timeout": 900, "env": "GEMINI_API_KEY"},
-  "local":     {"note": "no model; keyword heuristics + seeded variety; ~0.1 s; use for dry runs and timing"}
+  "claude": {
+   "model": "",
+   "timeout": 900,
+   "note": "Claude Code CLI `claude -p` (empty model = the CLI default). Set e.g. a faster model id here to trade taste for speed."
+  },
+  "anthropic": {
+   "enabled": false,
+   "model": "claude-opus-5-5",
+   "timeout": 900,
+   "env": "ANTHROPIC_API_KEY"
+  },
+  "openai": {
+   "enabled": false,
+   "model": "gpt-5",
+   "timeout": 900,
+   "env": "OPENAI_API_KEY"
+  },
+  "gemini": {
+   "enabled": false,
+   "model": "gemini-2.5-pro",
+   "timeout": 900,
+   "env": "GEMINI_API_KEY"
+  },
+  "local": {
+   "note": "no model; keyword heuristics + seeded variety; ~0.1 s; use for dry runs and timing"
+  },
+  "openrouter": {
+   "enabled": false,
+   "model": "openai/gpt-6.2-sol",
+   "key_file": "~/.config/tigno/openrouter.key",
+   "max_tokens": 32000,
+   "timeout": 600,
+   "note": "OpenRouter (any model id, e.g. openai/gpt-6.2-sol, google/gemini-4-carbon). Key read in code from key_file only, never in git. No response_format json_object (gemini-4-carbon failed with it + max_tokens 16000; plain call + 32000 worked). Invalid JSON -> local repair -> one model retry."
+  }
+ },
+ "trials": {
+  "2026-11-19 dai transcript": {
+   "openai/gpt-6.2-sol (openrouter)": "valid plan in 42 s, $0.04, 8 scene types",
+   "claude opus 5.5 high": "valid plan in 122 s, 13 scene types",
+   "google/gemini-4-carbon (openrouter)": "first call invalid JSON (response_format json_object + max_tokens 16000); plain call + max_tokens 32000: valid JSON in 34 s, $0.033"
+  }
  }
 }

@@ -60,9 +60,9 @@ def apply(plan, memory, seed, reel=None):
             old = sc.get("exit")
             sc["exit"] = _least_used(VOCAB["exit"], cnt, R, avoid=(prev.get("exit"), old))
             changes.append(f"{sc['type']}: exit {old}->{sc['exit']}")
-        if sc.get("camera") == prev.get("camera"):
+        if sc.get("camera", "none") != "none" and sc.get("camera") == prev.get("camera"):  # stillness stays still
             old = sc.get("camera")
-            sc["camera"] = _least_used(VOCAB["camera"], cnt, R, avoid=(old,))
+            sc["camera"] = _least_used([c for c in VOCAB["camera"] if c != "none"], cnt, R, avoid=(old,))
             changes.append(f"{sc['type']}: camera {old}->{sc['camera']}")
         cnt.update([sc["enter"], sc["exit"], sc["camera"]])
         prev = sc

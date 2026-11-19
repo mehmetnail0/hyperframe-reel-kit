@@ -1,0 +1,386 @@
+{
+ "title": "Preparation Before Opportunity",
+ "theme": "dark",
+ "accent2": "#ffd23f",
+ "keep": [
+  [
+   0,
+   238
+  ]
+ ],
+ "emph": [
+  4,
+  21,
+  59,
+  76,
+  123,
+  149,
+  191,
+  219,
+  238
+ ],
+ "beats": [
+  {
+   "w0": 0,
+   "layout": "split",
+   "header": {
+    "text": "DON'T MISS [THE MOMENT]",
+    "style": "box"
+   },
+   "scene": {
+    "type": "icon",
+    "text": "Don't miss *the moment*",
+    "enter": "pop",
+    "exit": "fade",
+    "camera": "none",
+    "icon": "star",
+    "label": ""
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 17,
+   "layout": "split",
+   "header": {
+    "text": "CHASING *Instant* REWARDS",
+    "style": "underline"
+   },
+   "scene": {
+    "type": "tree",
+    "root": "Instant Gratification",
+    "children": [
+     "Fast Money",
+     "Quick Attention"
+    ],
+    "at": [
+     29,
+     31
+    ],
+    "enter": "unfold",
+    "exit": "fade",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 32,
+   "layout": "speaker"
+  },
+  {
+   "w0": 45,
+   "layout": "split",
+   "header": {
+    "text": "THE [SHOUTOUT] TRAP",
+    "style": "box"
+   },
+   "scene": {
+    "type": "chat",
+    "messages": [
+     {
+      "from": "in",
+      "text": "Hey, can you shout me out?"
+     },
+     {
+      "from": "out",
+      "text": "No."
+     }
+    ],
+    "at": [
+     51,
+     59
+    ],
+    "enter": "settle",
+    "exit": "fade",
+    "camera": "none"
+   },
+   "sfx": [
+    "ding"
+   ]
+  },
+  {
+   "w0": 60,
+   "layout": "speaker"
+  },
+  {
+   "w0": 72,
+   "layout": "split",
+   "scene": {
+    "type": "chapter",
+    "n": 1,
+    "title": "Lack of Preparation",
+    "enter": "zoomIn",
+    "exit": "fade",
+    "camera": "push"
+   },
+   "sfx": [
+    "flash"
+   ],
+   "hero": true
+  },
+  {
+   "w0": 80,
+   "layout": "split",
+   "header": {
+    "text": "EMPTY *Profile* PAGE",
+    "style": "serif"
+   },
+   "scene": {
+    "type": "hero3d",
+    "preset": "phone",
+    "label": "New Visitors",
+    "enter": "tilt3d",
+    "exit": "fade",
+    "camera": "none"
+   },
+   "hero": true
+  },
+  {
+   "w0": 93,
+   "layout": "split",
+   "scene": {
+    "type": "counter",
+    "value": 2,
+    "prefix": "",
+    "suffix": " POSTS",
+    "label": "",
+    "at": [
+     102
+    ],
+    "enter": "pop",
+    "exit": "fade",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 116,
+   "layout": "split",
+   "header": {
+    "text": "NO _CATALOG_ READY",
+    "style": "underline"
+   },
+   "scene": {
+    "type": "grid",
+    "n": 9,
+    "highlight": 0,
+    "label": "Empty Catalog",
+    "enter": "iris",
+    "exit": "collapse",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 124,
+   "layout": "split",
+   "scene": {
+    "type": "chapter",
+    "n": 2,
+    "title": "Build The Catalog",
+    "enter": "zoomIn",
+    "exit": "fade",
+    "camera": "push"
+   },
+   "hero": true
+  },
+  {
+   "w0": 128,
+   "layout": "split",
+   "header": {
+    "text": "DO *Your* PART",
+    "style": "plain"
+   },
+   "scene": {
+    "type": "list",
+    "items": [
+     "Keep Dropping",
+     "Be Consistent",
+     "Do Your End"
+    ],
+    "at": [
+     128,
+     131,
+     139
+    ],
+    "enter": "rise",
+    "exit": "fade",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 141,
+   "layout": "graphic",
+   "header": {
+    "text": "WHEN THEY [COLLIDE]",
+    "style": "box"
+   },
+   "scene": {
+    "type": "custom_svg",
+    "svg": "<svg viewBox=\"0 0 900 800\"><path class=\"d\" d=\"M120 650 L380 430\" stroke=\"#fff\" stroke-width=\"6\" fill=\"none\"/><path class=\"d\" d=\"M780 650 L520 430\" stroke=\"#fff\" stroke-width=\"6\" fill=\"none\"/><circle class=\"p\" cx=\"450\" cy=\"380\" r=\"42\" stroke=\"#e8283c\" stroke-width=\"8\" fill=\"none\"/><line class=\"p\" x1=\"450\" y1=\"290\" x2=\"450\" y2=\"200\" stroke=\"#e8283c\" stroke-width=\"6\"/><line class=\"p\" x1=\"450\" y1=\"470\" x2=\"450\" y2=\"560\" stroke=\"#e8283c\" stroke-width=\"6\"/><line class=\"p\" x1=\"360\" y1=\"380\" x2=\"270\" y2=\"380\" stroke=\"#fff\" stroke-width=\"6\"/><line class=\"p\" x1=\"540\" y1=\"380\" x2=\"630\" y2=\"380\" stroke=\"#fff\" stroke-width=\"6\"/><line class=\"p\" x1=\"385\" y1=\"315\" x2=\"315\" y2=\"245\" stroke=\"#e8283c\" stroke-width=\"6\"/><line class=\"p\" x1=\"515\" y1=\"315\" x2=\"585\" y2=\"245\" stroke=\"#e8283c\" stroke-width=\"6\"/><line class=\"p\" x1=\"385\" y1=\"445\" x2=\"315\" y2=\"515\" stroke=\"#fff\" stroke-width=\"6\"/><line class=\"p\" x1=\"515\" y1=\"445\" x2=\"585\" y2=\"515\" stroke=\"#fff\" stroke-width=\"6\"/><text x=\"100\" y=\"710\" fill=\"#fff\" font-size=\"28\" font-family=\"sans-serif\">OPP</text><text x=\"710\" y=\"710\" fill=\"#fff\" font-size=\"28\" font-family=\"sans-serif\">PREP</text></svg>",
+    "enter": "focus",
+    "exit": "irisOut",
+    "camera": "none"
+   },
+   "sfx": [
+    "reveal"
+   ]
+  },
+  {
+   "w0": 151,
+   "layout": "speaker"
+  },
+  {
+   "w0": 160,
+   "layout": "split",
+   "scene": {
+    "type": "chapter",
+    "n": 3,
+    "title": "Wrong Order",
+    "enter": "zoomIn",
+    "exit": "fade",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 164,
+   "layout": "split",
+   "header": {
+    "text": "SKIPPING *The* PROCESS",
+    "style": "serif"
+   },
+   "scene": {
+    "type": "compare",
+    "left": {
+     "title": "Wrong Way",
+     "items": [
+      "Opportunity First",
+      "Zero Prep"
+     ]
+    },
+    "right": {
+     "title": "Right Way",
+     "items": [
+      "Prep First",
+      "Ready to Scale"
+     ]
+    },
+    "at": [
+     168,
+     171
+    ],
+    "enter": "flipY",
+    "exit": "fade",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 181,
+   "layout": "split",
+   "header": {
+    "text": "AT YOUR [FRONT DOOR]",
+    "style": "box"
+   },
+   "scene": {
+    "type": "icon",
+    "icon": "lock",
+    "label": "Can't Handle It",
+    "enter": "settle",
+    "exit": "fade",
+    "camera": "none"
+   }
+  },
+  {
+   "w0": 196,
+   "layout": "speaker"
+  },
+  {
+   "w0": 209,
+   "layout": "split",
+   "header": {
+    "text": "SUDDEN _CONTRACT_ OFFER",
+    "style": "underline"
+   },
+   "scene": {
+    "type": "doc",
+    "title": "OFFICIAL CONTRACT",
+    "rows": [
+     {
+      "label": "Deliverables"
+     },
+     {
+      "label": "Deadlines"
+     },
+     {
+      "label": "Sign Right Now"
+     }
+    ],
+    "at": [
+     214,
+     219,
+     222
+    ],
+    "enter": "settle",
+    "exit": "fade",
+    "camera": "none"
+   },
+   "sfx": [
+    "ding"
+   ]
+  },
+  {
+   "w0": 224,
+   "layout": "split",
+   "header": {
+    "text": "START AT [STEP A]",
+    "style": "box"
+   },
+   "scene": {
+    "type": "steps",
+    "items": [
+     "Step A: Build",
+     "Step M: Grow",
+     "Step Z: Deal"
+    ],
+    "at": [
+     230,
+     234,
+     237
+    ],
+    "enter": "wipe",
+    "exit": "fade",
+    "camera": "none"
+   },
+   "sfx": [
+    "flash"
+   ]
+  }
+ ],
+ "_dup_text_flags": [
+  {
+   "beat": 0,
+   "field": "text",
+   "text": "Don't miss *the moment*",
+   "fix": "quote -> glass object"
+  },
+  {
+   "beat": 1,
+   "field": "root",
+   "text": "Instant Gratification"
+  },
+  {
+   "beat": 7,
+   "field": "label",
+   "text": "Nothing to watch"
+  },
+  {
+   "beat": 10,
+   "field": "items",
+   "text": "Keep Dropping"
+  },
+  {
+   "beat": 17,
+   "field": "rows",
+   "text": "Sign Right Now"
+  }
+ ],
+ "seed": 41
+}

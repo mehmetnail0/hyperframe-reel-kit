@@ -30,16 +30,19 @@ def plan_chunks(total, n, cost=None):
     return [(cuts[i] / FPS, (cuts[i + 1] - cuts[i]) / FPS, cuts[i + 1] - cuts[i]) for i in range(len(cuts) - 1)]
 
 
-def render(proj, make_html, total, audio, out, n=None, workers=1, crf=18, log=print, card_from=None, split_iv=(), cost=None):
-    """card_from = base video path: during split_iv (reel seconds) its card band y 1370-1920 is
-    overlaid on the HTML render (the page then needs no <video> there: ~45 % faster frames)."""
+def render(proj, make_html, total, audio, out, n=None, workers=1, crf=18, log=print, card_from=None, split_iv=(), cost=None,
+           band_y=958, only=None, keep=False, chunks=None):
+    """card_from = base video path: during split_iv (reel seconds) its card band y band_y..1920 is
+    overlaid on the HTML render (the page then needs no <video> there: ~45 % faster frames).
+    only = chunk indices to (re)render (QC loop); keep = leave the cropped chunks for a later re-render."""
     n = n or max(1, (os.cpu_count() or 4))
-    chunks = plan_chunks(total, n, cost)
+    chunks = chunks or plan_chunks(total, n, cost)
     n = len(chunks)
     rd = os.path.join(proj, "renders", "_chunks")
     os.makedirs(rd, exist_ok=True)
     t0 = time.time()
     times = {}
+    todo = sorted(only) if only is not None else list(range(n))
 
     def one(k):
         off, dur, frames = chunks[k]
@@ -47,8 +50,12 @@ def render(proj, make_html, total, audio, out, n=None, workers=1, crf=18, log=pr
         open(os.path.join(proj, name), "w").write(make_html(off, dur))
         raw = os.path.join(rd, f"raw{k:02d}.mp4")
         a = time.time()
-        r = subprocess.run(HF + ["render", "-c", name, "-o", raw, "-w", str(workers), "--quiet", "--crf", "16"],
-                           cwd=proj, capture_output=True, text=True)
+        for attempt in range(2):  # a killed Chrome worker (memory pressure) must not sink the reel: retry once
+            r = subprocess.run(HF + ["render", "-c", name, "-o", raw, "-w", str(workers), "--quiet", "--crf", "16"],
+                               cwd=proj, capture_output=True, text=True)
+            if r.returncode == 0:
+                break
+            log(f"  chunk {k}: render failed (attempt {attempt + 1}), retrying")
         if r.returncode != 0:
             raise RuntimeError(f"chunk {k} render failed: {r.stdout[-800:]} {r.stderr[-800:]}")
         b = time.time()
@@ -56,8 +63,8 @@ def render(proj, make_html, total, audio, out, n=None, workers=1, crf=18, log=pr
         iv = [(max(a_, off) - off, min(b_, off + dur) - off) for a_, b_ in split_iv if min(b_, off + dur) - max(a_, off) > 0]
         if card_from and iv:
             en = "+".join(f"between(t,{a_:.4f},{b_ - .0005:.4f})" for a_, b_ in iv)
-            fc = (f"[1:v]crop=1080:550:0:1370,setpts=PTS-STARTPTS[card];[0:v]setpts=PTS-STARTPTS[h];"
-                  f"[h][card]overlay=0:1370:enable='{en}',crop=1080:1920:0:0[v]")
+            fc = (f"[1:v]crop=1080:{1920 - band_y}:0:{band_y},setpts=PTS-STARTPTS[card];[0:v]setpts=PTS-STARTPTS[h];"
+                  f"[h][card]overlay=0:{band_y}:enable='{en}',crop=1080:1920:0:0[v]")
             cmd = ["ffmpeg", "-v", "error", "-y", "-i", raw, "-ss", f"{off:.4f}", "-t", f"{dur + .1:.4f}", "-i", card_from,
                    "-filter_complex", fc, "-map", "[v]"]
         else:
@@ -70,14 +77,28 @@ def render(proj, make_html, total, audio, out, n=None, workers=1, crf=18, log=pr
         log(f"  chunk {k}: {frames} frames render {times[k][0]} s, crop {times[k][1]} s")
         return crop
 
-    with ThreadPoolExecutor(n) as ex:
-        parts = list(ex.map(one, range(n)))
+    with ThreadPoolExecutor(max(1, len(todo))) as ex:
+        list(ex.map(one, todo))
+    parts = [os.path.join(rd, f"c{k:02d}.mp4") for k in range(n)]
     lst = os.path.join(rd, "list.txt")
     open(lst, "w").write("".join(f"file '{os.path.abspath(p)}'\n" for p in parts))
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-i", audio,
                     "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "320k", "-shortest",
                     "-movflags", "+faststart", out], check=True)
-    for p in parts + [lst]:
-        os.remove(p)
-    os.rmdir(rd)
-    return dict(chunks=n, workers_per_chunk=workers, wall_s=round(time.time() - t0, 1), per_chunk=times)
+    os.remove(lst)
+    if not keep:
+        cleanup(proj)
+    seams, acc = [], 0
+    for c in chunks[:-1]:
+        acc += c[2]
+        seams.append(acc)
+    return dict(chunks=n, rendered=todo, workers_per_chunk=workers, wall_s=round(time.time() - t0, 1), per_chunk=times,
+                seams=seams, chunk_plan=chunks)
+
+
+def cleanup(proj):
+    rd = os.path.join(proj, "renders", "_chunks")
+    if os.path.isdir(rd):
+        for f in os.listdir(rd):
+            os.remove(os.path.join(rd, f))
+        os.rmdir(rd)
