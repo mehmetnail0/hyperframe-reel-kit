@@ -1,6 +1,39 @@
 ---
 name: split-motion
-description: Turn ANY talking-head / podcast clip into a "split-motion" vertical reel in the Kallaway style — top motion panel (dark or grid-paper, one evolving hero object per 1.5-3.5 s beat, headers with a serif-italic accent and a red box), wide speaker card at the bottom, 1-3 word seam captions, full-screen speaker punches every ~10 s, light cinematic risers + soft tick runs + rare flashes from the member's OWN SFX library, an optional licensed music bed, 1-3 three.js 3D hero moments. Driven by a fast harness (harness/run.py): raw clip in, finished reel out in ~5-8 min including render. HyperFrames 0.6.49 (HTML+CSS+GSAP), not Remotion.
+description: Turn ANY talking-head / podcast clip into a "split-motion" vertical reel (round-3 engine: Claude director + per-section Claude scene coders; no glow/slab/dust, content-lit depth, always-dynamic hero structures, flush geometry, density + frame gates). Originally: in the Kallaway style — top motion panel (dark or grid-paper, one evolving hero object per 1.5-3.5 s beat, headers with a serif-italic accent and a red box), wide speaker card at the bottom, 1-3 word seam captions, full-screen speaker punches every ~10 s, light cinematic risers + soft tick runs + rare flashes from the member's OWN SFX library, an optional licensed music bed, 1-3 three.js 3D hero moments. Driven by a fast harness (harness/run.py): raw clip in, finished reel out in ~5-8 min including render. HyperFrames 0.6.49 (HTML+CSS+GSAP), not Remotion.
+---
+
+# split-motion — MANDATORY RULES (owner, round 3; they override everything below)
+
+Engine: `python3 -I kit/split-motion/harness/r3/run_r3.py RAW REEL --sfx-lib LIB --coder opus` — a Claude DIRECTOR
+(Opus 5.5 high, one call) writes a storyboard; Claude SCENE CODERS (one call per section, in parallel) write bespoke GSAP
+on the `harness/r3/lib.js` helpers; a validator + lint + repair loop and frame gates fail anything that breaks a rule.
+Never hand the planner a fixed menu of scene types (round 2 failed exactly because of that).
+
+1. **No glow, no slab, no dust — ever.** No radial gradients, blurred blobs, soft light glows behind objects, grey glowing
+   panels behind diagrams, floating particles/orbs/dots, vignettes. The panel background is the flat deep colour
+   (`#0a0a0c`) with at most the hairline grid. All light and depth come from the CONTENT: strokes, solid/linear fills,
+   card rim + sheen from the section's key-light direction, shadows with real offsets. Blur only as a transient tween state.
+   Gate: `r3/gates.py bg_gate` on 5 frames (particle count <= 4, smooth-blob area <= 1.2 %) + DOM style gate in
+   `r3/validate.js` (radial-gradient / blur > 3 px / 0-offset glow shadows) + code lint. Any hit fails the render.
+2. **Always dynamic, never drifting.** One persistent HERO STRUCTURE per 8–25 s section (script doc with highlighter rows,
+   profile whose post grid fills, calendar/streak, tree/pipeline, phone feed, orbit of cards, chart, contract/offer,
+   stacked pages, or a new one) that EVOLVES on the words; something meaningful changes every ~0.5–1 s; supporting
+   elements arrive in staggered groups with soft overshoot; never "diagram, then wait"; no idle loops (yoyo/repeat),
+   no tween > 1.2 s except one eased camera move per section; never the same structure in consecutive sections;
+   sections transform into each other (push-through), never a blank panel.
+3. **Flush geometry.** One source of truth: `harness/scenes.geometry()` (panel rect, card rect x 24 / w 1032 / y, radius 38,
+   background colour, seam). Card band overlaid from the base video is range-converted (full → limited) so its black equals
+   the panel black. Gate: `r3/gates.py geom_gate` samples the seam rows, both margins and both top corners on 5 frames —
+   any deviation > 3 levels from the panel background, or a card edge not starting at its declared pixel, fails.
+4. **Density gates** (`r3/density.py`): panel events 40–60/min, >= 3 visible elements >= 95 % of panel time, lonely-object
+   time <= 5 %, ambient drift <= 20 %, jump detector 0 flagged (`harness/jumps.py`).
+5. **Text:** never echo the captions; one header per section (bold sans + one *serif-italic* accent, optional [red box]
+   word); numbers and real-looking UI text only.
+6. **Kept:** tall speaker card (940 px of 1920), no device overflow (content clipped to phone screens), seam caption,
+   Instagram danger zones, the member's own SFX only (12–18 dB under the voice, anti-repeat, risers on hero evolutions),
+   −14 LUFS / ≤ −1 dBTP. Measure every step (`build/timings.json`, tokens in `build/tokens.json`).
+
 ---
 
 # split-motion — Kallaway-style reels from any talking head

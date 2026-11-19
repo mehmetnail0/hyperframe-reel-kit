@@ -16,7 +16,7 @@ KIT = os.path.dirname(HARN)
 sys.path[:0] = [HERE, HARN, os.path.join(KIT, "sfx")]
 import ingest, cut, scenes, render, qc, jumps, planner  # noqa: E402
 import engine as sfx_engine  # noqa: E402
-import compose, claude_stage, density  # noqa: E402
+import compose, claude_stage, density, gates  # noqa: E402
 from run import Clock, stage_project  # noqa: E402
 
 
@@ -81,6 +81,10 @@ def lint(codes):
         longs = [float(x) for x in re.findall(r"duration\s*:\s*([0-9.]+)", c) if float(x) > 1.2]
         if len(longs) > 1 or any(x > 2.5 for x in longs):
             p.append(f"tween durations {sorted(longs)[-4:]} s: only ONE camera move may exceed 1.2 s (max 2.5 s); shorten the rest")
+        if re.search(r"radial-gradient|blur\(\s*([4-9]|\d\d)", c) or re.search(r"['\"]0 0 \d{2,}px", c):
+            p.append("uses radial-gradient / blur / 0-offset glow shadows: forbidden (no glowing slabs, halos, dust); light only from content")
+        if re.search(r"for\s*\([^)]*;\s*\w+\s*<\s*(2\d|[3-9]\d|\d{3})", c) and re.search(r"borderRadius\s*:\s*['\"]50%", c):
+            p.append("looks like a particle/dust layer (many small round dots): forbidden")
         if p:
             out[sid] = p
     return out
@@ -101,6 +105,8 @@ def problems_by_section(rep):
             p.append(f"{s['lonely_share']:.0%} of the time a single lonely object (need <= 5 %)")
         for o in s["overflow"]:
             p.append(f"element outside the allowed stage: {o}")
+        if s.get("glow"):
+            p.append(f"FORBIDDEN glow/blob (radial-gradient, blur > 3px, or 0-offset glow shadow) on visible elements: {s['glow'][:4]} - remove; depth only from strokes, fills and offset shadows")
         if s["device_overflow"]:
             p.append(f"content leaves its phone/device screen at t={s['device_overflow']}")
         if p:
@@ -210,7 +216,13 @@ def main(a):
     with ThreadPoolExecutor(3) as tp:
         fvid, fsp = tp.submit(job_video), tp.submit(job_speech)
         a0 = time.time()
-        codes, metas, prompts = claude_stage.code_sections(story, cw, G, coder)
+        if opt("--codes"):  # reuse a coder's code; the validator/lint/repair loop still enforces every rule
+            codes = json.load(open(opt("--codes")))
+            lib_src = open(os.path.join(HERE, "lib.js")).read()
+            prompts = {f"sec{k}": claude_stage.coder_prompt(story, k, cw, G, lib_src) for k in range(len(story["sections"]))}
+            metas = {}
+        else:
+            codes, metas, prompts = claude_stage.code_sections(story, cw, G, coder)
         for sid, m in metas.items():
             tokens.append(dict(stage=f"coder {sid}", **m))
         timing["coders_parallel"] = dict(s=round(time.time() - a0, 1), sections=len(codes), per_section_s={k: v["s"] for k, v in metas.items()})
@@ -289,6 +301,14 @@ def main(a):
     dv = density.verdict(ve, rep, jr)
     json.dump(dict(density=dv, video_events=ve, dom=rep, jumps=jr), open(os.path.join(work, "qc_r3.json"), "w"), indent=1)
     clk.step("5c density QC", time.time() - t, **dv)
+
+    # 5d owner gates on frames: no glow/slab/dust in the background; flush corners and seams
+    t = time.time()
+    bgg = gates.bg_gate(out, qbeats, G)
+    geo = gates.geom_gate(out, qbeats, G)
+    json.dump(dict(bg_gate=bgg, geom_gate=geo), open(os.path.join(work, "gates.json"), "w"), indent=1)
+    clk.step("5d frame gates (bg clean + geometry)", time.time() - t, bg_ok=bgg["ok"], geom_ok=geo["ok"],
+             bg=[(f["dots"], f["blob_share"]) for f in bgg["frames"]], geom=[f["bad"] for f in geo["frames"]])
 
     # 6 loudness + sheet
     t = time.time()

@@ -33,7 +33,7 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
 #panelbg .grid { position: absolute; inset: -80px; background-image:
   linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px);
   background-size: 90px 90px; }
-#panelbg .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 40%, rgba(0,0,0,.55) 100%); }
+#panelbg .vig { display: none; }
 .kw-light #panelbg .vig { background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 50%, rgba(0,0,0,.08) 100%); }
 #gfx { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: var(--bg); opacity: 0; }
 #gfx .grid { position: absolute; inset: 0; background-image:
@@ -116,13 +116,11 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
 #gl3d { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); opacity: 0; }
 .big, .chip, .pill, .row { font-variant-numeric: tabular-nums; }
 /* r3.css — scene layer for split-motion round 3 (component helpers; one light model per section) */
-.r3-bg { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; background: #08080a; }
+.r3-bg { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; background: var(--panel-bg, #0a0a0c); }
 .r3-bg .grid { position: absolute; inset: -90px; background-image: linear-gradient(rgba(255,255,255,.045) 2px, transparent 2px),
   linear-gradient(90deg, rgba(255,255,255,.045) 2px, transparent 2px); background-size: 90px 90px; }
-.r3-bg .field { position: absolute; width: 900px; height: 900px; border-radius: 50%; filter: blur(40px); opacity: .55; }
 .r3-sec { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; opacity: 0; }
 .r3-sec .r3-light { position: absolute; inset: 0; pointer-events: none; }
-.r3-sec .r3-vign { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%); }
 .r3-cam { position: absolute; inset: 0; transform-origin: 50% 55%; transform-style: preserve-3d; }
 .r3-layer { position: absolute; inset: 0; }
 .r3-el { position: absolute; }
@@ -151,14 +149,13 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
 .r3-screen { position: absolute; overflow: hidden; border-radius: 40px; background: #0b0b10; }
 .r3-dot { position: absolute; border-radius: 50%; }
 
-:root { --panel-h: 958px; --cap-top: 854px; --stage-top: 300px; --stage-h: 538px; }
+:root { --panel-bg: #0a0a0c; --bg: #0a0a0c; --panel-h: 958px; --cap-top: 854px; --stage-top: 300px; --stage-h: 538px; }
 </style></head><body>
 <div id="root" data-composition-id="main" data-start="0" data-duration="58.367" data-width="1080" data-height="2040">
 <video id="vid0" class="clip" src="assets/video.mp4" data-start="8.840" data-duration="2.460" data-media-start="8.840" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video><video id="vid1" class="clip" src="assets/video.mp4" data-start="18.627" data-duration="3.053" data-media-start="18.627" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video><video id="vid2" class="clip" src="assets/video.mp4" data-start="30.313" data-duration="3.360" data-media-start="30.313" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video><video id="vid3" class="clip" src="assets/video.mp4" data-start="45.380" data-duration="2.920" data-media-start="45.380" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video><video id="vid4" class="clip" src="assets/video.mp4" data-start="53.800" data-duration="4.567" data-media-start="53.800" data-track-index="0" muted playsinline style="position:absolute;left:0;top:0;width:1080px;height:2040px"></video>
 <div id="panel" class="clip" data-start="0" data-duration="58.367" data-track-index="2" data-layout-allow-overflow>
- <div class="r3-bg"><div class="grid"></div><div class="field" style="left:-200px;top:-260px;background:radial-gradient(circle,rgba(255,170,110,.20),transparent 65%)"></div>
- <div class="field" style="left:420px;top:180px;background:radial-gradient(circle,rgba(120,150,255,.14),transparent 65%)"></div></div>
- <div class="hd" id="h0"><span class="w">The</span> <span class="w"><span class="box">side</span></span> <span class="w">project</span> <span class="w"><i>nobody</i></span> <span class="w">wanted</span></div><div class="r3-sec" id="sec0"><div class="r3-light"></div><div class="r3-cam" id="sec0c"><div class="r3-layer" id="sec0m"></div><div class="r3-layer" id="sec0f"></div></div><div class="r3-vign"></div></div><div class="hd" id="h1"><span class="w">A</span> <span class="w">shelf</span> <span class="w">of</span> <span class="w"><i>empty</i></span> <span class="w"><span class="box">slots</span></span></div><div class="r3-sec" id="sec1"><div class="r3-light"></div><div class="r3-cam" id="sec1c"><div class="r3-layer" id="sec1m"></div><div class="r3-layer" id="sec1f"></div></div><div class="r3-vign"></div></div><div class="hd" id="h2"><span class="w">Made</span> <span class="w">to</span> <span class="w"><i>sell</i></span> <span class="w">,</span> <span class="w">not</span> <span class="w"><span class="box">read</span></span></div><div class="r3-sec" id="sec2"><div class="r3-light"></div><div class="r3-cam" id="sec2c"><div class="r3-layer" id="sec2m"></div><div class="r3-layer" id="sec2f"></div></div><div class="r3-vign"></div></div><div class="hd" id="h3"><span class="w"><span class="box">Skin</span></span> <span class="w">in</span> <span class="w">the</span> <span class="w"><i>game</i></span></div><div class="r3-sec" id="sec3"><div class="r3-light"></div><div class="r3-cam" id="sec3c"><div class="r3-layer" id="sec3m"></div><div class="r3-layer" id="sec3f"></div></div><div class="r3-vign"></div></div><div class="hd" id="h4"><span class="w"><span class="box">Nobody</span></span> <span class="w">gets</span> <span class="w"><i>special</i></span> <span class="w">treatment</span></div><div class="r3-sec" id="sec4"><div class="r3-light"></div><div class="r3-cam" id="sec4c"><div class="r3-layer" id="sec4m"></div><div class="r3-layer" id="sec4f"></div></div><div class="r3-vign"></div></div>
+ <div class="r3-bg"><div class="grid"></div></div>
+ <div class="hd" id="h0"><span class="w">The</span> <span class="w"><span class="box">side</span></span> <span class="w">project</span> <span class="w"><i>nobody</i></span> <span class="w">wanted</span></div><div class="r3-sec" id="sec0"><div class="r3-light"></div><div class="r3-cam" id="sec0c"><div class="r3-layer" id="sec0m"></div><div class="r3-layer" id="sec0f"></div></div></div><div class="hd" id="h1"><span class="w">A</span> <span class="w">shelf</span> <span class="w">of</span> <span class="w"><i>empty</i></span> <span class="w"><span class="box">slots</span></span></div><div class="r3-sec" id="sec1"><div class="r3-light"></div><div class="r3-cam" id="sec1c"><div class="r3-layer" id="sec1m"></div><div class="r3-layer" id="sec1f"></div></div></div><div class="hd" id="h2"><span class="w">Made</span> <span class="w">to</span> <span class="w"><i>sell</i></span> <span class="w">,</span> <span class="w">not</span> <span class="w"><span class="box">read</span></span></div><div class="r3-sec" id="sec2"><div class="r3-light"></div><div class="r3-cam" id="sec2c"><div class="r3-layer" id="sec2m"></div><div class="r3-layer" id="sec2f"></div></div></div><div class="hd" id="h3"><span class="w"><span class="box">Skin</span></span> <span class="w">in</span> <span class="w">the</span> <span class="w"><i>game</i></span></div><div class="r3-sec" id="sec3"><div class="r3-light"></div><div class="r3-cam" id="sec3c"><div class="r3-layer" id="sec3m"></div><div class="r3-layer" id="sec3f"></div></div></div><div class="hd" id="h4"><span class="w"><span class="box">Nobody</span></span> <span class="w">gets</span> <span class="w"><i>special</i></span> <span class="w">treatment</span></div><div class="r3-sec" id="sec4"><div class="r3-light"></div><div class="r3-cam" id="sec4c"><div class="r3-layer" id="sec4m"></div><div class="r3-layer" id="sec4f"></div></div></div>
 </div>
 <div class="clip cap seam" id="c0" style="" data-start="0.040" data-duration="0.520" data-track-index="3">They said</div><div class="clip cap seam" id="c1" style="" data-start="0.560" data-duration="0.540" data-track-index="3">but we have</div><div class="clip cap seam" id="c2" style="" data-start="1.100" data-duration="0.933" data-track-index="3">this this <i>magazine</i></div><div class="clip cap seam" id="c3" style="" data-start="2.033" data-duration="3.120" data-track-index="3">or <i>pamphlet</i> that</div><div class="clip cap seam" id="c4" style="" data-start="5.153" data-duration="0.467" data-track-index="3">we&#x27;ve we put</div><div class="clip cap seam" id="c5" style="" data-start="5.620" data-duration="0.800" data-track-index="3">together for our</div><div class="clip cap seam" id="c6" style="" data-start="6.420" data-duration="0.853" data-track-index="3">customers</div><div class="clip cap seam" id="c7" style="" data-start="7.273" data-duration="0.600" data-track-index="3">don&#x27;t really like</div><div class="clip cap seam" id="c8" style="" data-start="7.873" data-duration="0.700" data-track-index="3">doing it very</div><div class="clip cap seam" id="c9" style="" data-start="8.573" data-duration="0.300" data-track-index="3">much</div><div class="clip cap full" id="c10" style="top:1346px" data-start="8.873" data-duration="0.460" data-track-index="3">Maybe you would</div><div class="clip cap full" id="c11" style="top:1346px" data-start="9.333" data-duration="0.460" data-track-index="3">like to be</div><div class="clip cap full" id="c12" style="top:1346px" data-start="9.793" data-duration="0.680" data-track-index="3">the <i>editor</i> for</div><div class="clip cap full" id="c13" style="top:1346px" data-start="10.473" data-duration="0.860" data-track-index="3">this</div><div class="clip cap seam" id="c14" style="" data-start="11.333" data-duration="0.780" data-track-index="3">they had put</div><div class="clip cap seam" id="c15" style="" data-start="12.113" data-duration="1.660" data-track-index="3">it out <i>one</i></div><div class="clip cap seam" id="c16" style="" data-start="13.773" data-duration="0.400" data-track-index="3">issue</div><div class="clip cap seam" id="c17" style="" data-start="14.173" data-duration="0.233" data-track-index="3">I think and</div><div class="clip cap seam" id="c18" style="" data-start="14.406" data-duration="0.820" data-track-index="3">they charged <i>five</i></div><div class="clip cap seam" id="c19" style="" data-start="15.226" data-duration="1.247" data-track-index="3"><i>bucks</i> for us</div><div class="clip cap seam" id="c20" style="" data-start="16.473" data-duration="1.160" data-track-index="3">So I said</div><div class="clip cap seam" id="c21" style="" data-start="17.633" data-duration="0.120" data-track-index="3">well</div><div class="clip cap seam" id="c22" style="" data-start="17.753" data-duration="0.380" data-track-index="3">let me look</div><div class="clip cap seam" id="c23" style="" data-start="18.133" data-duration="0.527" data-track-index="3">at it</div><div class="clip cap full" id="c24" style="top:1346px" data-start="18.660" data-duration="0.520" data-track-index="3">I don&#x27;t know</div><div class="clip cap full" id="c25" style="top:1346px" data-start="19.180" data-duration="0.420" data-track-index="3">but I have</div><div class="clip cap full" id="c26" style="top:1346px" data-start="19.600" data-duration="0.793" data-track-index="3">an <i>idea</i> that</div><div class="clip cap full" id="c27" style="top:1346px" data-start="20.393" data-duration="0.380" data-track-index="3">let me go</div><div class="clip cap full" id="c28" style="top:1346px" data-start="20.773" data-duration="0.560" data-track-index="3">home and think</div><div class="clip cap full" id="c29" style="top:1346px" data-start="21.333" data-duration="0.480" data-track-index="3">about it and</div><div class="clip cap seam" id="c30" style="" data-start="21.813" data-duration="0.860" data-track-index="3">talk to my</div><div class="clip cap seam" id="c31" style="" data-start="22.673" data-duration="0.807" data-track-index="3"><i>partner</i></div><div class="clip cap seam" id="c32" style="" data-start="23.480" data-duration="0.460" data-track-index="3">And so I</div><div class="clip cap seam" id="c33" style="" data-start="23.940" data-duration="1.320" data-track-index="3">went home with</div><div class="clip cap seam" id="c34" style="" data-start="25.260" data-duration="1.880" data-track-index="3">this little pamphlet</div><div class="clip cap seam" id="c35" style="" data-start="27.140" data-duration="0.640" data-track-index="3">it was intended</div><div class="clip cap seam" id="c36" style="" data-start="27.780" data-duration="0.873" data-track-index="3">was get their</div><div class="clip cap seam" id="c37" style="" data-start="28.653" data-duration="1.260" data-track-index="3">customers to buy</div><div class="clip cap seam" id="c38" style="" data-start="29.913" data-duration="0.433" data-track-index="3"><i>more</i></div><div class="clip cap full" id="c39" style="top:1346px" data-start="30.346" data-duration="0.860" data-track-index="3">Which was fine</div><div class="clip cap full" id="c40" style="top:1346px" data-start="31.206" data-duration="1.140" data-track-index="3">but that certainly</div><div class="clip cap full" id="c41" style="top:1346px" data-start="32.346" data-duration="0.720" data-track-index="3">wasn&#x27;t what was</div><div class="clip cap full" id="c42" style="top:1346px" data-start="33.066" data-duration="0.640" data-track-index="3">in my <i>mind</i></div><div class="clip cap seam" id="c43" style="" data-start="33.706" data-duration="0.600" data-track-index="3">but they were</div><div class="clip cap seam" id="c44" style="" data-start="34.306" data-duration="0.540" data-track-index="3">willing to put</div><div class="clip cap seam" id="c45" style="" data-start="34.846" data-duration="0.720" data-track-index="3">some <i>money</i> into</div><div class="clip cap seam" id="c46" style="" data-start="35.566" data-duration="0.800" data-track-index="3">it and go</div><div class="clip cap seam" id="c47" style="" data-start="36.366" data-duration="1.240" data-track-index="3">partners</div><div class="clip cap seam" id="c48" style="" data-start="37.606" data-duration="1.420" data-track-index="3"><i>three</i> -way <i>partners</i></div><div class="clip cap seam" id="c49" style="" data-start="39.026" data-duration="0.920" data-track-index="3">I went home</div><div class="clip cap seam" id="c50" style="" data-start="39.946" data-duration="1.300" data-track-index="3">and I told</div><div class="clip cap seam" id="c51" style="" data-start="41.246" data-duration="0.720" data-track-index="3"><i>Al</i> about it</div><div class="clip cap seam" id="c52" style="" data-start="41.966" data-duration="0.647" data-track-index="3">and And I</div><div class="clip cap seam" id="c53" style="" data-start="42.613" data-duration="0.920" data-track-index="3">had all sorts</div><div class="clip cap seam" id="c54" style="" data-start="43.533" data-duration="1.040" data-track-index="3">of things that</div><div class="clip cap seam" id="c55" style="" data-start="44.573" data-duration="0.840" data-track-index="3">it should be</div><div class="clip cap full" id="c56" style="top:1346px" data-start="45.413" data-duration="0.600" data-track-index="3">And one thing</div><div class="clip cap full" id="c57" style="top:1346px" data-start="46.013" data-duration="0.860" data-track-index="3">that was really</div><div class="clip cap full" id="c58" style="top:1346px" data-start="46.873" data-duration="1.827" data-track-index="3"><i>important</i> was that</div><div class="clip cap seam" id="c59" style="" data-start="48.700" data-duration="1.100" data-track-index="3">could not <i>favor</i></div><div class="clip cap seam" id="c60" style="" data-start="49.800" data-duration="1.173" data-track-index="3">their company</div><div class="clip cap seam" id="c61" style="" data-start="50.973" data-duration="0.680" data-track-index="3">Didn&#x27;t mean we</div><div class="clip cap seam" id="c62" style="" data-start="51.653" data-duration="0.620" data-track-index="3">couldn&#x27;t have that</div><div class="clip cap seam" id="c63" style="" data-start="52.273" data-duration="0.360" data-track-index="3">and they could</div><div class="clip cap seam" id="c64" style="" data-start="52.633" data-duration="0.500" data-track-index="3">each write a</div><div class="clip cap seam" id="c65" style="" data-start="53.133" data-duration="0.700" data-track-index="3"><i>column</i> for it</div><div class="clip cap full" id="c66" style="top:1346px" data-start="53.833" data-duration="0.880" data-track-index="3">But it could</div><div class="clip cap full" id="c67" style="top:1346px" data-start="54.713" data-duration="3.307" data-track-index="3">not favor <i>anything</i></div>
 <div id="flash" class="clip" data-start="0" data-duration="58.367" data-track-index="4"></div>
@@ -344,9 +341,7 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
     o = Object.assign({ x: 760, y: 120, temp: 'warm', bloom: .26, ambient: .07 }, o || {});
     const rgb = TEMP[o.temp] || o.temp;
     C.lightModel = { x: o.x, y: o.y, rgb };
-    const L = C.sec.querySelector('.r3-light');
-    L.style.background = `radial-gradient(ellipse 62% 54% at ${o.x}px ${o.y}px, rgba(${rgb},${o.bloom}) 0%, rgba(${rgb},${o.bloom * .35}) 38%, transparent 72%),` +
-      `radial-gradient(ellipse 120% 90% at ${o.x}px ${o.y}px, rgba(${rgb},${o.ambient}) 0%, transparent 80%)`;
+    // NO background bloom/halo: light lives only in the content (rim, sheen, offset shadows)
     return C.lightModel;
   }
   // rim light + sheen on a card, from the section key light
@@ -495,7 +490,7 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
     return { cells,
       fill(t, d = .9, from = 'start') { ft(cells, { autoAlpha: 0, scale: .85 }, { autoAlpha: 1, scale: 1, duration: .45, ease: 'back.out(1.3)', stagger: { amount: d, from } }, t); },
       highlight(i, t) { C.tl.to(cells.filter((_, j) => j !== i), { opacity: .28, duration: .35 }, t);
-        C.tl.to(cells[i], { scale: 1.12, zIndex: 5, boxShadow: '0 0 0 5px #e8283c, 0 20px 60px rgba(232,40,60,.45)', duration: .4, ease: 'back.out(1.4)' }, t); } };
+        C.tl.to(cells[i], { scale: 1.12, zIndex: 5, boxShadow: '0 0 0 5px #e8283c, 0 18px 40px rgba(0,0,0,.6)', duration: .4, ease: 'back.out(1.4)' }, t); } };
   }
   // streak calendar
   function calendar(o) {
@@ -507,7 +502,7 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
     for (let i = 0; i < o.cols * o.rows; i++) {
       const q = i % o.cols, r = Math.floor(i / o.cols);
       const b = mk('div', '', Object.assign(box(20 + q * (o.cell + o.gap), 76 + r * (o.cell + o.gap), o.cell, o.cell), { position: 'absolute', borderRadius: '14px', border: '1.5px solid rgba(255,255,255,.15)' }), c);
-      cells.push(mk('div', 'r3-el', Object.assign(box(0, 0, o.cell, o.cell), { borderRadius: '13px', background: 'linear-gradient(135deg,#3dff8b,#10ac84)', boxShadow: '0 0 18px rgba(61,255,139,.45)' }), b));
+      cells.push(mk('div', 'r3-el', Object.assign(box(0, 0, o.cell, o.cell), { borderRadius: '13px', background: 'linear-gradient(135deg,#3dff8b,#10ac84)', boxShadow: '0 6px 14px rgba(0,0,0,.45)' }), b));
     }
     return { el: c, cells,
       check(i, t) { if (cells[i]) appear(cells[i], t, { y: 0, scale: .6, d: .35 }); },
@@ -627,7 +622,7 @@ const tl = gsap.timeline({paused:true});
 const W = [0.107, 0.267, 0.627, 0.707, 0.907, 1.167, 1.36, 1.48, 2.1, 2.84, 4.9, 5.22, 5.347, 5.487, 5.687, 5.987, 6.327, 6.487, 7.34, 7.48, 7.64, 7.94, 8.22, 8.44, 8.64, 8.94, 9.1, 9.28, 9.4, 9.58, 9.74, 9.86, 10.0, 10.24, 10.54, 11.4, 11.78, 11.98, 12.18, 12.36, 13.36, 13.84, 14.24, 14.36, 14.433, 14.473, 14.613, 14.913, 15.293, 15.773, 16.033, 16.54, 16.98, 17.42, 17.7, 17.82, 17.92, 18.0, 18.2, 18.42, 18.727, 18.867, 19.007, 19.247, 19.387, 19.527, 19.667, 19.787, 20.187, 20.46, 20.62, 20.7, 20.84, 21.08, 21.22, 21.4, 21.64, 21.78, 21.88, 22.04, 22.36, 22.74, 23.547, 23.747, 23.887, 24.007, 24.127, 24.507, 25.327, 25.667, 26.047, 27.207, 27.327, 27.447, 27.847, 28.14, 28.32, 28.72, 29.38, 29.74, 29.98, 30.413, 30.593, 30.733, 31.273, 31.833, 32.013, 32.413, 32.793, 33.013, 33.133, 33.293, 33.433, 33.773, 34.133, 34.273, 34.373, 34.593, 34.753, 34.913, 35.113, 35.333, 35.633, 35.853, 36.233, 36.433, 37.673, 37.873, 38.073, 39.093, 39.633, 39.793, 40.013, 40.193, 40.673, 41.313, 41.533, 41.793, 42.033, 42.16, 42.54, 42.68, 42.96, 43.36, 43.6, 43.86, 44.16, 44.64, 44.8, 44.96, 45.48, 45.54, 45.74, 46.08, 46.42, 46.6, 46.94, 47.46, 48.4, 48.767, 48.967, 49.387, 49.867, 50.367, 51.04, 51.4, 51.54, 51.72, 52.0, 52.18, 52.34, 52.44, 52.58, 52.7, 52.88, 53.06, 53.2, 53.46, 53.74, 53.9, 54.36, 54.6, 54.78, 55.0, 55.5];
 const G = {"W": 1080, "H": 958, "top": 300, "bottom": 838}; window.G = G;
 gsap.set('#panel',{autoAlpha:1});
-const B=document.querySelectorAll('.r3-bg .field');tl.fromTo(B[0],{x:-80,y:-40},{x:80,y:40,duration:58.367,ease:'sine.inOut',immediateRender:false},0);tl.fromTo(B[1],{x:60,y:30},{x:-60,y:-30,duration:58.367,ease:'sine.inOut',immediateRender:false},0);
+
 
 (function(){ const sec=document.getElementById('sec0'); const S=0.000, E=10.390;
  const ctx=R3.begin({sec, mid:document.getElementById('sec0m'), fg:document.getElementById('sec0f'), camEl:document.getElementById('sec0c'), tl, S, E, W, G});
@@ -648,10 +643,11 @@ const SANS = '"Helvetica Neue", Helvetica, Arial, sans-serif';
 const MONO = '"Courier New", Courier, monospace';
 
 // ---------- quiet desk props (static after their fade-in) ----------
+// coffee ring: two hairline strokes, no shadows
 const ring = R3.mk('div', 'r3-el', abs(133, 393, 124, 124, {
-  borderRadius: '50%', border: '6px solid rgba(150,98,52,.24)',
-  boxShadow: 'inset 0 0 0 10px rgba(150,98,52,.06)'
+  borderRadius: '50%', border: '6px solid rgba(150,98,52,.24)'
 }));
+R3.mk('div', '', abs(10, 10, 92, 92, { borderRadius: '50%', border: '2px solid rgba(150,98,52,.12)' }), ring);
 const stapler = R3.mk('div', 'r3-el', abs(70, 524, 240, 62), ctx.fg,
   '<svg width="240" height="62" viewBox="0 0 240 62" style="overflow:visible">' +
   '<path d="M8 52 H232 Q236 52 236 48 V46 Q236 42 232 42 H8 Q4 42 4 46 V48 Q4 52 8 52 Z" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>' +
@@ -661,7 +657,6 @@ R3.ft([ring, stapler], { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: 's
 
 // ---------- hero: stapled pamphlet group ----------
 const pam = R3.mk('div', '', abs(340, 330, 380, 470));
-const shadow = R3.mk('div', '', abs(10, 16, 380, 470, { background: 'rgba(0,0,0,.6)', filter: 'blur(16px)', borderRadius: '6px' }), pam);
 
 // back spread (inside pages), hidden exactly behind the cover until it fans
 const spread = R3.mk('div', 'r3-el', abs(0, 0, 380, 470, {
@@ -676,11 +671,11 @@ for (let r = 0; r < 3; r++) for (let c = 0; c < 2; c++) {
   R3.mk('div', '', abs(tx, ty + 103, 64, 7, { background: RED, opacity: 0.7, borderRadius: '3px' }), spread);
 }
 
-// cover
+// cover (thin paper shadow = real offset box-shadow on the sheet itself)
 const cover = R3.mk('div', 'r3-el', abs(0, 0, 380, 470, {
   background: 'linear-gradient(135deg, rgba(255,214,170,.34) 0%, transparent 46%), #efe8da',
-  borderRadius: '4px', overflow: 'hidden',
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,.5), 6px 10px 22px rgba(0,0,0,.35)'
+  borderRadius: '4px', overflow: 'hidden', borderTop: '1px solid rgba(255,255,255,.55)',
+  boxShadow: '14px 22px 36px rgba(0,0,0,.55)'
 }), pam);
 R3.mk('div', '', abs(0, 0, 14, 470, { background: 'linear-gradient(90deg, rgba(0,0,0,.16), transparent)' }), cover);
 [112, 330].forEach((y) => R3.mk('div', '', abs(6, y, 4, 30, { background: 'linear-gradient(90deg,#8a8f96,#e3e6ea,#8a8f96)', borderRadius: '2px' }), cover));
@@ -711,7 +706,9 @@ mhData.forEach(([k, v], i) => {
 // ---------- w0: pamphlet settles onto the desk ----------
 R3.ft(pam, { autoAlpha: 0, y: -28, scale: 1.05, rotation: -3.5 },
   { autoAlpha: 1, y: 0, scale: 1, rotation: -1.2, duration: 0.9, ease: 'power3.out' }, S + 0.02);
-R3.ft(shadow, { opacity: 0, x: 26, y: 30 }, { opacity: 1, x: 0, y: 0, duration: 0.9, ease: 'power3.out' }, S + 0.02);
+// shadow lands with the sheet: offset grows from lifted to resting (always offset, never a halo)
+R3.ft(cover, { boxShadow: '30px 46px 40px rgba(0,0,0,0)' },
+  { boxShadow: '14px 22px 36px rgba(0,0,0,.55)', duration: 0.9, ease: 'power3.out' }, S + 0.02);
 
 // ---------- w3: cover title prints ----------
 printIn(title, T(3), 0.5);
@@ -1042,7 +1039,8 @@ const mat = R.mk('div', 'r3-el', Object.assign({}, A, R.box(40, 306, 1000, 522),
 // ---------- the opened pamphlet page ----------
 const page = R.mk('div', 'r3-el', Object.assign({}, A, R.box(PX, PY, PW, PH), {
   background: 'linear-gradient(215deg, rgba(255,214,170,.32) 0%, rgba(255,214,170,0) 40%), #fbf8f0',
-  borderRadius: '6px', boxShadow: '-16px 24px 44px rgba(20,30,45,.32), inset 0 0 0 1px rgba(29,35,43,.08)'
+  borderRadius: '6px', border: '1px solid rgba(29,35,43,.10)', boxSizing: 'border-box',
+  boxShadow: '-16px 24px 44px rgba(20,30,45,.32)'
 }));
 
 const pHead = R.mk('div', 'r3-el', Object.assign({}, A, { left: '28px', top: '22px', font: `800 17px ${SANS}`, letterSpacing: '.16em', color: INK, whiteSpace: 'nowrap', padding: '2px 4px 2px 0' }), page,
@@ -1065,7 +1063,7 @@ const rowC = [], hls = [], ticks = [], bodyL = [];
 ROWS.forEach((r, i) => {
   const y = 92 + i * 70;
   const c = R.mk('div', 'r3-el', Object.assign({}, A, { left: '60px', top: px(y - 8), width: '520px', height: '60px', borderRadius: '6px',
-    backgroundColor: 'rgba(251,248,240,0)', boxShadow: '0px 0px 0px rgba(0,0,0,0)', transformOrigin: '30% 50%', zIndex: i === 3 ? '3' : '1' }), page);
+    backgroundColor: 'rgba(251,248,240,0)', boxShadow: '-2px 4px 8px rgba(0,0,0,0)', transformOrigin: '30% 50%', zIndex: i === 3 ? '3' : '1' }), page);
   const tx = R.mk('div', '', Object.assign({}, A, { left: '16px', top: '8px', zIndex: '1', whiteSpace: 'nowrap', font: '700 24px Georgia, "Times New Roman", serif', lineHeight: '30px', color: INK }), c, r.text);
   const hl = R.mk('div', '', Object.assign({}, A, { left: '-8px', right: '-10px', top: '3px', bottom: '-1px', zIndex: '-1', borderRadius: '3px 12px 4px 10px',
     background: r.mark === 'r' ? 'rgba(255,84,96,.58)' : 'rgba(255,222,48,.85)', transformOrigin: 'left center' }), tx);
@@ -1104,10 +1102,11 @@ const link = pen('M848 362 C 828 366, 828 436, 848 440', 'rgba(29,35,43,.45)', 2
 // ---------- right column: team chips, tally, ratio ----------
 function avaChip(y, label, k) {
   const c = R.mk('div', 'r3-el', Object.assign({}, A, { left: '846px', top: px(y), width: '184px', height: '52px', borderRadius: '26px', background: '#ffffff',
-    boxShadow: '-6px 10px 22px rgba(20,30,45,.18), inset 0 0 0 1px rgba(29,35,43,.08)' }));
-  R.mk('div', '', Object.assign({}, A, { left: '8px', top: '8px', width: '36px', height: '36px', borderRadius: '50%',
-    background: k ? 'radial-gradient(circle at 40% 35%, #ffb27a, #e1572e)' : 'radial-gradient(circle at 40% 35%, #8fc3ff, #2a5bd7)' }), c);
-  R.mk('div', '', Object.assign({}, A, { left: '54px', top: '0px', lineHeight: '52px', font: `700 19px ${SANS}`, color: INK, whiteSpace: 'nowrap' }), c, label);
+    border: '1px solid rgba(29,35,43,.10)', boxSizing: 'border-box', boxShadow: '-6px 10px 22px rgba(20,30,45,.18)' }));
+  R.mk('div', '', Object.assign({}, A, { left: '7px', top: '7px', width: '36px', height: '36px', borderRadius: '50%',
+    background: k ? 'linear-gradient(140deg, #ffb27a, #e1572e)' : 'linear-gradient(140deg, #8fc3ff, #2a5bd7)',
+    color: '#fff', font: `800 16px ${SANS}`, lineHeight: '36px', textAlign: 'center' }), c, k ? 'A' : 'M');
+  R.mk('div', '', Object.assign({}, A, { left: '53px', top: '0px', lineHeight: '50px', font: `700 19px ${SANS}`, color: INK, whiteSpace: 'nowrap' }), c, label);
   return c;
 }
 const chipM = avaChip(334, 'M · editor', 0);
@@ -1132,7 +1131,7 @@ function mark(i, t) {
 // ---------- timeline ----------
 // open: grid paper, page, printed rows settle together
 R.appear(mat, S + .05, { y: 0, scale: .985, d: .5, ease: 'power3.out' });
-R.appear(page, S + .12, { y: 28, scale: .97, d: .6, blur: 6 });
+R.appear(page, S + .12, { y: 28, scale: .97, d: .6 });
 R.appear(rowC.concat([fL, fR]), S + .3, { y: 12, scale: 1, d: .4, stagger: .06, ease: 'power3.out' });
 
 // w77 — bulletin masthead prints on
@@ -1250,7 +1249,9 @@ const names = ['The Distributor, Inc.', 'Editor'].map((n, i) => {
 });
 const pill = R3.mk('div', 'r3-el', abs(536, 408, 176, 32, { borderRadius: '16px', background: 'rgba(255,255,255,.08)',
   border: '1px solid rgba(255,205,90,.6)', boxSizing: 'border-box' }), c);
-R3.avatar(4, 3, 24, 2, pill);
+// flat monogram avatar (solid linear fill + offset shadow, no radial gradient)
+R3.mk('div', 'r3-el', abs(4, 3, 24, 24, { borderRadius: '50%', background: 'linear-gradient(135deg,#feca57,#e17055)',
+  boxShadow: '0 2px 4px rgba(0,0,0,.45)', color: '#1b1406', fontSize: '12px', fontWeight: '900', lineHeight: '24px', textAlign: 'center' }), pill, 'A');
 const pillT = R3.text(36, 5, 'Al — co-founder', { size: 15, weight: 700, parent: pill });
 pillT.style.lineHeight = '20px';
 
@@ -1282,9 +1283,9 @@ const stamp = R3.mk('div', 'r3-el', { position: 'absolute', left: '552px', top: 
 
 // ---------------- timeline ----------------
 // w113 (major): order-form lines resolve into the agreement card, title settles
-R3.appear(c, Math.max(S + 0.02, W[113] - 0.15), { y: 0, scale: 1.035, blur: 10, d: 0.6, ease: 'power3.out' });
+R3.appear(c, Math.max(S + 0.02, W[113] - 0.15), { y: 0, scale: 1.035, blur: 3, d: 0.6, ease: 'power3.out' });
 R3.ft(clauses, { scaleX: 0, autoAlpha: 0 }, { scaleX: 1, autoAlpha: 1, duration: 0.5, ease: 'power3.out', stagger: 0.04 }, S + 0.08);
-R3.appear([ttl, meta], W[113] + 0.05, { y: 12, d: 0.5, stagger: 0.1, blur: 4, ease: 'power3.out' });
+R3.appear([ttl, meta], W[113] + 0.05, { y: 12, d: 0.5, stagger: 0.1, blur: 3, ease: 'power3.out' });
 R3.ft(divider, { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: 'power2.out' }, W[113] + 0.2);
 
 // w118: funding row
@@ -1340,6 +1341,15 @@ const A = (o) => Object.assign({ position: 'absolute' }, o);
 const NS = 'http://www.w3.org/2000/svg';
 const sv = (tag, at, p) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); p.appendChild(e); return e; };
 
+// flat-lit avatar chip (linear fill + offset shadow only)
+const AVA = [['#1dd1a1', '#10ac84'], ['#fd79a8', '#e84393'], ['#81ecec', '#00cec9']];
+function flatAvatar(x, y, d, k, parent) {
+  const [a, b] = AVA[k % AVA.length];
+  return R3.mk('div', 'r3-el', A({ left: x + 'px', top: y + 'px', width: d + 'px', height: d + 'px', borderRadius: '50%',
+    background: `linear-gradient(145deg, ${a} 0%, ${b} 100%)`, border: '1.5px solid rgba(255,255,255,.55)', boxSizing: 'border-box',
+    boxShadow: '0 4px 10px rgba(0,0,0,.45)' }), parent);
+}
+
 // =====================================================================
 // HERO 1 — EDITORIAL CHARTER (x 60..1020, y 304..600)
 // =====================================================================
@@ -1384,7 +1394,11 @@ const rows = ROWS.map((txt, i) => {
   const num = R3.mk('div', '', A({ left: '38px', top: 0, lineHeight: RH + 'px', fontFamily: MONO, fontSize: '17px', fontWeight: '700',
     color: 'rgba(127,184,255,.85)' }), r, String(i + 1).padStart(2, '0'));
   const t = R3.mk('div', '', A({ left: '78px', top: 0, lineHeight: RH + 'px', fontSize: '21px', fontWeight: '600', color: '#fff',
-    whiteSpace: 'nowrap', filter: 'blur(7px)', opacity: .55 }), r, txt);
+    whiteSpace: 'nowrap', opacity: .25 }), r, txt);
+  // solid redaction bar covering the unrevealed text (flat linear fill, wipes away on reveal)
+  const redW = Math.min(700, Math.round(txt.length * 10.6) + 12);
+  const red = R3.mk('div', '', A({ left: '72px', top: '6px', width: redW + 'px', height: '18px', borderRadius: '4px',
+    background: 'linear-gradient(180deg,#3a4866 0%,#2a3550 100%)', boxShadow: '0 2px 4px rgba(0,0,0,.4)', transformOrigin: '100% 50%' }), r);
   const lockT = i === 5 ? R3.mk('div', '', A({ left: '78px', top: 0, lineHeight: RH + 'px', fontSize: '21px', fontWeight: '700', color: '#fff',
     whiteSpace: 'nowrap', opacity: 0, visibility: 'hidden' }), r,
     '— <span class="u" style="position:relative">favors no publisher<i style="position:absolute;left:0;right:0;bottom:1px;height:2.5px;border-radius:2px;background:#ff4d5e;transform-origin:0 50%"></i></span>, including the backers') : null;
@@ -1393,7 +1407,7 @@ const rows = ROWS.map((txt, i) => {
   const pDraft = pill('draft', { color: 'rgba(255,255,255,.5)', border: '1px solid rgba(255,255,255,.22)' });
   const pOn = pill(i === 5 ? 'locked' : 'adopted', i === 5 ? { color: '#fff', background: RED, opacity: 0, visibility: 'hidden' }
     : { color: '#0b1426', background: COOL, opacity: 0, visibility: 'hidden' });
-  return { el: r, hl, sh, tick, chk, num, t, lockT, pDraft, pOn };
+  return { el: r, hl, sh, tick, chk, num, t, red, lockT, pDraft, pOn };
 });
 
 function shimmer(r, t) { R3.ft(r.sh, { x: 0 }, { x: 1120, duration: .6, ease: 'power1.inOut' }, t); }
@@ -1403,10 +1417,11 @@ function settleStatus(r, t, col) {
   tl.to(r.pDraft, { autoAlpha: 0, duration: .2 }, t + .15);
   R3.ft(r.pOn, { autoAlpha: 0, scale: .7 }, { autoAlpha: 1, scale: 1, duration: .35, ease: 'back.out(2)' }, t + .15);
 }
-function unblur(i, t) {
+function reveal(i, t) {
   const r = rows[i];
   shimmer(r, t);
-  R3.ft(r.t, { filter: 'blur(7px)', opacity: .55 }, { filter: 'blur(0px)', opacity: 1, duration: .5, ease: 'power2.out' }, t);
+  R3.ft(r.red, { scaleX: 1 }, { scaleX: 0, duration: .45, ease: 'power3.inOut' }, t);
+  R3.ft(r.t, { opacity: .25 }, { opacity: 1, duration: .4, ease: 'power2.out' }, t + .08);
   settleStatus(r, t, COOL);
 }
 
@@ -1432,9 +1447,9 @@ const slots = COLX.map((x) => R3.mk('div', 'r3-el', A({ left: x + 'px', top: CYC
 const BY = [['Guest page', 'The Distributor', 'D'], ['Guest page', 'Al', 'A'], ['From the desk', 'Editor', 'E']];
 const cards = COLX.map((x, k) => {
   const c = R3.card(x, CYC, CWC, CHC);
-  const ava = R3.avatar(14, 14, 40, k * 2, c);
+  const ava = flatAvatar(14, 14, 40, k, c);
   R3.mk('div', '', A({ left: 0, top: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontSize: '17px', fontWeight: '800', color: '#fff' }), ava, BY[k][2]);
+    fontSize: '17px', fontWeight: '800', color: '#0b1426' }), ava, BY[k][2]);
   R3.mk('div', '', A({ left: '66px', top: '12px', lineHeight: '16px', fontSize: '12px', fontWeight: '700', letterSpacing: '.12em',
     textTransform: 'uppercase', color: 'rgba(255,255,255,.55)', whiteSpace: 'nowrap' }), c, BY[k][0]);
   R3.mk('div', '', A({ left: '66px', top: '36px', lineHeight: '24px', fontSize: '20px', fontWeight: '700', color: '#fff', whiteSpace: 'nowrap' }), c, BY[k][1]);
@@ -1462,34 +1477,37 @@ const rLabels = COLX.map((x) => R3.mk('div', 'r3-el', A({ left: (x + CWC / 2 - 7
 // =====================================================================
 tl.set(ctx.cam.el, { transformOrigin: '540px 571px' }, S);
 
-// w139 — charter sets, rows arrive blurred, layout skeleton waits below
+// w139 — charter sets, rows arrive redacted, layout skeleton waits below
 R3.appear(charter, T(139), { y: 20, scale: .97, d: .6 });
 R3.appear([title, logo], T(139) + .12, { y: 10, d: .45, stagger: .1 });
 R3.ft(divider, { scaleX: 0 }, { scaleX: 1, duration: .5, ease: 'power3.out' }, T(139) + .2);
 R3.appear(rows.map((r) => r.el), T(139) + .22, { y: 14, d: .45, stagger: .06 });
+R3.ft(rows.map((r) => r.red), { scaleX: 0 }, { scaleX: 1, duration: .35, ease: 'power3.out', stagger: .06 }, T(139) + .3);
 R3.ft(hdrL, { autoAlpha: 0, y: 8 }, { autoAlpha: .4, y: 0, duration: .45, ease: 'power2.out' }, T(139) + .45);
 R3.appear(slots, T(139) + .5, { y: 12, d: .45, stagger: .08 });
 R3.ft(strike, { scaleX: 0 }, { scaleX: 0, duration: .01 }, S);
 
-// w142..148 — rows unblur one by one
-unblur(0, T(142));
-unblur(1, T(144));
-unblur(2, T(146));
-unblur(3, T(148));
-unblur(4, T(148) + .14);
+// w142..148 — rows come into view one by one
+reveal(0, T(142));
+reveal(1, T(144));
+reveal(2, T(146));
+reveal(3, T(148));
+reveal(4, T(148) + .14);
 
 // w151 — row 06 flagged for review
 const r6 = rows[5];
 tl.to(r6.num, { color: RED, duration: .3, ease: 'power2.out' }, T(151));
 tl.to(r6.tick, { borderColor: RED, duration: .3, ease: 'power2.out' }, T(151));
 tl.to(r6.pDraft, { color: RED, borderColor: 'rgba(255,77,94,.7)', duration: .3, ease: 'power2.out' }, T(151));
+tl.to(r6.red, { backgroundColor: '#5a2a36', duration: .3, ease: 'power2.out' }, T(151));
 
-// w159 — row 06 unblurs into the locked independence row; camera push
+// w159 — row 06 resolves into the locked independence row; camera push
 const t159 = T(159);
 R3.ft(r6.hl, { scaleX: 0 }, { scaleX: 1, duration: .45, ease: 'power3.out' }, t159);
 shimmer(r6, t159);
-tl.to(r6.t, { autoAlpha: 0, filter: 'blur(12px)', duration: .28, ease: 'power1.in' }, t159);
-R3.ft(r6.lockT, { autoAlpha: 0, filter: 'blur(8px)' }, { autoAlpha: 1, filter: 'blur(0px)', duration: .5, ease: 'power2.out' }, t159 + .12);
+R3.ft(r6.red, { scaleX: 1 }, { scaleX: 0, duration: .4, ease: 'power3.inOut' }, t159);
+tl.to(r6.t, { autoAlpha: 0, y: -6, duration: .25, ease: 'power1.in' }, t159);
+R3.ft(r6.lockT, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: .45, ease: 'back.out(1.4)' }, t159 + .14);
 settleStatus(r6, t159, RED);
 tl.to(rows.slice(0, 5).map((r) => r.el), { opacity: .42, duration: .4, ease: 'sine.inOut' }, t159);
 ctx.cam.push(t159, 2.2, 1.06, 0, 0);
@@ -1499,7 +1517,7 @@ R3.ft(r6.lockT.querySelector('.u i'), { scaleX: 0 }, { scaleX: 1, duration: .45,
 
 // w163 — distributor chip greys out, thin strike
 tl.to(logo, { backgroundColor: 'rgba(255,255,255,.04)', borderColor: 'rgba(255,255,255,.18)', color: 'rgba(255,255,255,.45)', duration: .35, ease: 'power2.out' }, T(163));
-R3.ft(logoMark, { filter: 'grayscale(0)', opacity: 1 }, { filter: 'grayscale(1)', opacity: .5, duration: .35, ease: 'power2.out' }, T(163));
+R3.ft(logoMark, { opacity: 1 }, { opacity: .4, duration: .35, ease: 'power2.out' }, T(163));
 R3.ft(strike, { scaleX: 0 }, { scaleX: 1, duration: .35, ease: 'power2.out' }, T(163) + .06);
 
 // w164 — page layout frame materialises

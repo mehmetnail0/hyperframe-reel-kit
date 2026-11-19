@@ -19,7 +19,7 @@ const fs = require('fs');
       const tl = window.__timelines.main, G = window.G;
       const sec = document.getElementById(sid);
       const vis = (el) => el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
-      const samples = [], over = new Set(), dev = new Set();
+      const samples = [], over = new Set(), dev = new Set(), bad = new Set();
       for (let t = t0 + .5; t < t1 - .45; t += .1) {
         if ((skip || []).some(([a, b]) => t >= a - .1 && t < b + .3)) continue;  // full-screen speaker: panel hidden
         tl.seek(t, false);
@@ -30,6 +30,10 @@ const fs = require('fs');
           const b = el.getBoundingClientRect(); if (b.width < 3 || b.height < 3) return;
           if (b.bottom < 0 || b.top > G.H || b.right < 0 || b.left > 1080) return;
           n++;
+          const cs = getComputedStyle(el);
+          const glow = /radial-gradient/.test(cs.backgroundImage) || /blur\((\d+)/.test(cs.filter) && +cs.filter.match(/blur\(([\d.]+)/)[1] > 3
+            || /rgba?\([^)]*\) 0px 0px (1[1-9]|[2-9]\d|\d{3})px/.test(cs.boxShadow);
+          if (glow) bad.add(((el.className || '').toString().slice(0, 24)) + '@' + t.toFixed(1) + ' ' + (cs.backgroundImage.slice(0, 40) || cs.filter || cs.boxShadow.slice(0, 40)));
           // top-level structure this element belongs to (direct child of a layer)
           let p = el; while (p.parentElement && !p.parentElement.classList.contains('r3-layer')) p = p.parentElement;
           groups.add(p);
@@ -44,7 +48,7 @@ const fs = require('fs');
         share_ge3: samples.filter((x) => x[0] >= 3).length / N,
         lonely_share: samples.filter((x) => x[0] <= 1 || x[1] <= 1 && x[0] <= 2).length / N,
         mean_elements: samples.reduce((a, x) => a + x[0], 0) / N,
-        overflow: [...over].slice(0, 8), device_overflow: [...dev].slice(0, 8) };
+        overflow: [...over].slice(0, 8), device_overflow: [...dev].slice(0, 8), glow: [...bad].slice(0, 8), glow_n: bad.size };
     }, [s.sid, s.t0, s.t1, s.skip || []]);
     res.sections.push(r);
   }

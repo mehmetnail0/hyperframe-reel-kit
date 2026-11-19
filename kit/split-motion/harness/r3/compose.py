@@ -56,7 +56,7 @@ def compose(story, codes, words, total, ctx, chunk=None):
         if hd.get("text"):
             body.append(f'<div class="hd" id="h{k}">{scenes.words_markup(hd["text"])}</div>')
         body.append(f'<div class="r3-sec" id="{sid}"><div class="r3-light"></div><div class="r3-cam" id="{sid}c">'
-                    f'<div class="r3-layer" id="{sid}m"></div><div class="r3-layer" id="{sid}f"></div></div><div class="r3-vign"></div></div>')
+                    f'<div class="r3-layer" id="{sid}m"></div><div class="r3-layer" id="{sid}f"></div></div></div>')
         a_in = t0 if k == 0 else t0 - OVL
         e_out = t1 if k == len(st) - 1 else t1
         code = codes.get(sid, "")
@@ -111,9 +111,7 @@ def compose(story, codes, words, total, ctx, chunk=None):
     css = open(os.path.join(scenes.RT, "kw.css")).read() + open(os.path.join(HERE, "r3.css")).read()
     kw = open(os.path.join(scenes.RT, "kw.js")).read()
     lib = open(os.path.join(HERE, "lib.js")).read()
-    bg_js = ("const B=document.querySelectorAll('.r3-bg .field');"
-             f"tl.fromTo(B[0],{{x:-80,y:-40}},{{x:80,y:40,duration:{total:.3f},ease:'sine.inOut',immediateRender:false}},0);"
-             f"tl.fromTo(B[1],{{x:60,y:30}},{{x:-60,y:-30,duration:{total:.3f},ease:'sine.inOut',immediateRender:false}},0);")
+    bg_js = ""  # flat background: no moving light field
     reg = (f"const WW=gsap.timeline({{paused:true}});WW.fromTo(tl,{{time:{off:.4f}}},{{time:{off + dur:.4f},duration:{dur:.4f},ease:'none',immediateRender:true}},0);"
            "window.__timelines=window.__timelines||{};window.__timelines['main']=WW;") if chunk else \
         "window.__timelines=window.__timelines||{};window.__timelines['main']=tl;"
@@ -124,13 +122,12 @@ def compose(story, codes, words, total, ctx, chunk=None):
 <title>{H.escape(story.get('title', 'split-motion r3'))}</title>
 <script src="assets/vendor/gsap.min.js"></script>
 <style>{css}
-:root {{ --panel-h: {G["panel_h"]}px; --cap-top: {G["cap_top"]}px; --stage-top: {G["stage_top"]}px; --stage-h: {G["stage_h"]}px; }}
+:root {{ --panel-bg: {G["bg"]}; --bg: {G["bg"]}; --panel-h: {G["panel_h"]}px; --cap-top: {G["cap_top"]}px; --stage-top: {G["stage_top"]}px; --stage-h: {G["stage_h"]}px; }}
 </style></head><body>
 <div id="root" data-composition-id="main" data-start="0" data-duration="{dur:.3f}" data-width="1080" data-height="2040">
 {''.join(vids)}
 <div id="panel" class="clip" data-start="0" data-duration="{dur:.3f}" data-track-index="2" data-layout-allow-overflow>
- <div class="r3-bg"><div class="grid"></div><div class="field" style="left:-200px;top:-260px;background:radial-gradient(circle,rgba(255,170,110,.20),transparent 65%)"></div>
- <div class="field" style="left:420px;top:180px;background:radial-gradient(circle,rgba(120,150,255,.14),transparent 65%)"></div></div>
+ <div class="r3-bg"><div class="grid"></div></div>
  {''.join(body)}
 </div>
 {''.join(cap_html)}

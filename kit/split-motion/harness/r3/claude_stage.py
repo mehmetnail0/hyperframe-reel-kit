@@ -134,7 +134,13 @@ HARD RULES
   than 1.2 s — except at most ONE eased camera move per section (ctx.cam.push or ctx.cam.tilt, <= 2.5 s) on a major event.
   (QC measures ambient motion in the holds; > 20 % fails the render.)
 - Text lines must never overlap each other: leave >= 8 px between lines/rows; keep UI text <= 2 short lines per card.
-- ONE light model: call nothing else for light (already set from the storyboard via R3.light); no glowing balls/halos.
+- NO GLOW, NO SLAB, NO DUST (owner's hard rule, the render FAILS otherwise): no radial-gradient, no blurred blobs, no soft
+  light glow behind objects, no grey glowing panel behind a diagram, no floating particles/orbs/dots. The background stays the
+  flat deep colour with its hairline grid. ALL light and depth come from the content itself: strokes, solid/linear fills, the
+  card rim/sheen R3 already applies, and shadows WITH real offsets (e.g. '0 18px 40px rgba(0,0,0,.5)'). Blur only as a brief
+  transition state (from-state of a tween), never resting.
+- ALWAYS DYNAMIC: something meaningful changes at least every ~0.5-1 s (a row builds, a value updates, a node connects, a
+  highlight moves); never 'diagram then wait'. Still no drifting: changes are discrete, eased events.
 - No text that repeats the spoken words; real-looking UI text, names, numbers, labels only.
 - Deterministic: no Math.random, no Date. Everything scheduled on `tl` at absolute times between S and E.
 - Anything inside a phone/device must stay inside its screen.

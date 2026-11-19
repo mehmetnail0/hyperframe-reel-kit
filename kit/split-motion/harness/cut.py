@@ -22,11 +22,17 @@ CARD = (24, 960, 1032, 940)    # x, y, w, h of the speaker card on the 1080x2040
 PANEL_H = 958
 
 
+BG_RGB = (10, 10, 12)
+RADIUS = 38
+
+
 def set_geometry(G):
-    """G = scenes.geometry(speaker_h): the card follows the speaker-height parameter."""
-    global CARD, PANEL_H
-    CARD = (24, G["card_y"], 1032, G["speaker_h"])
+    """G = scenes.geometry(speaker_h): card rect, radius and background colour come from ONE place."""
+    global CARD, PANEL_H, BG_RGB, RADIUS
+    CARD = (G.get("card_x", 24), G["card_y"], G.get("card_w", 1032), G["speaker_h"])
     PANEL_H = G["panel_h"]
+    BG_RGB = tuple(G.get("bg_rgb", BG_RGB))
+    RADIUS = G.get("radius", RADIUS)
 BG = {"dark": "0x0a0a0c", "light": "0xe9e9ec"}
 
 
@@ -112,12 +118,12 @@ def speech(raw, E, out, sr=48000):
 def mask_png(path, theme="dark"):
     """bg-coloured frame with a transparent rounded hole for the card (corners r 38)."""
     import cv2
-    c = (12, 10, 10) if theme == "dark" else (236, 233, 233)
+    c = tuple(reversed(BG_RGB)) if theme == "dark" else (236, 233, 233)
     m = np.zeros((2040, 1080, 4), np.uint8)
     m[..., :3] = c
     m[..., 3] = 255
     x, y, w, h = CARD
-    r = 38
+    r = RADIUS
     hole = np.zeros((2040, 1080), np.uint8)
     cv2.rectangle(hole, (x + r, y), (x + w - r, y + h), 255, -1)
     cv2.rectangle(hole, (x, y + r), (x + w, y + h - r), 255, -1)

@@ -63,7 +63,7 @@ def render(proj, make_html, total, audio, out, n=None, workers=1, crf=18, log=pr
         iv = [(max(a_, off) - off, min(b_, off + dur) - off) for a_, b_ in split_iv if min(b_, off + dur) - max(a_, off) > 0]
         if card_from and iv:
             en = "+".join(f"between(t,{a_:.4f},{b_ - .0005:.4f})" for a_, b_ in iv)
-            fc = (f"[1:v]crop=1080:{1920 - band_y}:0:{band_y},setpts=PTS-STARTPTS[card];[0:v]setpts=PTS-STARTPTS[h];"
+            fc = (f"[1:v]crop=1080:{1920 - band_y}:0:{band_y},scale=in_range=full:out_range=limited,format=yuv420p,setpts=PTS-STARTPTS[card];[0:v]setpts=PTS-STARTPTS[h];"
                   f"[h][card]overlay=0:{band_y}:enable='{en}',crop=1080:1920:0:0[v]")
             cmd = ["ffmpeg", "-v", "error", "-y", "-i", raw, "-ss", f"{off:.4f}", "-t", f"{dur + .1:.4f}", "-i", card_from,
                    "-filter_complex", fc, "-map", "[v]"]

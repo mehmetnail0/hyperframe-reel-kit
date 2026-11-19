@@ -48,9 +48,7 @@
     o = Object.assign({ x: 760, y: 120, temp: 'warm', bloom: .26, ambient: .07 }, o || {});
     const rgb = TEMP[o.temp] || o.temp;
     C.lightModel = { x: o.x, y: o.y, rgb };
-    const L = C.sec.querySelector('.r3-light');
-    L.style.background = `radial-gradient(ellipse 62% 54% at ${o.x}px ${o.y}px, rgba(${rgb},${o.bloom}) 0%, rgba(${rgb},${o.bloom * .35}) 38%, transparent 72%),` +
-      `radial-gradient(ellipse 120% 90% at ${o.x}px ${o.y}px, rgba(${rgb},${o.ambient}) 0%, transparent 80%)`;
+    // NO background bloom/halo: light lives only in the content (rim, sheen, offset shadows)
     return C.lightModel;
   }
   // rim light + sheen on a card, from the section key light
@@ -199,7 +197,7 @@
     return { cells,
       fill(t, d = .9, from = 'start') { ft(cells, { autoAlpha: 0, scale: .85 }, { autoAlpha: 1, scale: 1, duration: .45, ease: 'back.out(1.3)', stagger: { amount: d, from } }, t); },
       highlight(i, t) { C.tl.to(cells.filter((_, j) => j !== i), { opacity: .28, duration: .35 }, t);
-        C.tl.to(cells[i], { scale: 1.12, zIndex: 5, boxShadow: '0 0 0 5px #e8283c, 0 20px 60px rgba(232,40,60,.45)', duration: .4, ease: 'back.out(1.4)' }, t); } };
+        C.tl.to(cells[i], { scale: 1.12, zIndex: 5, boxShadow: '0 0 0 5px #e8283c, 0 18px 40px rgba(0,0,0,.6)', duration: .4, ease: 'back.out(1.4)' }, t); } };
   }
   // streak calendar
   function calendar(o) {
@@ -211,7 +209,7 @@
     for (let i = 0; i < o.cols * o.rows; i++) {
       const q = i % o.cols, r = Math.floor(i / o.cols);
       const b = mk('div', '', Object.assign(box(20 + q * (o.cell + o.gap), 76 + r * (o.cell + o.gap), o.cell, o.cell), { position: 'absolute', borderRadius: '14px', border: '1.5px solid rgba(255,255,255,.15)' }), c);
-      cells.push(mk('div', 'r3-el', Object.assign(box(0, 0, o.cell, o.cell), { borderRadius: '13px', background: 'linear-gradient(135deg,#3dff8b,#10ac84)', boxShadow: '0 0 18px rgba(61,255,139,.45)' }), b));
+      cells.push(mk('div', 'r3-el', Object.assign(box(0, 0, o.cell, o.cell), { borderRadius: '13px', background: 'linear-gradient(135deg,#3dff8b,#10ac84)', boxShadow: '0 6px 14px rgba(0,0,0,.45)' }), b));
     }
     return { el: c, cells,
       check(i, t) { if (cells[i]) appear(cells[i], t, { y: 0, scale: .6, d: .35 }); },

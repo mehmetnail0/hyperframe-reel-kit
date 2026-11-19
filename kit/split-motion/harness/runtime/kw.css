@@ -29,7 +29,7 @@ body { font-family: "PS", "Product Sans", sans-serif; color: var(--ink); -webkit
 #panelbg .grid { position: absolute; inset: -80px; background-image:
   linear-gradient(var(--line) 2px, transparent 2px), linear-gradient(90deg, var(--line) 2px, transparent 2px);
   background-size: 90px 90px; }
-#panelbg .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 40%, rgba(0,0,0,.55) 100%); }
+#panelbg .vig { display: none; }
 .kw-light #panelbg .vig { background: radial-gradient(ellipse 75% 60% at 50% 48%, transparent 50%, rgba(0,0,0,.08) 100%); }
 #gfx { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: var(--bg); opacity: 0; }
 #gfx .grid { position: absolute; inset: 0; background-image:

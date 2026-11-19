@@ -14,6 +14,8 @@ Outputs: `FINAL.mp4` (1080×1920/30, −14 LUFS, TP ≤ −1 dBTP), `FINAL-sheet
 `REEL_DIR/data/{plan,edl,words,beats,sfx-map}.json`, `REEL_DIR/index.html` (preview in
 `npm run dev`), `REEL_DIR/build/timings.json` (every step's wall time + the QC block).
 
+**Skill (rules every session must follow): [`kit/split-motion/SKILL.md`](SKILL.md)** — top section "MANDATORY RULES".
+
 ## RESUME — round 3 (scene-layer redesign) — keep this block current
 
 - Branch `claude/split-motion-r3-1119` from 1f2811a. Kept: ingest, cut, chunk render, SFX mix, QC, jumps.py.
@@ -25,8 +27,25 @@ Outputs: `FINAL.mp4` (1080×1920/30, −14 LUFS, TP ≤ −1 dBTP), `FINAL-sheet
 - Inputs (scratchpad, not in git): raw dai `dl/raw/raw.mp4`, margot `dl/cc2/margot-290-410.mp4`, SFX lib `dl/sfx/sound effects /`.
 - Deliverables: split-motion-dai/renders/r3/{dai-sonnet,dai-opus}.mp4 + compare sheet (+ Kallaway DfzlY0XMeeN, Dfx2dzvuI2V
   sheets at matching relative times); split-motion-margot/renders/r3/ with the better coder.
-- Status: DONE for round 3 — dai sonnet + opus, compare sheet, margot (opus coder) delivered and pushed.
-  Open: ambient-drift gate (25–40 %), events/min on margot (33), 16–18 min per fresh reel (coder time).
+- Status (latest): owner round-3b rules implemented (no glow/slab/dust everywhere: r3.css/lib.js light() bloom removed,
+  compose light fields + vignette removed, round-2 fx_layers/halo removed; DOM glow gate in validate.js; code lint; frame
+  gates r3/gates.py bg_gate + geom_gate wired as step 5d; skill rules at top of SKILL.md). Re-render with reused codes
+  (dai-opus 499 s, margot 415 s) -> BOTH STILL FAIL gates:
+  * geom_gate: panel black = 10, but the whole card band (margins beside/below the card, bottom corners = Nail's image 9,
+    the BOTTOM corners of the video block) = 24. The full->limited conversion added in render.py overlay made it 14 levels
+    off (before: 17-22). The HyperFrames raw behaves as FULL range -> NEXT: in render.py use
+    `scale=in_range=full:out_range=full` (or drop the conversion) and make cut.mask_png + pad colour produce Y matching the
+    panel; iterate on a 1-chunk test until gates.geom_gate passes (probes: seam rows, both margins, top corners; ADD bottom
+    corners y 1896-1900 x 24..28 / 1052..1056 and the bottom edge row 1901-1904).
+  * bg_gate: particles 0-3 (ok); blob_share 0.13-0.16 dai / 0.02-0.16 margot -> either coder-written soft gradients remain
+    or the card linear-gradient fills trip the blob test; inspect gates.json frames, tighten (exclude regions inside card
+    boxes from validate) or remove gradients from r3.css .r3-card (use solid fill + offset shadow).
+  * density: dai 52 ev/min, ambient 31 %, 4 jump frames (same 5.8 s spot = composition, sec0->speaker run); margot 30 ev/min.
+  OWNER RULE (11-19, hard): never trade quality for fewer/cheaper calls. Do NOT reuse cached codes (--codes was used only
+  for this gate test; remove from the default path). Keep director Opus high; coders per section in parallel (Opus = better
+  tier on dai); ADD a REVIEW PASS: a Claude call sees 4 rendered frames per section + density report and rewrites static /
+  flat / neighbour-repetitive sections until density QC + no-glow gate pass (cap 3 rounds per section). Report calls,
+  tokens, wall time as information only.
 
 ## Round 3 (2026-11-19) — scene-layer redesign: Claude writes the motion
 

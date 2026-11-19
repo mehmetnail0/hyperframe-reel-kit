@@ -470,8 +470,7 @@ def gen_icon(sid, sp, t0, t1, R, wt):
     name = sp.get("icon") or "star"
     lab = sp.get("label") or ""
     acc = R.choice(["#ff4d5e", "#ffd23f", "#2ee6d6", "#b05cff"])
-    h = [f'<div class="fx-halo {sid}_halo" style="position:absolute;left:190px;top:-40px;width:700px;height:700px;border-radius:50%;'
-         f'background:radial-gradient(circle,{acc}55 0%,{acc}18 35%,transparent 68%)"></div>',
+    h = [
          f'<div class="{sid}_disc px-far" style="position:absolute;left:300px;top:70px;width:480px;height:480px;border-radius:50%;'
          f'background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.22),rgba(255,255,255,.04) 45%,rgba(0,0,0,.25) 100%),'
          f'linear-gradient(160deg,#1f1f27,#0c0c10);border:2px solid rgba(255,255,255,.22);'
@@ -675,13 +674,16 @@ def geometry(speaker_h=940):
     cap_top = panel_h - 104
     stage_top = 312 if panel_h >= 1100 else 300
     stage_h = cap_top - 16 - stage_top
-    return dict(speaker_h=speaker_h, card_y=card_y, panel_h=panel_h, cap_top=cap_top, stage_top=stage_top, stage_h=stage_h)
+    # ONE source of truth for the split layout: panel rect, card rect, corner radius, background colour, seam
+    return dict(speaker_h=speaker_h, card_y=card_y, panel_h=panel_h, cap_top=cap_top, stage_top=stage_top, stage_h=stage_h,
+                card_x=24, card_w=1032, radius=38, bg='#0a0a0c', bg_rgb=(10, 10, 12), seam=(panel_h + card_y) / 2)
 
 
 ACC = ["#ff4d5e", "#ffd23f", "#2ee6d6", "#b05cff", "#3dff8b"]
 
 
 def fx_layers(sid, t0, t1, R, hero, every_shine):
+    return '', []  # removed for good (owner: no glow / particles / shine layers)
     """substance instead of text: light, particles and one cinematic shine — all settle to stillness."""
     acc = R.choice(ACC)
     n = 30 if hero else 14

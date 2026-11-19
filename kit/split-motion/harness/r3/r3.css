@@ -1,11 +1,9 @@
 /* r3.css — scene layer for split-motion round 3 (component helpers; one light model per section) */
-.r3-bg { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; background: #08080a; }
+.r3-bg { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; background: var(--panel-bg, #0a0a0c); }
 .r3-bg .grid { position: absolute; inset: -90px; background-image: linear-gradient(rgba(255,255,255,.045) 2px, transparent 2px),
   linear-gradient(90deg, rgba(255,255,255,.045) 2px, transparent 2px); background-size: 90px 90px; }
-.r3-bg .field { position: absolute; width: 900px; height: 900px; border-radius: 50%; filter: blur(40px); opacity: .55; }
 .r3-sec { position: absolute; left: 0; top: 0; width: 1080px; height: var(--panel-h, 958px); overflow: hidden; opacity: 0; }
 .r3-sec .r3-light { position: absolute; inset: 0; pointer-events: none; }
-.r3-sec .r3-vign { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%); }
 .r3-cam { position: absolute; inset: 0; transform-origin: 50% 55%; transform-style: preserve-3d; }
 .r3-layer { position: absolute; inset: 0; }
 .r3-el { position: absolute; }
